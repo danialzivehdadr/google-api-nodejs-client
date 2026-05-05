@@ -763,6 +763,15 @@ export namespace run_v2 {
     tag?: string | null;
   }
   /**
+   * Inlined source.
+   */
+  export interface Schema$GoogleCloudRunV2InlinedSource {
+    /**
+     * Required. Input only. The source code.
+     */
+    sources?: Schema$GoogleCloudRunV2SourceFile[];
+  }
+  /**
    * A Cloud Run Instance represents a single group of containers running in a region.
    */
   export interface Schema$GoogleCloudRunV2Instance {
@@ -1434,11 +1443,11 @@ export namespace run_v2 {
    */
   export interface Schema$GoogleCloudRunV2RevisionScaling {
     /**
-     * Optional. Determines a threshold for concurrency utilization before scaling begins. Accepted values are between `0.1` and `0.95` (inclusive) or `0.0` to disable concurrency utilization as threshold for scaling.
+     * Optional. Determines a threshold for concurrency utilization before scaling begins. Accepted values are between `0.1` and `0.95` (inclusive) or `0.0` to disable concurrency utilization as threshold for scaling. CPU and concurrency scaling cannot both be disabled.
      */
     concurrencyUtilization?: number | null;
     /**
-     * Optional. Determines a threshold for CPU utilization before scaling begins. Accepted values are between `0.1` and `0.95` (inclusive) or `0.0` to disable CPU utilization as threshold for scaling.
+     * Optional. Determines a threshold for CPU utilization before scaling begins. Accepted values are between `0.1` and `0.95` (inclusive) or `0.0` to disable CPU utilization as threshold for scaling. CPU and concurrency scaling cannot both be disabled.
      */
     cpuUtilization?: number | null;
     /**
@@ -1790,6 +1799,23 @@ export namespace run_v2 {
      * The source is a Cloud Storage bucket.
      */
     cloudStorageSource?: Schema$GoogleCloudRunV2CloudStorageSource;
+    /**
+     * Optional. Input only. Source code inlined in the request. Cloud Run will store the inlined_source to Cloud Storage and replace the field with cloud_storage_source.
+     */
+    inlinedSource?: Schema$GoogleCloudRunV2InlinedSource;
+  }
+  /**
+   * Source file.
+   */
+  export interface Schema$GoogleCloudRunV2SourceFile {
+    /**
+     * Required. Input only. Represents the exact, literal, and complete source code of the file. Placeholders like `...` or comments such as `# [rest of code]` should NEVER be used as omission. Every character in this field will be built into the final container. Any omission will result in a broken application.
+     */
+    content?: string | null;
+    /**
+     * Required. Input only. The file name for the source code. e.g., `"index.js"` or `"node_modules/dependency.js"`. The filename must be less than 255 characters and cannot contain `..`, `./`, `//`, or end with a `/`. Cloud Run will place the files in the container subdirectories, please use relative path to access the file.
+     */
+    filename?: string | null;
   }
   /**
    * Request message for starting an Instance.
@@ -2209,7 +2235,7 @@ export namespace run_v2 {
      */
     name?: string | null;
     /**
-     * Optional. Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+     * Optional. Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root). This field is currently rejected in Secret volume mounts.
      */
     subPath?: string | null;
   }
@@ -2263,7 +2289,7 @@ export namespace run_v2 {
      */
     creator?: string | null;
     /**
-     * Not supported, and ignored by Cloud Run.
+     * Deprecated: Not supported, and ignored by Cloud Run.
      */
     customAudiences?: string[] | null;
     /**
@@ -2485,6 +2511,10 @@ export namespace run_v2 {
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1Artifacts {
     /**
+     * Optional. A list of generic artifacts to be uploaded to Artifact Registry upon successful completion of all build steps. If any artifacts fail to be pushed, the build is marked FAILURE.
+     */
+    genericArtifacts?: Schema$GoogleDevtoolsCloudbuildV1GenericArtifact[];
+    /**
      * Optional. A list of Go modules to be uploaded to Artifact Registry upon successful completion of all build steps. If any objects fail to be pushed, the build is marked FAILURE.
      */
     goModules?: Schema$GoogleDevtoolsCloudbuildV1GoModule[];
@@ -2504,6 +2534,10 @@ export namespace run_v2 {
      * A list of objects to be uploaded to Cloud Storage upon successful completion of all build steps. Files in the workspace matching specified paths globs will be uploaded to the specified Cloud Storage location using the builder service account's credentials. The location and generation of the uploaded objects will be stored in the Build resource's results field. If any objects fail to be pushed, the build is marked FAILURE.
      */
     objects?: Schema$GoogleDevtoolsCloudbuildV1ArtifactObjects;
+    /**
+     * Optional. A list of OCI images to be uploaded to Artifact Registry upon successful completion of all build steps. OCI images in the specified paths will be uploaded to the specified Artifact Registry repository using the builder service account's credentials. If any images fail to be pushed, the build is marked FAILURE.
+     */
+    oci?: Schema$GoogleDevtoolsCloudbuildV1Oci[];
     /**
      * A list of Python packages to be uploaded to Artifact Registry upon successful completion of all build steps. The build service account credentials will be used to perform the upload. If any objects fail to be pushed, the build is marked FAILURE.
      */
@@ -2786,6 +2820,10 @@ export namespace run_v2 {
      */
     pullTiming?: Schema$GoogleDevtoolsCloudbuildV1TimeSpan;
     /**
+     * Declaration of results for this build step.
+     */
+    results?: Schema$GoogleDevtoolsCloudbuildV1StepResult[];
+    /**
      * A shell script to be executed in the step. When script is provided, the user cannot specify the entrypoint or args.
      */
     script?: string | null;
@@ -2815,6 +2853,15 @@ export namespace run_v2 {
     waitFor?: string[] | null;
   }
   /**
+   * Results for a build step.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1BuildStepResults {
+    /**
+     * Results for a build step.
+     */
+    results?: {[key: string]: string} | null;
+  }
+  /**
    * An image built by the pipeline.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1BuiltImage {
@@ -2830,6 +2877,10 @@ export namespace run_v2 {
      * Name used to push the container image to Google Container Registry, as presented to `docker push`.
      */
     name?: string | null;
+    /**
+     * Output only. The OCI media type of the artifact. Non-OCI images, such as Docker images, will have an unspecified value.
+     */
+    ociMediaType?: string | null;
     /**
      * Output only. Stores timing information for pushing the specified image.
      */
@@ -2860,6 +2911,10 @@ export namespace run_v2 {
      * If set to true disable all dependency fetching (ignoring the default source as well).
      */
     empty?: boolean | null;
+    /**
+     * Represents a generic artifact as a build dependency.
+     */
+    genericArtifact?: Schema$GoogleDevtoolsCloudbuildV1GenericArtifactDependency;
     /**
      * Represents a git repository as a build dependency.
      */
@@ -2903,6 +2958,32 @@ export namespace run_v2 {
      * Collection of file hashes.
      */
     fileHash?: Schema$GoogleDevtoolsCloudbuildV1Hash[];
+  }
+  /**
+   * Generic artifact to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1GenericArtifact {
+    /**
+     * Required. Path to the generic artifact in the build's workspace to be uploaded to Artifact Registry.
+     */
+    folder?: string | null;
+    /**
+     * Required. Registry path to upload the generic artifact to, in the form projects/$PROJECT/locations/$LOCATION/repositories/$REPO/packages/$PACKAGE/versions/$VERSION
+     */
+    registryPath?: string | null;
+  }
+  /**
+   * Represents a generic artifact as a build dependency.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1GenericArtifactDependency {
+    /**
+     * Required. Where the artifact files should be placed on the worker.
+     */
+    destPath?: string | null;
+    /**
+     * Required. The location to download the artifact files from. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    resource?: string | null;
   }
   /**
    * GitConfig is a configuration for git operations.
@@ -3075,6 +3156,23 @@ export namespace run_v2 {
     repository?: string | null;
   }
   /**
+   * OCI image to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1Oci {
+    /**
+     * Required. Path on the local file system where to find the container to upload. e.g. /workspace/my-image.tar
+     */
+    file?: string | null;
+    /**
+     * Required. Registry path to upload the container to. e.g. us-east1-docker.pkg.dev/my-project/my-repo/my-image
+     */
+    registryPath?: string | null;
+    /**
+     * Optional. Tags to apply to the uploaded image. e.g. latest, 1.0.0
+     */
+    tags?: string[] | null;
+  }
+  /**
    * Details about how a build should be executed on a `WorkerPool`. See [running builds in a private pool](https://cloud.google.com/build/docs/private-pools/run-builds-in-private-pool) for more information.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1PoolOption {
@@ -3153,6 +3251,16 @@ export namespace run_v2 {
      * List of build step outputs, produced by builder images, in the order corresponding to build step indices. [Cloud Builders](https://cloud.google.com/cloud-build/docs/cloud-builders) can produce this output by writing to `$BUILDER_OUTPUT/output`. Only the first 50KB of data is stored. Note that the `$BUILDER_OUTPUT` variable is read-only and can't be substituted.
      */
     buildStepOutputs?: string[] | null;
+    /**
+     * Results for build steps. step_id -\>
+     */
+    buildStepResults?: {
+      [key: string]: Schema$GoogleDevtoolsCloudbuildV1BuildStepResults;
+    } | null;
+    /**
+     * Output only. Generic artifacts uploaded to Artifact Registry at the end of the build.
+     */
+    genericArtifacts?: Schema$GoogleDevtoolsCloudbuildV1UploadedGenericArtifact[];
     /**
      * Optional. Go module artifacts uploaded to Artifact Registry at the end of the build.
      */
@@ -3278,6 +3386,23 @@ export namespace run_v2 {
     resolvedStorageSourceManifest?: Schema$GoogleDevtoolsCloudbuildV1StorageSourceManifest;
   }
   /**
+   * StepResult is the declaration of a result for a build step.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1StepResult {
+    /**
+     * Optional. The content of the attestation to be generated.
+     */
+    attestationContent?: string | null;
+    /**
+     * Optional. The type of attestation to be generated.
+     */
+    attestationType?: string | null;
+    /**
+     * Required. The name of the result.
+     */
+    name?: string | null;
+  }
+  /**
    * Location of the source in an archive file in Cloud Storage.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1StorageSource {
@@ -3327,6 +3452,33 @@ export namespace run_v2 {
      * Start of time span.
      */
     startTime?: string | null;
+  }
+  /**
+   * A generic artifact uploaded to Artifact Registry using the GenericArtifact directive.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1UploadedGenericArtifact {
+    /**
+     * Output only. The hash of the whole artifact.
+     */
+    artifactFingerprint?: Schema$GoogleDevtoolsCloudbuildV1FileHashes;
+    /**
+     * Output only. Path to the artifact in Artifact Registry.
+     */
+    artifactRegistryPackage?: string | null;
+    /**
+     * Output only. The file hashes that make up the generic artifact.
+     */
+    fileHashes?: {
+      [key: string]: Schema$GoogleDevtoolsCloudbuildV1FileHashes;
+    } | null;
+    /**
+     * Output only. Stores timing information for pushing the specified artifact.
+     */
+    pushTiming?: Schema$GoogleDevtoolsCloudbuildV1TimeSpan;
+    /**
+     * Output only. URI of the uploaded artifact. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    uri?: string | null;
   }
   /**
    * A Go module artifact uploaded to Artifact Registry using the GoModule directive.
@@ -5025,6 +5177,155 @@ export namespace run_v2 {
     }
 
     /**
+     * Gets the IAM Access Control policy currently in effect for the given Instance. This result does not include any inherited policies.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/run.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const run = google.run('v2');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/run',
+     *       'https://www.googleapis.com/auth/run.readonly',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await run.projects.locations.instances.getIamPolicy({
+     *     // Optional. The maximum policy version that will be used to format the policy. Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected. Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset. The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies).
+     *     'options.requestedPolicyVersion': 'placeholder-value',
+     *     // REQUIRED: The resource for which the policy is being requested. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     *     resource: 'projects/my-project/locations/my-location/instances/my-instance',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "auditConfigs": [],
+     *   //   "bindings": [],
+     *   //   "etag": "my_etag",
+     *   //   "version": 0
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    getIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Getiampolicy,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    getIamPolicy(
+      params?: Params$Resource$Projects$Locations$Instances$Getiampolicy,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleIamV1Policy>>;
+    getIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Getiampolicy,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    getIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Getiampolicy,
+      options: MethodOptions | BodyResponseCallback<Schema$GoogleIamV1Policy>,
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    getIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Getiampolicy,
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    getIamPolicy(
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    getIamPolicy(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Instances$Getiampolicy
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleIamV1Policy>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Instances$Getiampolicy;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Instances$Getiampolicy;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://run.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v2/{+resource}:getIamPolicy').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['resource'],
+        pathParams: ['resource'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleIamV1Policy>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleIamV1Policy>(parameters);
+      }
+    }
+
+    /**
      * Lists Instances. Results are sorted by creation time, descending.
      * @example
      * ```js
@@ -5179,6 +5480,357 @@ export namespace run_v2 {
         return createAPIRequest<Schema$GoogleCloudRunV2ListInstancesResponse>(
           parameters
         );
+      }
+    }
+
+    /**
+     * Updates an Instance.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/run.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const run = google.run('v2');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/run',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await run.projects.locations.instances.patch({
+     *     // Optional. If set to true, and if the Instance does not exist, it will create a new one. The caller must have 'run.instances.create' permissions if this is set to true and the Instance does not exist.
+     *     allowMissing: 'placeholder-value',
+     *     // The fully qualified name of this Instance. In CreateInstanceRequest, this field is ignored, and instead composed from CreateInstanceRequest.parent and CreateInstanceRequest.instance_id. Format: projects/{project\}/locations/{location\}/instances/{instance_id\}
+     *     name: 'projects/my-project/locations/my-location/instances/my-instance',
+     *     // Optional. The list of fields to be updated.
+     *     updateMask: 'placeholder-value',
+     *     // Optional. Indicates that the request should be validated and default values populated, without persisting the request or updating any resources.
+     *     validateOnly: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "annotations": {},
+     *       //   "binaryAuthorization": {},
+     *       //   "client": "my_client",
+     *       //   "clientVersion": "my_clientVersion",
+     *       //   "conditions": [],
+     *       //   "containerStatuses": [],
+     *       //   "containers": [],
+     *       //   "createTime": "my_createTime",
+     *       //   "creator": "my_creator",
+     *       //   "deleteTime": "my_deleteTime",
+     *       //   "description": "my_description",
+     *       //   "encryptionKey": "my_encryptionKey",
+     *       //   "encryptionKeyRevocationAction": "my_encryptionKeyRevocationAction",
+     *       //   "encryptionKeyShutdownDuration": "my_encryptionKeyShutdownDuration",
+     *       //   "etag": "my_etag",
+     *       //   "expireTime": "my_expireTime",
+     *       //   "generation": "my_generation",
+     *       //   "gpuZonalRedundancyDisabled": false,
+     *       //   "iapEnabled": false,
+     *       //   "ingress": "my_ingress",
+     *       //   "invokerIamDisabled": false,
+     *       //   "labels": {},
+     *       //   "lastModifier": "my_lastModifier",
+     *       //   "launchStage": "my_launchStage",
+     *       //   "logUri": "my_logUri",
+     *       //   "name": "my_name",
+     *       //   "nodeSelector": {},
+     *       //   "observedGeneration": "my_observedGeneration",
+     *       //   "reconciling": false,
+     *       //   "satisfiesPzs": false,
+     *       //   "serviceAccount": "my_serviceAccount",
+     *       //   "terminalCondition": {},
+     *       //   "timeout": "my_timeout",
+     *       //   "uid": "my_uid",
+     *       //   "updateTime": "my_updateTime",
+     *       //   "urls": [],
+     *       //   "volumes": [],
+     *       //   "vpcAccess": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    patch(
+      params: Params$Resource$Projects$Locations$Instances$Patch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    patch(
+      params?: Params$Resource$Projects$Locations$Instances$Patch,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleLongrunningOperation>>;
+    patch(
+      params: Params$Resource$Projects$Locations$Instances$Patch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Instances$Patch,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$GoogleLongrunningOperation>,
+      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Instances$Patch,
+      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
+    ): void;
+    patch(
+      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
+    ): void;
+    patch(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Instances$Patch
+        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleLongrunningOperation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Instances$Patch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Instances$Patch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://run.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v2/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleLongrunningOperation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleLongrunningOperation>(parameters);
+      }
+    }
+
+    /**
+     * Sets the IAM Access control policy for the specified Instance. Overwrites any existing policy.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/run.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const run = google.run('v2');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/run',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await run.projects.locations.instances.setIamPolicy({
+     *     // REQUIRED: The resource for which the policy is being specified. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     *     resource: 'projects/my-project/locations/my-location/instances/my-instance',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "policy": {},
+     *       //   "updateMask": "my_updateMask"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "auditConfigs": [],
+     *   //   "bindings": [],
+     *   //   "etag": "my_etag",
+     *   //   "version": 0
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    setIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Setiampolicy,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    setIamPolicy(
+      params?: Params$Resource$Projects$Locations$Instances$Setiampolicy,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleIamV1Policy>>;
+    setIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Setiampolicy,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    setIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Setiampolicy,
+      options: MethodOptions | BodyResponseCallback<Schema$GoogleIamV1Policy>,
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    setIamPolicy(
+      params: Params$Resource$Projects$Locations$Instances$Setiampolicy,
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    setIamPolicy(
+      callback: BodyResponseCallback<Schema$GoogleIamV1Policy>
+    ): void;
+    setIamPolicy(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Instances$Setiampolicy
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleIamV1Policy>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleIamV1Policy>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Instances$Setiampolicy;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Instances$Setiampolicy;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://run.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v2/{+resource}:setIamPolicy').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['resource'],
+        pathParams: ['resource'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleIamV1Policy>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleIamV1Policy>(parameters);
       }
     }
 
@@ -5489,6 +6141,166 @@ export namespace run_v2 {
         return createAPIRequest<Schema$GoogleLongrunningOperation>(parameters);
       }
     }
+
+    /**
+     * Returns permissions that a caller has on the specified Project. There are no permissions required for making this API call.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/run.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const run = google.run('v2');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/run',
+     *       'https://www.googleapis.com/auth/run.readonly',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await run.projects.locations.instances.testIamPermissions({
+     *     // REQUIRED: The resource for which the policy detail is being requested. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     *     resource: 'projects/my-project/locations/my-location/instances/my-instance',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "permissions": []
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "permissions": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    testIamPermissions(
+      params: Params$Resource$Projects$Locations$Instances$Testiampermissions,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    testIamPermissions(
+      params?: Params$Resource$Projects$Locations$Instances$Testiampermissions,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$GoogleIamV1TestIamPermissionsResponse>
+    >;
+    testIamPermissions(
+      params: Params$Resource$Projects$Locations$Instances$Testiampermissions,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    testIamPermissions(
+      params: Params$Resource$Projects$Locations$Instances$Testiampermissions,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>,
+      callback: BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+    ): void;
+    testIamPermissions(
+      params: Params$Resource$Projects$Locations$Instances$Testiampermissions,
+      callback: BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+    ): void;
+    testIamPermissions(
+      callback: BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+    ): void;
+    testIamPermissions(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Instances$Testiampermissions
+        | BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleIamV1TestIamPermissionsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$GoogleIamV1TestIamPermissionsResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Instances$Testiampermissions;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Instances$Testiampermissions;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://run.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v2/{+resource}:testIamPermissions').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['resource'],
+        pathParams: ['resource'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleIamV1TestIamPermissionsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleIamV1TestIamPermissionsResponse>(
+          parameters
+        );
+      }
+    }
   }
 
   export interface Params$Resource$Projects$Locations$Instances$Create extends StandardParameters {
@@ -5530,6 +6342,16 @@ export namespace run_v2 {
      */
     name?: string;
   }
+  export interface Params$Resource$Projects$Locations$Instances$Getiampolicy extends StandardParameters {
+    /**
+     * Optional. The maximum policy version that will be used to format the policy. Valid values are 0, 1, and 3. Requests specifying an invalid value will be rejected. Requests for policies with any conditional role bindings must specify version 3. Policies with no conditional role bindings may specify any valid value or leave the field unset. The policy in the response might use the policy version that you specified, or it might use a lower policy version. For example, if you specify version 3, but the policy has no conditional role bindings, the response uses version 1. To learn which resources support conditions in their IAM policies, see the [IAM documentation](https://cloud.google.com/iam/help/conditions/resource-policies).
+     */
+    'options.requestedPolicyVersion'?: number;
+    /**
+     * REQUIRED: The resource for which the policy is being requested. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     */
+    resource?: string;
+  }
   export interface Params$Resource$Projects$Locations$Instances$List extends StandardParameters {
     /**
      * Optional. Maximum number of Instances to return in this call.
@@ -5547,6 +6369,40 @@ export namespace run_v2 {
      * Optional. If true, returns deleted (but unexpired) resources along with active ones.
      */
     showDeleted?: boolean;
+  }
+  export interface Params$Resource$Projects$Locations$Instances$Patch extends StandardParameters {
+    /**
+     * Optional. If set to true, and if the Instance does not exist, it will create a new one. The caller must have 'run.instances.create' permissions if this is set to true and the Instance does not exist.
+     */
+    allowMissing?: boolean;
+    /**
+     * The fully qualified name of this Instance. In CreateInstanceRequest, this field is ignored, and instead composed from CreateInstanceRequest.parent and CreateInstanceRequest.instance_id. Format: projects/{project\}/locations/{location\}/instances/{instance_id\}
+     */
+    name?: string;
+    /**
+     * Optional. The list of fields to be updated.
+     */
+    updateMask?: string;
+    /**
+     * Optional. Indicates that the request should be validated and default values populated, without persisting the request or updating any resources.
+     */
+    validateOnly?: boolean;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GoogleCloudRunV2Instance;
+  }
+  export interface Params$Resource$Projects$Locations$Instances$Setiampolicy extends StandardParameters {
+    /**
+     * REQUIRED: The resource for which the policy is being specified. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     */
+    resource?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GoogleIamV1SetIamPolicyRequest;
   }
   export interface Params$Resource$Projects$Locations$Instances$Start extends StandardParameters {
     /**
@@ -5569,6 +6425,17 @@ export namespace run_v2 {
      * Request body metadata
      */
     requestBody?: Schema$GoogleCloudRunV2StopInstanceRequest;
+  }
+  export interface Params$Resource$Projects$Locations$Instances$Testiampermissions extends StandardParameters {
+    /**
+     * REQUIRED: The resource for which the policy detail is being requested. See [Resource names](https://cloud.google.com/apis/design/resource_names) for the appropriate value for this field.
+     */
+    resource?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GoogleIamV1TestIamPermissionsRequest;
   }
 
   export class Resource$Projects$Locations$Jobs {

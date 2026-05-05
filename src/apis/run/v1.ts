@@ -805,6 +805,10 @@ export namespace run_v1 {
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1Artifacts {
     /**
+     * Optional. A list of generic artifacts to be uploaded to Artifact Registry upon successful completion of all build steps. If any artifacts fail to be pushed, the build is marked FAILURE.
+     */
+    genericArtifacts?: Schema$GoogleDevtoolsCloudbuildV1GenericArtifact[];
+    /**
      * Optional. A list of Go modules to be uploaded to Artifact Registry upon successful completion of all build steps. If any objects fail to be pushed, the build is marked FAILURE.
      */
     goModules?: Schema$GoogleDevtoolsCloudbuildV1GoModule[];
@@ -824,6 +828,10 @@ export namespace run_v1 {
      * A list of objects to be uploaded to Cloud Storage upon successful completion of all build steps. Files in the workspace matching specified paths globs will be uploaded to the specified Cloud Storage location using the builder service account's credentials. The location and generation of the uploaded objects will be stored in the Build resource's results field. If any objects fail to be pushed, the build is marked FAILURE.
      */
     objects?: Schema$GoogleDevtoolsCloudbuildV1ArtifactObjects;
+    /**
+     * Optional. A list of OCI images to be uploaded to Artifact Registry upon successful completion of all build steps. OCI images in the specified paths will be uploaded to the specified Artifact Registry repository using the builder service account's credentials. If any images fail to be pushed, the build is marked FAILURE.
+     */
+    oci?: Schema$GoogleDevtoolsCloudbuildV1Oci[];
     /**
      * A list of Python packages to be uploaded to Artifact Registry upon successful completion of all build steps. The build service account credentials will be used to perform the upload. If any objects fail to be pushed, the build is marked FAILURE.
      */
@@ -1106,6 +1114,10 @@ export namespace run_v1 {
      */
     pullTiming?: Schema$GoogleDevtoolsCloudbuildV1TimeSpan;
     /**
+     * Declaration of results for this build step.
+     */
+    results?: Schema$GoogleDevtoolsCloudbuildV1StepResult[];
+    /**
      * A shell script to be executed in the step. When script is provided, the user cannot specify the entrypoint or args.
      */
     script?: string | null;
@@ -1135,6 +1147,15 @@ export namespace run_v1 {
     waitFor?: string[] | null;
   }
   /**
+   * Results for a build step.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1BuildStepResults {
+    /**
+     * Results for a build step.
+     */
+    results?: {[key: string]: string} | null;
+  }
+  /**
    * An image built by the pipeline.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1BuiltImage {
@@ -1150,6 +1171,10 @@ export namespace run_v1 {
      * Name used to push the container image to Google Container Registry, as presented to `docker push`.
      */
     name?: string | null;
+    /**
+     * Output only. The OCI media type of the artifact. Non-OCI images, such as Docker images, will have an unspecified value.
+     */
+    ociMediaType?: string | null;
     /**
      * Output only. Stores timing information for pushing the specified image.
      */
@@ -1180,6 +1205,10 @@ export namespace run_v1 {
      * If set to true disable all dependency fetching (ignoring the default source as well).
      */
     empty?: boolean | null;
+    /**
+     * Represents a generic artifact as a build dependency.
+     */
+    genericArtifact?: Schema$GoogleDevtoolsCloudbuildV1GenericArtifactDependency;
     /**
      * Represents a git repository as a build dependency.
      */
@@ -1223,6 +1252,32 @@ export namespace run_v1 {
      * Collection of file hashes.
      */
     fileHash?: Schema$GoogleDevtoolsCloudbuildV1Hash[];
+  }
+  /**
+   * Generic artifact to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1GenericArtifact {
+    /**
+     * Required. Path to the generic artifact in the build's workspace to be uploaded to Artifact Registry.
+     */
+    folder?: string | null;
+    /**
+     * Required. Registry path to upload the generic artifact to, in the form projects/$PROJECT/locations/$LOCATION/repositories/$REPO/packages/$PACKAGE/versions/$VERSION
+     */
+    registryPath?: string | null;
+  }
+  /**
+   * Represents a generic artifact as a build dependency.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1GenericArtifactDependency {
+    /**
+     * Required. Where the artifact files should be placed on the worker.
+     */
+    destPath?: string | null;
+    /**
+     * Required. The location to download the artifact files from. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    resource?: string | null;
   }
   /**
    * GitConfig is a configuration for git operations.
@@ -1395,6 +1450,23 @@ export namespace run_v1 {
     repository?: string | null;
   }
   /**
+   * OCI image to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1Oci {
+    /**
+     * Required. Path on the local file system where to find the container to upload. e.g. /workspace/my-image.tar
+     */
+    file?: string | null;
+    /**
+     * Required. Registry path to upload the container to. e.g. us-east1-docker.pkg.dev/my-project/my-repo/my-image
+     */
+    registryPath?: string | null;
+    /**
+     * Optional. Tags to apply to the uploaded image. e.g. latest, 1.0.0
+     */
+    tags?: string[] | null;
+  }
+  /**
    * Details about how a build should be executed on a `WorkerPool`. See [running builds in a private pool](https://cloud.google.com/build/docs/private-pools/run-builds-in-private-pool) for more information.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1PoolOption {
@@ -1473,6 +1545,16 @@ export namespace run_v1 {
      * List of build step outputs, produced by builder images, in the order corresponding to build step indices. [Cloud Builders](https://cloud.google.com/cloud-build/docs/cloud-builders) can produce this output by writing to `$BUILDER_OUTPUT/output`. Only the first 50KB of data is stored. Note that the `$BUILDER_OUTPUT` variable is read-only and can't be substituted.
      */
     buildStepOutputs?: string[] | null;
+    /**
+     * Results for build steps. step_id -\>
+     */
+    buildStepResults?: {
+      [key: string]: Schema$GoogleDevtoolsCloudbuildV1BuildStepResults;
+    } | null;
+    /**
+     * Output only. Generic artifacts uploaded to Artifact Registry at the end of the build.
+     */
+    genericArtifacts?: Schema$GoogleDevtoolsCloudbuildV1UploadedGenericArtifact[];
     /**
      * Optional. Go module artifacts uploaded to Artifact Registry at the end of the build.
      */
@@ -1598,6 +1680,23 @@ export namespace run_v1 {
     resolvedStorageSourceManifest?: Schema$GoogleDevtoolsCloudbuildV1StorageSourceManifest;
   }
   /**
+   * StepResult is the declaration of a result for a build step.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1StepResult {
+    /**
+     * Optional. The content of the attestation to be generated.
+     */
+    attestationContent?: string | null;
+    /**
+     * Optional. The type of attestation to be generated.
+     */
+    attestationType?: string | null;
+    /**
+     * Required. The name of the result.
+     */
+    name?: string | null;
+  }
+  /**
    * Location of the source in an archive file in Cloud Storage.
    */
   export interface Schema$GoogleDevtoolsCloudbuildV1StorageSource {
@@ -1647,6 +1746,33 @@ export namespace run_v1 {
      * Start of time span.
      */
     startTime?: string | null;
+  }
+  /**
+   * A generic artifact uploaded to Artifact Registry using the GenericArtifact directive.
+   */
+  export interface Schema$GoogleDevtoolsCloudbuildV1UploadedGenericArtifact {
+    /**
+     * Output only. The hash of the whole artifact.
+     */
+    artifactFingerprint?: Schema$GoogleDevtoolsCloudbuildV1FileHashes;
+    /**
+     * Output only. Path to the artifact in Artifact Registry.
+     */
+    artifactRegistryPackage?: string | null;
+    /**
+     * Output only. The file hashes that make up the generic artifact.
+     */
+    fileHashes?: {
+      [key: string]: Schema$GoogleDevtoolsCloudbuildV1FileHashes;
+    } | null;
+    /**
+     * Output only. Stores timing information for pushing the specified artifact.
+     */
+    pushTiming?: Schema$GoogleDevtoolsCloudbuildV1TimeSpan;
+    /**
+     * Output only. URI of the uploaded artifact. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    uri?: string | null;
   }
   /**
    * A Go module artifact uploaded to Artifact Registry using the GoModule directive.
@@ -3220,7 +3346,7 @@ export namespace run_v1 {
      */
     readOnly?: boolean | null;
     /**
-     * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root).
+     * Path within the volume from which the container's volume should be mounted. Defaults to "" (volume's root). This field is currently rejected in Secret volume mounts.
      */
     subPath?: string | null;
   }
@@ -5854,6 +5980,162 @@ export namespace run_v1 {
     }
 
     /**
+     * Replace an Instance.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/run.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const run = google.run('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/run',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await run.namespaces.instances.replaceInstance({
+     *     // Required. The name of the Instance being replaced. Replace {namespace\} with the project ID or number. It takes the form namespaces/{namespace\}. For example: namespaces/PROJECT_ID
+     *     name: 'namespaces/my-namespace/instances/my-instance',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "apiVersion": "my_apiVersion",
+     *       //   "kind": "my_kind",
+     *       //   "metadata": {},
+     *       //   "spec": {},
+     *       //   "status": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "apiVersion": "my_apiVersion",
+     *   //   "kind": "my_kind",
+     *   //   "metadata": {},
+     *   //   "spec": {},
+     *   //   "status": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    replaceInstance(
+      params: Params$Resource$Namespaces$Instances$Replaceinstance,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    replaceInstance(
+      params?: Params$Resource$Namespaces$Instances$Replaceinstance,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Instance>>;
+    replaceInstance(
+      params: Params$Resource$Namespaces$Instances$Replaceinstance,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    replaceInstance(
+      params: Params$Resource$Namespaces$Instances$Replaceinstance,
+      options: MethodOptions | BodyResponseCallback<Schema$Instance>,
+      callback: BodyResponseCallback<Schema$Instance>
+    ): void;
+    replaceInstance(
+      params: Params$Resource$Namespaces$Instances$Replaceinstance,
+      callback: BodyResponseCallback<Schema$Instance>
+    ): void;
+    replaceInstance(callback: BodyResponseCallback<Schema$Instance>): void;
+    replaceInstance(
+      paramsOrCallback?:
+        | Params$Resource$Namespaces$Instances$Replaceinstance
+        | BodyResponseCallback<Schema$Instance>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Instance>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Instance>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Instance>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Namespaces$Instances$Replaceinstance;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Namespaces$Instances$Replaceinstance;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://run.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/apis/run.googleapis.com/v1/{+name}').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'PUT',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Instance>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Instance>(parameters);
+      }
+    }
+
+    /**
      * Start an Instance which has been stopped.
      * @example
      * ```js
@@ -6221,6 +6503,17 @@ export namespace run_v1 {
      * Optional. Not supported by Cloud Run.
      */
     watch?: boolean;
+  }
+  export interface Params$Resource$Namespaces$Instances$Replaceinstance extends StandardParameters {
+    /**
+     * Required. The name of the Instance being replaced. Replace {namespace\} with the project ID or number. It takes the form namespaces/{namespace\}. For example: namespaces/PROJECT_ID
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$Instance;
   }
   export interface Params$Resource$Namespaces$Instances$Start extends StandardParameters {
     /**
@@ -10418,7 +10711,7 @@ export namespace run_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -10452,7 +10745,7 @@ export namespace run_v1 {
      *
      *   // Do the magic
      *   const res = await run.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -10572,7 +10865,7 @@ export namespace run_v1 {
 
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
