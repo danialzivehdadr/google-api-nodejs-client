@@ -314,7 +314,7 @@ export namespace gmail_v1 {
      */
     addLabelIds?: string[] | null;
     /**
-     * Email address that the message should be forwarded to.
+     * Email address that the message should be forwarded to. This effectively redirects the message to the address specified in this field, maintaining the original sender in the "From" field.
      */
     forward?: string | null;
     /**
@@ -515,11 +515,11 @@ export namespace gmail_v1 {
   }
   export interface Schema$LabelColor {
     /**
-     * The background color represented as hex string #RRGGBB (ex #000000). This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c \#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765
+     * The background color represented as hex string #RRGGBB (ex #000000). This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c, \#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765
      */
     backgroundColor?: string | null;
     /**
-     * The text color of the label, represented as hex string. This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c \#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765
+     * The text color of the label, represented as hex string. This field is required in order to set the color of a label. Only the following predefined set of color values are allowed: \#000000, #434343, #666666, #999999, #cccccc, #efefef, #f3f3f3, #ffffff, \#fb4c2f, #ffad47, #fad165, #16a766, #43d692, #4a86e8, #a479e2, #f691b3, \#f6c5be, #ffe6c7, #fef1d1, #b9e4d0, #c6f3de, #c9daf8, #e4d7f5, #fcdee8, \#efa093, #ffd6a2, #fce8b3, #89d3b2, #a0eac9, #a4c2f4, #d0bcf1, #fbc8d9, \#e66550, #ffbc6b, #fcda83, #44b984, #68dfa9, #6d9eeb, #b694e8, #f7a7c0, \#cc3a21, #eaa041, #f2c960, #149e60, #3dc789, #3c78d8, #8e63ce, #e07798, \#ac2b16, #cf8933, #d5ae49, #0b804b, #2a9c68, #285bac, #653e9b, #b65775, \#822111, #a46a21, #aa8831, #076239, #1a764d, #1c4587, #41236d, #83334c, \#464646, #e7e7e7, #0d3472, #b6cff5, #0d3b44, #98d7e4, #3d188e, #e3d7ff, \#711a36, #fbd3e0, #8a1c0a, #f2b2a8, #7a2e0b, #ffc8af, #7a4706, #ffdeb5, \#594c05, #fbe983, #684e07, #fdedc1, #0b4f30, #b3efd3, #04502e, #a2dcc1, \#c2c2c2, #4986e7, #2da2bb, #b99aff, #994a64, #f691b2, #ff7537, #ffad46, \#662e37, #ebdbde, #cca6ac, #094228, #42d692, #16a765
      */
     textColor?: string | null;
   }
@@ -816,7 +816,7 @@ export namespace gmail_v1 {
     threadsTotal?: number | null;
   }
   /**
-   * Settings associated with a send-as alias, which can be either the primary login address associated with the account or a custom "from" address. Send-as aliases correspond to the "Send Mail As" feature in the web interface.
+   * Settings associated with a send-as alias, which can be either the primary login address associated with the account or a custom "from" address. Send-as aliases correspond to the "Send Mail As" feature in the web interface. The send-as alias must be a valid email address.
    */
   export interface Schema$SendAs {
     /**
@@ -1184,7 +1184,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Stop receiving push notifications for the given user mailbox.
+     * Turn off push notification delivery for the given user mailbox. For more information, see [Configure push notifications in Gmail API](https://developers.google.com/workspace/gmail/api/guides/push).
      * @example
      * ```js
      * // Before running the sample:
@@ -1318,7 +1318,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Set up or update a push notification watch on the given user mailbox.
+     * Set up or update a push notification watch on the given user mailbox. For more information, see [Configure push notifications in Gmail API](https://developers.google.com/workspace/gmail/api/guides/push).
      * @example
      * ```js
      * // Before running the sample:
@@ -1502,7 +1502,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Creates a new draft with the `DRAFT` label.
+     * Creates a draft with the `DRAFT` label. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -1662,7 +1662,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Immediately and permanently deletes the specified draft. Does not simply trash it.
+     * Immediately and permanently deletes the specified draft. Does not simply trash it. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -1799,7 +1799,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified draft.
+     * Gets the specified draft. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -1945,7 +1945,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the drafts in the user's mailbox.
+     * Lists the drafts in the user's mailbox. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -2097,7 +2097,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Sends the specified, existing draft to the recipients in the `To`, `Cc`, and `Bcc` headers.
+     * Sends the specified, existing draft to the recipients in the `To`, `Cc`, and `Bcc` headers. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -2264,7 +2264,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Replaces a draft's content.
+     * Replaces a draft's content. For more information, see [Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts).
      * @example
      * ```js
      * // Before running the sample:
@@ -2561,7 +2561,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing `historyId`).
+     * Lists the history of all changes to the given mailbox. History results are returned in chronological order (increasing `historyId`). For more information, see [Synchronize clients with Gmail](https://developers.google.com/workspace/gmail/api/guides/sync).
      * @example
      * ```js
      * // Before running the sample:
@@ -2749,7 +2749,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Creates a new label.
+     * Creates a label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -2916,7 +2916,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to.
+     * Immediately and permanently deletes the specified label and removes it from any messages and threads that it's applied to. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -3052,7 +3052,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified label.
+     * Gets the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -3205,7 +3205,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists all labels in the user's mailbox.
+     * Lists all labels in the user's mailbox. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -3348,7 +3348,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Patch the specified label.
+     * Patch the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -3517,7 +3517,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates the specified label.
+     * Updates the specified label. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).
      * @example
      * ```js
      * // Before running the sample:
@@ -4334,7 +4334,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP. This method doesn't perform SPF checks, so it might not work for some spam messages, such as those attempting to perform domain spoofing. This method does not send a message. Note that the maximum size of the message is 150MB.
+     * Imports a message into only this user's mailbox, with standard email delivery scanning and classification similar to receiving via SMTP. This method doesn't perform SPF checks, so it might not work for some spam messages, such as those attempting to perform domain spoofing. This method does not send a message. Note that the maximum size of the message is 150 MB.
      * @example
      * ```js
      * // Before running the sample:
@@ -4516,7 +4516,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Directly inserts a message into only this user's mailbox similar to `IMAP APPEND`, bypassing most scanning and classification. Does not send a message.
+     * Directly inserts a message into only this user's mailbox similar to `IMAP APPEND`, bypassing most scanning and classification. Does not send a message. For more information, see [Create and send email messages](https://developers.google.com/workspace/gmail/api/guides/sending).
      * @example
      * ```js
      * // Before running the sample:
@@ -4694,7 +4694,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the messages in the user's mailbox. For example usage, see [List Gmail messages](https://developers.google.com/workspace/gmail/api/guides/list-messages).
+     * Lists the messages in the user's mailbox. For more information, see [List Gmail messages](https://developers.google.com/workspace/gmail/api/guides/list-messages).
      * @example
      * ```js
      * // Before running the sample:
@@ -5009,7 +5009,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Sends the specified message to the recipients in the `To`, `Cc`, and `Bcc` headers. For example usage, see [Sending email](https://developers.google.com/workspace/gmail/api/guides/sending).
+     * Sends the specified message to the recipients in the `To`, `Cc`, and `Bcc` headers. For more information, see [Create and send email messages](https://developers.google.com/workspace/gmail/api/guides/sending).
      * @example
      * ```js
      * // Before running the sample:
@@ -5888,7 +5888,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the auto-forwarding setting for the specified account.
+     * Gets the auto-forwarding setting for the specified account. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6033,7 +6033,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets IMAP settings.
+     * Gets IMAP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6178,7 +6178,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets language settings.
+     * Gets language settings. For more information, see [Manage language settings](https://developers.google.com/workspace/gmail/api/guides/language-settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6319,7 +6319,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets POP settings.
+     * Gets POP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6462,7 +6462,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets vacation responder settings.
+     * Gets vacation responder settings. For more information, see [Manage vacation settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/vacation_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6610,7 +6610,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates the auto-forwarding setting for the specified account. A verified forwarding address must be specified when auto-forwarding is enabled. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Updates the auto-forwarding setting for the specified account. A verified forwarding address must be specified when auto-forwarding is enabled. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -6760,7 +6760,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates IMAP settings.
+     * Updates IMAP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -6911,7 +6911,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates language settings. If successful, the return object contains the `displayLanguage` that was saved for the user, which may differ from the value passed into the request. This is because the requested `displayLanguage` may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.
+     * Updates language settings. For more information, see [Manage language settings](https://developers.google.com/workspace/gmail/api/guides/language-settings). If successful, the return object contains the `displayLanguage` that was saved for the user, which may differ from the value passed into the request. This is because the requested `displayLanguage` may not be directly supported by Gmail but have a close variant that is, and so the variant may be chosen and saved instead.
      * @example
      * ```js
      * // Before running the sample:
@@ -7057,7 +7057,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates POP settings.
+     * Updates POP settings. For more information, see [Configure POP and IMAP settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/pop_imap_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -7204,7 +7204,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates vacation responder settings.
+     * Updates vacation responder settings. For more information, see [Manage vacation settings with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/vacation_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -9272,7 +9272,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Adds a delegate with its verification status set directly to `accepted`, without sending any verification email. The delegate user must be a member of the same Google Workspace organization as the delegator user. Gmail imposes limitations on the number of delegates and delegators each user in a Google Workspace organization can have. These limits depend on your organization, but in general each user can have up to 25 delegates and up to 10 delegators. Note that a delegate user must be referred to by their primary email address, and not an email alias. Also note that when a new delegate is created, there may be up to a one minute delay before the new delegate is available for use. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Adds a delegate with its verification status set directly to `accepted`, without sending any verification email. The delegate user must be a member of the same Google Workspace organization as the delegator user. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). Gmail imposes limitations on the number of delegates and delegators each user in a Google Workspace organization can have. These limits depend on your organization, but in general each user can have up to 25 delegates and up to 10 delegators. A delegate user must be referred to by their primary email address, and not an email alias. When a new delegate is created, there may be up to a one minute delay before the new delegate is available for use. This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -9418,7 +9418,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it. Note that a delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Removes the specified delegate (which can be of any verification status), and revokes any verification that may have been required for using it. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). A delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -9550,7 +9550,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified delegate. Note that a delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Gets the specified delegate. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). A delegate user must be referred to by their primary email address, and not an email alias. This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -9695,7 +9695,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the delegates for the specified account. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Lists the delegates for the specified account. For more information, see [Manage delegates](https://developers.google.com/workspace/gmail/api/guides/delegate_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -9883,7 +9883,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Creates a filter. Note: you can only create a maximum of 1,000 filters.
+     * Creates a filter. Note: you can only create a maximum of 1,000 filters. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -10031,7 +10031,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Immediately and permanently deletes the specified filter.
+     * Immediately and permanently deletes the specified filter. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -10162,7 +10162,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets a filter.
+     * Gets a filter. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -10307,7 +10307,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the message filters of a Gmail user.
+     * Lists the message filters of a Gmail user. For more information, see [Manage Gmail filters](https://developers.google.com/workspace/gmail/api/guides/filter_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -10493,7 +10493,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Creates a forwarding address. If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Creates a forwarding address. If ownership verification is required, a message will be sent to the recipient and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -10640,7 +10640,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Deletes the specified forwarding address and revokes any verification that may have been required. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Deletes the specified forwarding address and revokes any verification that may have been required. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -10773,7 +10773,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified forwarding address.
+     * Gets the specified forwarding address. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -10918,7 +10918,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the forwarding addresses for the specified account.
+     * Lists the forwarding addresses for the specified account. For more information, see [Manage email forwarding](https://developers.google.com/workspace/gmail/api/guides/forwarding_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -11114,7 +11114,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Creates a custom "from" send-as alias. If an SMTP MSA is specified, Gmail will attempt to connect to the SMTP service to validate the configuration before creating the alias. If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Creates a custom "from" send-as alias. If an SMTP MSA is specified, Gmail will attempt to connect to the SMTP service to validate the configuration before creating the alias. If ownership verification is required for the alias, a message will be sent to the email address and the resource's verification status will be set to `pending`; otherwise, the resource will be created with verification status set to `accepted`. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -11275,7 +11275,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Deletes the specified send-as alias. Revokes any verification that may have been required for using it. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Deletes the specified send-as alias. Revokes any verification that may have been required for using it. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -11406,7 +11406,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified send-as alias. Fails with an HTTP 404 error if the specified address is not a member of the collection.
+     * Gets the specified send-as alias. Fails with an HTTP 404 error if the specified address is not a member of the collection. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -11557,7 +11557,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the send-as aliases for the specified account. The result includes the primary send-as address associated with the account as well as any custom "from" aliases.
+     * Lists the send-as aliases for the specified account. The result includes the primary send-as address associated with the account as well as any custom "from" aliases. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -11699,7 +11699,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Patch the specified send-as alias.
+     * Patch the specified send-as alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings).
      * @example
      * ```js
      * // Before running the sample:
@@ -11864,7 +11864,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Updates a send-as alias. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority.
+     * Updates a send-as alias. If a signature is provided, Gmail will sanitize the HTML before saving it with the alias. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). Addresses other than the primary address for the account can only be updated by service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -12029,7 +12029,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Sends a verification email to the specified send-as alias address. The verification status must be `pending`. This method is only available to service account clients that have been delegated domain-wide authority.
+     * Sends a verification email to the specified send-as alias address. The verification status must be `pending`. For more information, see [Manage aliases and signatures with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/alias_and_signature_settings). This method is only available to service account clients that have been delegated domain-wide authority.
      * @example
      * ```js
      * // Before running the sample:
@@ -12246,7 +12246,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Deletes the specified S/MIME config for the specified send-as alias.
+     * Deletes the specified S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).
      * @example
      * ```js
      * // Before running the sample:
@@ -12383,7 +12383,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified S/MIME config for the specified send-as alias.
+     * Gets the specified S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).
      * @example
      * ```js
      * // Before running the sample:
@@ -12536,7 +12536,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Insert (upload) the given S/MIME config for the specified send-as alias. Note that pkcs12 format is required for the key.
+     * Insert (upload) the given S/MIME config for the specified send-as alias. Note that `pkcs12` format is required for the key. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).
      * @example
      * ```js
      * // Before running the sample:
@@ -12698,7 +12698,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists S/MIME configs for the specified send-as alias.
+     * Lists S/MIME configs for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).
      * @example
      * ```js
      * // Before running the sample:
@@ -12845,7 +12845,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Sets the default S/MIME config for the specified send-as alias.
+     * Sets the default S/MIME config for the specified send-as alias. For more information, see [Manage S/MIME certificates with the Gmail API](https://developers.google.com/workspace/gmail/api/guides/smime_certs).
      * @example
      * ```js
      * // Before running the sample:
@@ -13058,7 +13058,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Immediately and permanently deletes the specified thread. Any messages that belong to the thread are also deleted. This operation cannot be undone. Prefer `threads.trash` instead.
+     * Immediately and permanently deletes the specified thread. Any messages that belong to the thread are also deleted. This operation cannot be undone. Prefer `threads.trash` instead. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
@@ -13190,7 +13190,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Gets the specified thread.
+     * Gets the specified thread. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
@@ -13344,7 +13344,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Lists the threads in the user's mailbox.
+     * Lists the threads in the user's mailbox. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
@@ -13498,7 +13498,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Modifies the labels applied to the thread. This applies to all messages in the thread.
+     * Modifies the labels applied to the thread. This applies to all messages in the thread. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
@@ -13651,7 +13651,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash.
+     * Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
@@ -13795,7 +13795,7 @@ export namespace gmail_v1 {
     }
 
     /**
-     * Removes the specified thread from the trash. Any messages that belong to the thread are also removed from the trash.
+     * Removes the specified thread from the trash. Any messages that belong to the thread are also removed from the trash. For more information, see [Manage threads](https://developers.google.com/workspace/gmail/api/guides/threads).
      * @example
      * ```js
      * // Before running the sample:
