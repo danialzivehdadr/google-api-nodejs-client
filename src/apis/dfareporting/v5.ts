@@ -33336,6 +33336,12 @@ export namespace dfareporting_v5 {
      *     profileId: '[^/]+',
      *     // Tag formats to generate for these placements. *Note:* PLACEMENT_TAG_STANDARD can only be generated for 1x1 placements.
      *     tagFormats: 'placeholder-value',
+     *     // Optional. Indicates whether to include the dc_dbm macro in the generated tags. [Learn more](https://support.google.com/campaignmanager/answer/9280273) about this macro.
+     *     'tagProperties.dcDbmMacroIncluded': 'placeholder-value',
+     *     // Optional. Indicates whether to include the GPP macro in the generated tags. [Learn more](https://support.google.com/campaignmanager/answer/10031693) about this macro.
+     *     'tagProperties.gppMacrosIncluded': 'placeholder-value',
+     *     // Optional. Indicates whether to include the TCF macro in the generated tags. Default true. [Learn more](https://support.google.com/campaignmanager/answer/10031693) about this macro.
+     *     'tagProperties.tcfGdprMacrosIncluded': 'placeholder-value',
      *   });
      *   console.log(res.data);
      *
@@ -34548,6 +34554,18 @@ export namespace dfareporting_v5 {
      * Tag formats to generate for these placements. *Note:* PLACEMENT_TAG_STANDARD can only be generated for 1x1 placements.
      */
     tagFormats?: string[];
+    /**
+     * Optional. Indicates whether to include the dc_dbm macro in the generated tags. [Learn more](https://support.google.com/campaignmanager/answer/9280273) about this macro.
+     */
+    'tagProperties.dcDbmMacroIncluded'?: boolean;
+    /**
+     * Optional. Indicates whether to include the GPP macro in the generated tags. [Learn more](https://support.google.com/campaignmanager/answer/10031693) about this macro.
+     */
+    'tagProperties.gppMacrosIncluded'?: boolean;
+    /**
+     * Optional. Indicates whether to include the TCF macro in the generated tags. Default true. [Learn more](https://support.google.com/campaignmanager/answer/10031693) about this macro.
+     */
+    'tagProperties.tcfGdprMacrosIncluded'?: boolean;
   }
   export interface Params$Resource$Placements$Get extends StandardParameters {
     /**
