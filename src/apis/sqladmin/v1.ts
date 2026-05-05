@@ -1147,7 +1147,7 @@ export namespace sqladmin_v1 {
      */
     application?: string | null;
     /**
-     * Optional. When set to true, the API caller identity associated with the request is used for database authentication. The API caller must be an IAM user in the database.
+     * Optional. When set to `true`, the API caller identity associated with the request is used for database authentication. The API caller must be an IAM user in the database.
      */
     autoIamAuthn?: boolean | null;
     /**
@@ -2279,9 +2279,21 @@ export namespace sqladmin_v1 {
      */
     privateNetwork?: string | null;
     /**
+     * Optional. The region of the target instance where the datasource will be restored. For example: "us-central1".
+     */
+    region?: string | null;
+    /**
      * Target instance name.
      */
     targetInstance?: string | null;
+    /**
+     * Optional. Specifies the instance settings that will be cleared from the source instance. This field is only applicable for cross project PITRs.
+     */
+    targetInstanceClearSettingsFieldNames?: string[] | null;
+    /**
+     * Optional. Specifies the instance settings that will be overridden from the source instance. This field is only applicable for cross project PITRs.
+     */
+    targetInstanceSettings?: Schema$DatabaseInstance;
   }
   /**
    * Details of a single read pool node of a read pool.
@@ -2367,7 +2379,7 @@ export namespace sqladmin_v1 {
      */
     consumerNetworkStatus?: string | null;
     /**
-     * Optional. This is the project ID of consumer service project of this consumer endpoint. Optional. This is only applicable if consumer_network is a shared vpc network.
+     * Optional. This is the project ID of consumer service project of this consumer endpoint. This is only applicable if `consumer_network` is a shared VPC network.
      */
     consumerProject?: string | null;
     /**
@@ -2396,9 +2408,17 @@ export namespace sqladmin_v1 {
      */
     pscAutoConnections?: Schema$PscAutoConnectionConfig[];
     /**
+     * Optional. Indicates whether PSC DNS automation is enabled for this instance. When enabled, Cloud SQL provisions a universal DNS record across all networks configured with Private Service Connect (PSC) auto-connections. This will default to true for new instances when Private Service Connect is enabled.
+     */
+    pscAutoDnsEnabled?: boolean | null;
+    /**
      * Whether PSC connectivity is enabled for this instance.
      */
     pscEnabled?: boolean | null;
+    /**
+     * Optional. Indicates whether PSC write endpoint DNS automation is enabled for this instance. When enabled, Cloud SQL provisions a universal global DNS record across all networks configured with Private Service Connect (PSC) auto-connections that always points to the cluster primary instance. This feature is only supported for Enterprise Plus edition. This will default to true for new Enterprise Plus instances when `psc_auto_dns_enabled` is enabled.
+     */
+    pscWriteEndpointDnsEnabled?: boolean | null;
   }
   /**
    * QueryResult contains the result of executing a single SQL statement.
@@ -7323,7 +7343,7 @@ export namespace sqladmin_v1 {
      *   const res = await sql.instances.clone({
      *     // Required. The ID of the Cloud SQL instance to be cloned (source). This does not include the project ID.
      *     instance: 'placeholder-value',
-     *     // Required. Project ID of the source as well as the clone Cloud SQL instance.
+     *     // Required. Project ID of the source Cloud SQL instance.
      *     project: 'placeholder-value',
      *
      *     // Request body metadata
@@ -9896,7 +9916,10 @@ export namespace sqladmin_v1 {
      *       //   "preferredSecondaryZone": "my_preferredSecondaryZone",
      *       //   "preferredZone": "my_preferredZone",
      *       //   "privateNetwork": "my_privateNetwork",
-     *       //   "targetInstance": "my_targetInstance"
+     *       //   "region": "my_region",
+     *       //   "targetInstance": "my_targetInstance",
+     *       //   "targetInstanceClearSettingsFieldNames": [],
+     *       //   "targetInstanceSettings": {}
      *       // }
      *     },
      *   });
@@ -12605,7 +12628,7 @@ export namespace sqladmin_v1 {
      */
     instance?: string;
     /**
-     * Required. Project ID of the source as well as the clone Cloud SQL instance.
+     * Required. Project ID of the source Cloud SQL instance.
      */
     project?: string;
 
