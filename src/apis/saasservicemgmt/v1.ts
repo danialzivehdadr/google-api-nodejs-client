@@ -35,9 +35,9 @@ import {
 } from 'googleapis-common';
 import {Readable} from 'stream';
 
-export namespace saasservicemgmt_v1beta1 {
+export namespace saasservicemgmt_v1 {
   export interface Options extends GlobalOptions {
-    version: 'v1beta1';
+    version: 'v1';
   }
 
   interface StandardParameters {
@@ -107,7 +107,7 @@ export namespace saasservicemgmt_v1beta1 {
    * @example
    * ```js
    * const {google} = require('googleapis');
-   * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+   * const saasservicemgmt = google.saasservicemgmt('v1');
    * ```
    */
   export class Saasservicemgmt {
@@ -138,53 +138,6 @@ export namespace saasservicemgmt_v1beta1 {
     group?: string | null;
   }
   /**
-   * Allocation defines a set of weighted flag variants, specifying how traffic is split based on the randomization unit.
-   */
-  export interface Schema$Allocation {
-    /**
-     * Optional. Description of the allocation. Max length: 500 bytes.
-     */
-    description?: string | null;
-    /**
-     * Required. Allocation ID. Max length: 128 bytes.
-     */
-    id?: string | null;
-    /**
-     * Required. Key of the context attribute that is used for traffic splitting.
-     */
-    randomizedOn?: string | null;
-    /**
-     * Required. Slots defines the weighted distribution of variants.
-     */
-    slots?: Schema$AllocationSlot[];
-  }
-  /**
-   * AllocationSlot specifies a variant and the proportion of traffic allocated to it.
-   */
-  export interface Schema$AllocationSlot {
-    /**
-     * Required. Variant of the allocation slot.
-     */
-    variant?: string | null;
-    /**
-     * Required. Weight defines the proportion of traffic to allocate to the variant, relative to other slots in the same allocation.
-     */
-    weight?: number | null;
-  }
-  /**
-   * AppParams contains the parameters for creating an AppHub Application.
-   */
-  export interface Schema$AppParams {
-    /**
-     * Grouping used to construct the name of the AppHub Application. Multiple UnitKinds can specify the same group to use the same Application across their respective units. Corresponds to the app_boundary_id in the ADC composite ApplicationTemplate. Defaults to UnitKind.name
-     */
-    group?: string | null;
-    /**
-     * Corresponds to the scope in the ADC composite ApplicationTemplate. Defaults to TYPE_REGIONAL.
-     */
-    scope?: Schema$Scope;
-  }
-  /**
    * Blueprints are OCI Images that contain all of the artifacts needed to provision a unit. Metadata such as, type of the engine used to actuate the blueprint (e.g. terraform, helm etc) and version will come from the image manifest. If the hostname is omitted, it will be assumed to be the regional path to Artifact Registry (eg. us-east1-docker.pkg.dev).
    */
   export interface Schema$Blueprint {
@@ -200,40 +153,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Output only. Version metadata if present on the blueprint.
      */
     version?: string | null;
-  }
-  /**
-   * ComponentRef represents a reference to a component resource. Next ID: 4
-   */
-  export interface Schema$ComponentRef {
-    /**
-     * Name of the component in composite.Components
-     */
-    component?: string | null;
-    /**
-     * Reference to the Composite ApplicationTemplate.
-     */
-    compositeRef?: Schema$CompositeRef;
-    /**
-     * Revision of the component. If the component does not have a revision, this field will be explicitly set to the revision of the composite ApplicationTemplate.
-     */
-    revision?: string | null;
-  }
-  /**
-   * CompositeRef represents a reference to a composite resource. Next ID: 4
-   */
-  export interface Schema$CompositeRef {
-    /**
-     * Required. Reference to the ApplicationTemplate resource.
-     */
-    applicationTemplate?: string | null;
-    /**
-     * Revision of the ApplicationTemplate to use. Changes to revision will trigger manual resynchronization. If empty, ApplicationTemplate will be ignored.
-     */
-    revision?: string | null;
-    /**
-     * Output only. Reference to on-going AppTemplate import and replication operation (i.e. the operation_id for the long-running operation). This field is opaque for external usage.
-     */
-    syncOperation?: string | null;
   }
   /**
    * Dependency represent a single dependency with another unit kind by alias.
@@ -270,294 +189,6 @@ export namespace saasservicemgmt_v1beta1 {
     allowedPercentage?: number | null;
   }
   /**
-   * EvaluationRule defines a single rule for evaluating a feature flag. A rule consists of a condition that, if met, assigns a specific variant or allocation to the user.
-   */
-  export interface Schema$EvaluationRule {
-    /**
-     * Required. A Common Expression Language (CEL) expression that evaluates to a boolean. The expression is evaluated against the provided context. If it returns true, the rule's target is applied.
-     */
-    condition?: string | null;
-    /**
-     * Required. Evaluation rule ID. Max length: 128 bytes.
-     */
-    id?: string | null;
-    /**
-     * Required. The target variant or allocation to apply if the condition is met. This should match the name of a defined variant or allocation's ID.
-     */
-    target?: string | null;
-  }
-  /**
-   * EvaluationSpec holds rules for evaluating the value of a flag.
-   */
-  export interface Schema$EvaluationSpec {
-    /**
-     * Optional. A list of allocations.
-     */
-    allocations?: Schema$Allocation[];
-    /**
-     * Optional. Names of the context attributes that are used in the evaluation rules and allocations.
-     */
-    attributes?: string[] | null;
-    /**
-     * Required. Default variant or allocation of the flag.
-     */
-    defaultTarget?: string | null;
-    /**
-     * Optional. Evaluation rules define the logic for evaluating the flag against a given context. The rules are evaluated sequentially in their specified order.
-     */
-    rules?: Schema$EvaluationRule[];
-    /**
-     * Optional. A list of variants.
-     */
-    variants?: Schema$Variant[];
-  }
-  /**
-   * Represents a single Flag.
-   */
-  export interface Schema$Flag {
-    /**
-     * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
-     */
-    annotations?: {[key: string]: string} | null;
-    /**
-     * Output only. The timestamp when the resource was created.
-     */
-    createTime?: string | null;
-    /**
-     * Optional. Description of the flag. Max length: 500 bytes.
-     */
-    description?: string | null;
-    /**
-     * Output only. An opaque value that uniquely identifies a version or generation of a resource. It can be used to confirm that the client and server agree on the ordering of a resource being written.
-     */
-    etag?: string | null;
-    /**
-     * Optional. Specification of how the flag value should be evaluated. If a bool flag is created without an evaluation_spec specified, two default variants, "Enabled" (with bool_value = true) and "Disabled" (with bool_value = false), are created by default, and "Disabled" is set as the default_target.
-     */
-    evaluationSpec?: Schema$EvaluationSpec;
-    /**
-     * Optional. Flag set this flag belongs to.
-     */
-    flagSet?: string | null;
-    /**
-     * Optional. Immutable. Flag value type.
-     */
-    flagValueType?: string | null;
-    /**
-     * Required. Immutable. Flag key used in runtime evaluation APIs (OpenFeature). Max length: 256 bytes.
-     */
-    key?: string | null;
-    /**
-     * Optional. The labels on the resource, which can be used for categorization. similar to Kubernetes resource labels.
-     */
-    labels?: {[key: string]: string} | null;
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flags/{flag_id\}"
-     */
-    name?: string | null;
-    /**
-     * Optional. Current state of the flag.
-     */
-    state?: string | null;
-    /**
-     * Output only. The unique identifier of the resource. UID is unique in the time and space for this resource within the scope of the service. It is typically generated by the server on successful creation of a resource and must not be changed. UID is used to uniquely identify resources with resource name reuses. This should be a UUID4.
-     */
-    uid?: string | null;
-    /**
-     * Required. Immutable. UnitKind that can consume this flag.
-     */
-    unitKind?: string | null;
-    /**
-     * Output only. The timestamp when the resource was last updated. Any change to the resource made by users must refresh this value. Changes to a resource made by the service should refresh this value.
-     */
-    updateTime?: string | null;
-    /**
-     * Optional. Immutable. Deprecated: Use `flag_value_type` instead. Flag value type.
-     */
-    valueType?: string | null;
-    /**
-     * Optional. A list of variants.
-     */
-    variants?: Schema$FlagVariant[];
-  }
-  /**
-   * FlagAttribute defines a custom property in the evaluation context.
-   */
-  export interface Schema$FlagAttribute {
-    /**
-     * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
-     */
-    annotations?: {[key: string]: string} | null;
-    /**
-     * Optional. Immutable. Type of the attribute.
-     */
-    attributeValueType?: string | null;
-    /**
-     * Output only. The timestamp when the resource was created.
-     */
-    createTime?: string | null;
-    /**
-     * Output only. An opaque value that uniquely identifies a version or generation of a resource. It can be used to confirm that the client and server agree on the ordering of a resource being written.
-     */
-    etag?: string | null;
-    /**
-     * Required. Immutable. The identifier for the attribute, used as the key in the evaluation context. The attribute key is referenced in the evaluation rules and used in the OpenFeature evaluation API to specify the attribute context.
-     */
-    key?: string | null;
-    /**
-     * Optional. The labels on the resource, which can be used for categorization. similar to Kubernetes resource labels.
-     */
-    labels?: {[key: string]: string} | null;
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagAttributes/{flag_attribute_id\}"
-     */
-    name?: string | null;
-    /**
-     * Output only. The unique identifier of the resource. UID is unique in the time and space for this resource within the scope of the service. It is typically generated by the server on successful creation of a resource and must not be changed. UID is used to uniquely identify resources with resource name reuses. This should be a UUID4.
-     */
-    uid?: string | null;
-    /**
-     * Output only. The timestamp when the resource was last updated. Any change to the resource made by users must refresh this value. Changes to a resource made by the service should refresh this value.
-     */
-    updateTime?: string | null;
-    /**
-     * Optional. Immutable. Deprecated: Use `attribute_value_type` instead. Type of the attribute.
-     */
-    valueType?: string | null;
-  }
-  /**
-   * A collection of FlagRevisions.
-   */
-  export interface Schema$FlagRelease {
-    /**
-     * Optional. Immutable. DEPRECATED: Use all_flags_release instead. Rollout all flags in the provided UnitKind. Only one of flag_revisions, all_flags, or flag_sets can be set.
-     */
-    allFlags?: boolean | null;
-    /**
-     * Optional. Immutable. Specifies the release includes all flags.
-     */
-    allFlagsRelease?: boolean | null;
-    /**
-     * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
-     */
-    annotations?: {[key: string]: string} | null;
-    /**
-     * Output only. The timestamp when the resource was created.
-     */
-    createTime?: string | null;
-    /**
-     * Output only. An OUTPUT_ONLY field that contains FlagRevisions to be rolled out. This is the ultimate source of truth of what a Rollout or a UnitOperation carries.
-     */
-    effectiveFlagRevisions?: string[] | null;
-    /**
-     * Output only. An opaque value that uniquely identifies a version or generation of a resource. It can be used to confirm that the client and server agree on the ordering of a resource being written.
-     */
-    etag?: string | null;
-    /**
-     * Optional. Immutable. DEPRECATED: Use flag_revisions_release instead. FlagRevisions to be rolled out. Only one of flag_revisions, all_flags, or flag_sets can be set. It used to be the ultimate source to truth and has been moved to effective_flag_revisions.
-     */
-    flagRevisions?: string[] | null;
-    /**
-     * Optional. Immutable. Specifies the release consists of a list of flag revisions.
-     */
-    flagRevisionsRelease?: Schema$FlagRevisionList;
-    /**
-     * Optional. Immutable. DEPRECATED: Use flag_sets_release instead. Flag sets to be rolled out. Only one of flag_revisions, all_flags, or flag_sets can be set.
-     */
-    flagSets?: string[] | null;
-    /**
-     * Optional. Immutable. Specifies the release consists of a list of flag sets.
-     */
-    flagSetsRelease?: Schema$FlagSetList;
-    /**
-     * Optional. The labels on the resource, which can be used for categorization. similar to Kubernetes resource labels.
-     */
-    labels?: {[key: string]: string} | null;
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagReleases/{flag_release_id\}"
-     */
-    name?: string | null;
-    /**
-     * Optional. Immutable. Deprecated: Use the 'state' field in the 'Flag' resource to manage the cleanup of flag lifecycles including removal from UnitKind and Units. Flags to be removed from given UnitKind and all related Units. If Flag is provided here, its FlagRevisions will be removed from UnitKind and Units.
-     */
-    obsoleteFlags?: string[] | null;
-    /**
-     * Output only. The unique identifier of the resource. UID is unique in the time and space for this resource within the scope of the service. It is typically generated by the server on successful creation of a resource and must not be changed. UID is used to uniquely identify resources with resource name reuses. This should be a UUID4.
-     */
-    uid?: string | null;
-    /**
-     * Required. Immutable. The UnitKind this FlagRelease applies to.
-     */
-    unitKind?: string | null;
-    /**
-     * Output only. The timestamp when the resource was last updated. Any change to the resource made by users must refresh this value. Changes to a resource made by the service should refresh this value.
-     */
-    updateTime?: string | null;
-  }
-  /**
-   * A snapshot of the EvaluationSpec for the Flag.
-   */
-  export interface Schema$FlagRevision {
-    /**
-     * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
-     */
-    annotations?: {[key: string]: string} | null;
-    /**
-     * Output only. The timestamp when the resource was created.
-     */
-    createTime?: string | null;
-    /**
-     * Output only. An opaque value that uniquely identifies a version or generation of a resource. It can be used to confirm that the client and server agree on the ordering of a resource being written.
-     */
-    etag?: string | null;
-    /**
-     * Output only. Immutable. Snapshot of the EvaluationSpec for the flag. DEPRECATED: Use snapshot instead.
-     */
-    evaluationSpec?: Schema$EvaluationSpec;
-    /**
-     * Required. Immutable. Name of the Flag this is a revision of.
-     */
-    flag?: string | null;
-    /**
-     * Optional. The labels on the resource, which can be used for categorization. similar to Kubernetes resource labels.
-     */
-    labels?: {[key: string]: string} | null;
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagRevisions/{flag_revision_id\}"
-     */
-    name?: string | null;
-    /**
-     * Output only. Immutable. Snapshot of the Flag.
-     */
-    snapshot?: Schema$Flag;
-    /**
-     * Output only. The unique identifier of the resource. UID is unique in the time and space for this resource within the scope of the service. It is typically generated by the server on successful creation of a resource and must not be changed. UID is used to uniquely identify resources with resource name reuses. This should be a UUID4.
-     */
-    uid?: string | null;
-    /**
-     * Output only. The timestamp when the resource was last updated. Any change to the resource made by users must refresh this value. Changes to a resource made by the service should refresh this value.
-     */
-    updateTime?: string | null;
-  }
-  /**
-   * Wrapper for a list of flag revisions.
-   */
-  export interface Schema$FlagRevisionList {
-    /**
-     * Required. FlagRevisions to be rolled out.
-     */
-    revisions?: string[] | null;
-  }
-  /**
-   * Wrapper for a list of flag sets.
-   */
-  export interface Schema$FlagSetList {
-    /**
-     * Required. Flag sets to be rolled out.
-     */
-    sets?: string[] | null;
-  }
-  /**
    * FlagUpdate is a UnitOperation that pushes new flag values to Units.
    */
   export interface Schema$FlagUpdate {
@@ -565,39 +196,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Required. Flag release being applied by UnitOperation.
      */
     flagRelease?: string | null;
-  }
-  /**
-   * Variant is an identifier for a value (name assigned to a value).
-   */
-  export interface Schema$FlagVariant {
-    /**
-     * Optional. Boolean variant value.
-     */
-    booleanValue?: boolean | null;
-    /**
-     * Optional. A human-readable description of what this variant does or represents.
-     */
-    description?: string | null;
-    /**
-     * Optional. Double variant value.
-     */
-    doubleValue?: number | null;
-    /**
-     * Required. Variant ID. Max length: 128 bytes.
-     */
-    id?: string | null;
-    /**
-     * Optional. Integer variant value.
-     */
-    integerValue?: string | null;
-    /**
-     * Optional. String variant value.
-     */
-    stringValue?: string | null;
-    /**
-     * Optional. trackingId is unique depending on name and value of the variant within the scope of the service. It is typically generated by the server and must not be changed. trackingId is used to uniquely identify and track variants.
-     */
-    trackingId?: string | null;
   }
   /**
    * Output variables whose values will be passed on to dependencies
@@ -636,74 +234,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Resource name for the location, which may vary between implementations. For example: `"projects/example-project/locations/us-east1"`
      */
     name?: string | null;
-  }
-  /**
-   * The response structure for the ListFlagAttributes method.
-   */
-  export interface Schema$ListFlagAttributesResponse {
-    /**
-     * The resulting flag attributes.
-     */
-    flagAttributes?: Schema$FlagAttribute[];
-    /**
-     * If present, the next page token can be provided to a subsequent ListFlagAttributes call to list the next page. If empty, there are no more pages.
-     */
-    nextPageToken?: string | null;
-    /**
-     * Locations that could not be reached.
-     */
-    unreachable?: string[] | null;
-  }
-  /**
-   * The response structure for the ListFlagReleases method.
-   */
-  export interface Schema$ListFlagReleasesResponse {
-    /**
-     * The resulting flag releases.
-     */
-    flagReleases?: Schema$FlagRelease[];
-    /**
-     * If present, the next page token can be provided to a subsequent ListFlagReleases call to list the next page. If empty, there are no more pages.
-     */
-    nextPageToken?: string | null;
-    /**
-     * Locations that could not be reached.
-     */
-    unreachable?: string[] | null;
-  }
-  /**
-   * The response structure for the ListFlagRevisions method.
-   */
-  export interface Schema$ListFlagRevisionsResponse {
-    /**
-     * The resulting flag revisions.
-     */
-    flagRevisions?: Schema$FlagRevision[];
-    /**
-     * If present, the next page token can be provided to a subsequent ListFlagRevisions call to list the next page. If empty, there are no more pages.
-     */
-    nextPageToken?: string | null;
-    /**
-     * Locations that could not be reached.
-     */
-    unreachable?: string[] | null;
-  }
-  /**
-   * The response structure for the ListFlags method.
-   */
-  export interface Schema$ListFlagsResponse {
-    /**
-     * The resulting flags.
-     */
-    flags?: Schema$Flag[];
-    /**
-     * If present, the next page token can be provided to a subsequent ListFlags call to list the next page. If empty, there are no more pages.
-     */
-    nextPageToken?: string | null;
-    /**
-     * Locations that could not be reached.
-     */
-    unreachable?: string[] | null;
   }
   /**
    * The response message for Locations.ListLocations.
@@ -893,10 +423,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
      */
     annotations?: {[key: string]: string} | null;
-    /**
-     * Output only. Reference to component and revision in a composite ApplicationTemplate.
-     */
-    applicationTemplateComponent?: Schema$ComponentRef;
     /**
      * Optional. Blueprints are OCI Images that contain all of the artifacts needed to provision a unit.
      */
@@ -1149,14 +675,6 @@ export namespace saasservicemgmt_v1beta1 {
      */
     annotations?: {[key: string]: string} | null;
     /**
-     * Reference to composite ApplicationTemplate. When specified, the template components will be imported into their equivalent UnitKind, Release and Blueprint resources. Deleted references will not delete imported resources. Should only be specified on source regions, and be unspecified on replica regions.
-     */
-    applicationTemplate?: Schema$CompositeRef;
-    /**
-     * Output only. Name of repository in Artifact Registry for system-generated Blueprints, eg. Blueprints of imported ApplicationTemplates.
-     */
-    blueprintRepo?: string | null;
-    /**
      * Output only. A set of conditions which indicate the various conditions this resource can have.
      */
     conditions?: Schema$SaasCondition[];
@@ -1230,15 +748,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Optional. Start of operation. If not set, will be set to the start of the next window. (optional)
      */
     startTime?: string | null;
-  }
-  /**
-   * Scope of an application.
-   */
-  export interface Schema$Scope {
-    /**
-     * Required. Scope Type.
-     */
-    type?: string | null;
   }
   /**
    * The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).
@@ -1324,10 +833,6 @@ export namespace saasservicemgmt_v1beta1 {
      */
     annotations?: {[key: string]: string} | null;
     /**
-     * Optional. Reference to the AppHub Application this unit belongs to. All resources deployed in this Unit will be associated with the specified Application.
-     */
-    application?: string | null;
-    /**
      * Optional. Output only. A set of conditions which indicate the various conditions this resource can have.
      */
     conditions?: Schema$UnitCondition[];
@@ -1347,10 +852,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Output only. An opaque value that uniquely identifies a version or generation of a resource. It can be used to confirm that the client and server agree on the ordering of a resource being written.
      */
     etag?: string | null;
-    /**
-     * Output only. This field stores the unique identifier for the flag configuration to be used by this Unit.
-     */
-    flagConfigName?: string | null;
     /**
      * Optional. Output only. Flag revisions used by this Unit.
      */
@@ -1478,14 +979,6 @@ export namespace saasservicemgmt_v1beta1 {
      * Optional. Annotations is an unstructured key-value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata. They are not queryable and should be preserved when modifying objects. More info: https://kubernetes.io/docs/user-guide/annotations
      */
     annotations?: {[key: string]: string} | null;
-    /**
-     * Output only. Reference to component and revision in a composite ApplicationTemplate.
-     */
-    applicationTemplateComponent?: Schema$ComponentRef;
-    /**
-     * AppParams contains the parameters for creating an AppHub Application.
-     */
-    appParams?: Schema$AppParams;
     /**
      * Output only. The timestamp when the resource was created.
      */
@@ -1684,31 +1177,6 @@ export namespace saasservicemgmt_v1beta1 {
      */
     variable?: string | null;
   }
-  /**
-   * Variant is an identifier for a value (name assigned to a value). DEPRECATED: Use Flag.Variants instead.
-   */
-  export interface Schema$Variant {
-    /**
-     * Optional. Boolean flag value.
-     */
-    boolValue?: boolean | null;
-    /**
-     * Optional. Double flag value.
-     */
-    doubleValue?: number | null;
-    /**
-     * Optional. Integer flag value.
-     */
-    intValue?: string | null;
-    /**
-     * Required. Name of the variant. Max length: 128 bytes.
-     */
-    name?: string | null;
-    /**
-     * Optional. String flag value.
-     */
-    stringValue?: string | null;
-  }
 
   export class Resource$Projects {
     context: APIRequestContext;
@@ -1721,10 +1189,6 @@ export namespace saasservicemgmt_v1beta1 {
 
   export class Resource$Projects$Locations {
     context: APIRequestContext;
-    flagAttributes: Resource$Projects$Locations$Flagattributes;
-    flagReleases: Resource$Projects$Locations$Flagreleases;
-    flagRevisions: Resource$Projects$Locations$Flagrevisions;
-    flags: Resource$Projects$Locations$Flags;
     releases: Resource$Projects$Locations$Releases;
     rolloutKinds: Resource$Projects$Locations$Rolloutkinds;
     rollouts: Resource$Projects$Locations$Rollouts;
@@ -1735,16 +1199,6 @@ export namespace saasservicemgmt_v1beta1 {
     units: Resource$Projects$Locations$Units;
     constructor(context: APIRequestContext) {
       this.context = context;
-      this.flagAttributes = new Resource$Projects$Locations$Flagattributes(
-        this.context
-      );
-      this.flagReleases = new Resource$Projects$Locations$Flagreleases(
-        this.context
-      );
-      this.flagRevisions = new Resource$Projects$Locations$Flagrevisions(
-        this.context
-      );
-      this.flags = new Resource$Projects$Locations$Flags(this.context);
       this.releases = new Resource$Projects$Locations$Releases(this.context);
       this.rolloutKinds = new Resource$Projects$Locations$Rolloutkinds(
         this.context
@@ -1776,7 +1230,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -1881,7 +1335,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -1919,7 +1373,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -2027,7 +1481,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}/locations').replace(
+            url: (rootUrl + '/v1/{+name}/locations').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -2081,3548 +1535,6 @@ export namespace saasservicemgmt_v1beta1 {
     pageToken?: string;
   }
 
-  export class Resource$Projects$Locations$Flagattributes {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Create a new flag attribute.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagAttributes.create({
-     *     // Required. The ID value for the new flag attribute.
-     *     flagAttributeId: 'placeholder-value',
-     *     // Required. The parent of the flag attribute.
-     *     parent: 'projects/my-project/locations/my-location',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "attributeValueType": "my_attributeValueType",
-     *       //   "createTime": "my_createTime",
-     *       //   "etag": "my_etag",
-     *       //   "key": "my_key",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime",
-     *       //   "valueType": "my_valueType"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "attributeValueType": "my_attributeValueType",
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Flagattributes$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Flagattributes$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>;
-    create(
-      params: Params$Resource$Projects$Locations$Flagattributes$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagattributes$Create,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagAttribute>,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagattributes$Create,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    create(callback: BodyResponseCallback<Schema$FlagAttribute>): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagattributes$Create
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagattributes$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagattributes$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagAttributes').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagAttribute>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagAttribute>(parameters);
-      }
-    }
-
-    /**
-     * Delete a single flag attribute.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagAttributes.delete({
-     *     // The etag known to the client for the expected state of the flag attribute. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag attribute. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     *     etag: 'placeholder-value',
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagAttributes/my-flagAttribute',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {}
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Flagattributes$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Flagattributes$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagattributes$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagattributes$Delete,
-      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagattributes$Delete,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(callback: BodyResponseCallback<Schema$Empty>): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagattributes$Delete
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagattributes$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagattributes$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Empty>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Empty>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a single flag attribute.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagAttributes.get({
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagAttributes/my-flagAttribute',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "attributeValueType": "my_attributeValueType",
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Flagattributes$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Flagattributes$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>;
-    get(
-      params: Params$Resource$Projects$Locations$Flagattributes$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagattributes$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagAttribute>,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagattributes$Get,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$FlagAttribute>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagattributes$Get
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagattributes$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagattributes$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagAttribute>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagAttribute>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a collection of flag attributes.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagAttributes.list({
-     *     // Filter the list as specified in https://google.aip.dev/160.
-     *     filter: 'placeholder-value',
-     *     // Order results as specified in https://google.aip.dev/132.
-     *     orderBy: 'placeholder-value',
-     *     // The maximum number of flag attributes to send per page.
-     *     pageSize: 'placeholder-value',
-     *     // The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     *     pageToken: 'placeholder-value',
-     *     // Required. The parent of the flag attribute.
-     *     parent: 'projects/my-project/locations/my-location',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "flagAttributes": [],
-     *   //   "nextPageToken": "my_nextPageToken",
-     *   //   "unreachable": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Projects$Locations$Flagattributes$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Projects$Locations$Flagattributes$List,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$ListFlagAttributesResponse>>;
-    list(
-      params: Params$Resource$Projects$Locations$Flagattributes$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagattributes$List,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$ListFlagAttributesResponse>,
-      callback: BodyResponseCallback<Schema$ListFlagAttributesResponse>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagattributes$List,
-      callback: BodyResponseCallback<Schema$ListFlagAttributesResponse>
-    ): void;
-    list(
-      callback: BodyResponseCallback<Schema$ListFlagAttributesResponse>
-    ): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagattributes$List
-        | BodyResponseCallback<Schema$ListFlagAttributesResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$ListFlagAttributesResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$ListFlagAttributesResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$ListFlagAttributesResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagattributes$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagattributes$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagAttributes').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$ListFlagAttributesResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$ListFlagAttributesResponse>(parameters);
-      }
-    }
-
-    /**
-     * Update a single flag attribute.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagAttributes.patch({
-     *     // Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagAttributes/{flag_attribute_id\}"
-     *     name: 'projects/my-project/locations/my-location/flagAttributes/my-flagAttribute',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // Field mask is used to specify the fields to be overwritten in the FlagAttribute resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagAttribute will be overwritten.
-     *     updateMask: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "attributeValueType": "my_attributeValueType",
-     *       //   "createTime": "my_createTime",
-     *       //   "etag": "my_etag",
-     *       //   "key": "my_key",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime",
-     *       //   "valueType": "my_valueType"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "attributeValueType": "my_attributeValueType",
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    patch(
-      params: Params$Resource$Projects$Locations$Flagattributes$Patch,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    patch(
-      params?: Params$Resource$Projects$Locations$Flagattributes$Patch,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagattributes$Patch,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagattributes$Patch,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagAttribute>,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagattributes$Patch,
-      callback: BodyResponseCallback<Schema$FlagAttribute>
-    ): void;
-    patch(callback: BodyResponseCallback<Schema$FlagAttribute>): void;
-    patch(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagattributes$Patch
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagAttribute>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagAttribute>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagattributes$Patch;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagattributes$Patch;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'PATCH',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagAttribute>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagAttribute>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Flagattributes$Create extends StandardParameters {
-    /**
-     * Required. The ID value for the new flag attribute.
-     */
-    flagAttributeId?: string;
-    /**
-     * Required. The parent of the flag attribute.
-     */
-    parent?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagAttribute;
-  }
-  export interface Params$Resource$Projects$Locations$Flagattributes$Delete extends StandardParameters {
-    /**
-     * The etag known to the client for the expected state of the flag attribute. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag attribute. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     */
-    etag?: string;
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-  }
-  export interface Params$Resource$Projects$Locations$Flagattributes$Get extends StandardParameters {
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagattributes$List extends StandardParameters {
-    /**
-     * Filter the list as specified in https://google.aip.dev/160.
-     */
-    filter?: string;
-    /**
-     * Order results as specified in https://google.aip.dev/132.
-     */
-    orderBy?: string;
-    /**
-     * The maximum number of flag attributes to send per page.
-     */
-    pageSize?: number;
-    /**
-     * The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     */
-    pageToken?: string;
-    /**
-     * Required. The parent of the flag attribute.
-     */
-    parent?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagattributes$Patch extends StandardParameters {
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagAttributes/{flag_attribute_id\}"
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * Field mask is used to specify the fields to be overwritten in the FlagAttribute resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagAttribute will be overwritten.
-     */
-    updateMask?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagAttribute;
-  }
-
-  export class Resource$Projects$Locations$Flagreleases {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Create a new flag release.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagReleases.create({
-     *     // Required. The ID value for the new flag release.
-     *     flagReleaseId: 'placeholder-value',
-     *     // Required. The parent of the flag release.
-     *     parent: 'projects/my-project/locations/my-location',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "allFlags": false,
-     *       //   "allFlagsRelease": false,
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "effectiveFlagRevisions": [],
-     *       //   "etag": "my_etag",
-     *       //   "flagRevisions": [],
-     *       //   "flagRevisionsRelease": {},
-     *       //   "flagSets": [],
-     *       //   "flagSetsRelease": {},
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "obsoleteFlags": [],
-     *       //   "uid": "my_uid",
-     *       //   "unitKind": "my_unitKind",
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "allFlags": false,
-     *   //   "allFlagsRelease": false,
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "effectiveFlagRevisions": [],
-     *   //   "etag": "my_etag",
-     *   //   "flagRevisions": [],
-     *   //   "flagRevisionsRelease": {},
-     *   //   "flagSets": [],
-     *   //   "flagSetsRelease": {},
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "obsoleteFlags": [],
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Flagreleases$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Flagreleases$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>;
-    create(
-      params: Params$Resource$Projects$Locations$Flagreleases$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagreleases$Create,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRelease>,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagreleases$Create,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    create(callback: BodyResponseCallback<Schema$FlagRelease>): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagreleases$Create
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagreleases$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagreleases$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagReleases').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRelease>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRelease>(parameters);
-      }
-    }
-
-    /**
-     * Delete a single flag release.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagReleases.delete({
-     *     // The etag known to the client for the expected state of the flag release. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag release. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     *     etag: 'placeholder-value',
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagReleases/my-flagRelease',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {}
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Flagreleases$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Flagreleases$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagreleases$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagreleases$Delete,
-      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagreleases$Delete,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(callback: BodyResponseCallback<Schema$Empty>): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagreleases$Delete
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagreleases$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagreleases$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Empty>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Empty>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a single flag release.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagReleases.get({
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagReleases/my-flagRelease',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "allFlags": false,
-     *   //   "allFlagsRelease": false,
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "effectiveFlagRevisions": [],
-     *   //   "etag": "my_etag",
-     *   //   "flagRevisions": [],
-     *   //   "flagRevisionsRelease": {},
-     *   //   "flagSets": [],
-     *   //   "flagSetsRelease": {},
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "obsoleteFlags": [],
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Flagreleases$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Flagreleases$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>;
-    get(
-      params: Params$Resource$Projects$Locations$Flagreleases$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagreleases$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRelease>,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagreleases$Get,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$FlagRelease>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagreleases$Get
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagreleases$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagreleases$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRelease>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRelease>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a collection of flag releases.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagReleases.list({
-     *     // Filter the list as specified in https://google.aip.dev/160.
-     *     filter: 'placeholder-value',
-     *     // Order results as specified in https://google.aip.dev/132.
-     *     orderBy: 'placeholder-value',
-     *     // The maximum number of flag releases to send per page.
-     *     pageSize: 'placeholder-value',
-     *     // The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     *     pageToken: 'placeholder-value',
-     *     // Required. The parent of the flag release.
-     *     parent: 'projects/my-project/locations/my-location',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "flagReleases": [],
-     *   //   "nextPageToken": "my_nextPageToken",
-     *   //   "unreachable": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Projects$Locations$Flagreleases$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Projects$Locations$Flagreleases$List,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$ListFlagReleasesResponse>>;
-    list(
-      params: Params$Resource$Projects$Locations$Flagreleases$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagreleases$List,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$ListFlagReleasesResponse>,
-      callback: BodyResponseCallback<Schema$ListFlagReleasesResponse>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagreleases$List,
-      callback: BodyResponseCallback<Schema$ListFlagReleasesResponse>
-    ): void;
-    list(callback: BodyResponseCallback<Schema$ListFlagReleasesResponse>): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagreleases$List
-        | BodyResponseCallback<Schema$ListFlagReleasesResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$ListFlagReleasesResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$ListFlagReleasesResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$ListFlagReleasesResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagreleases$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagreleases$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagReleases').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$ListFlagReleasesResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$ListFlagReleasesResponse>(parameters);
-      }
-    }
-
-    /**
-     * Update a single flag release.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagReleases.patch({
-     *     // Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagReleases/{flag_release_id\}"
-     *     name: 'projects/my-project/locations/my-location/flagReleases/my-flagRelease',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // Field mask is used to specify the fields to be overwritten in the FlagRelease resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagRelease will be overwritten.
-     *     updateMask: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "allFlags": false,
-     *       //   "allFlagsRelease": false,
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "effectiveFlagRevisions": [],
-     *       //   "etag": "my_etag",
-     *       //   "flagRevisions": [],
-     *       //   "flagRevisionsRelease": {},
-     *       //   "flagSets": [],
-     *       //   "flagSetsRelease": {},
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "obsoleteFlags": [],
-     *       //   "uid": "my_uid",
-     *       //   "unitKind": "my_unitKind",
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "allFlags": false,
-     *   //   "allFlagsRelease": false,
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "effectiveFlagRevisions": [],
-     *   //   "etag": "my_etag",
-     *   //   "flagRevisions": [],
-     *   //   "flagRevisionsRelease": {},
-     *   //   "flagSets": [],
-     *   //   "flagSetsRelease": {},
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "obsoleteFlags": [],
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    patch(
-      params: Params$Resource$Projects$Locations$Flagreleases$Patch,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    patch(
-      params?: Params$Resource$Projects$Locations$Flagreleases$Patch,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagreleases$Patch,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagreleases$Patch,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRelease>,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagreleases$Patch,
-      callback: BodyResponseCallback<Schema$FlagRelease>
-    ): void;
-    patch(callback: BodyResponseCallback<Schema$FlagRelease>): void;
-    patch(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagreleases$Patch
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRelease>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRelease>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagreleases$Patch;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagreleases$Patch;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'PATCH',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRelease>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRelease>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Flagreleases$Create extends StandardParameters {
-    /**
-     * Required. The ID value for the new flag release.
-     */
-    flagReleaseId?: string;
-    /**
-     * Required. The parent of the flag release.
-     */
-    parent?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagRelease;
-  }
-  export interface Params$Resource$Projects$Locations$Flagreleases$Delete extends StandardParameters {
-    /**
-     * The etag known to the client for the expected state of the flag release. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag release. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     */
-    etag?: string;
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-  }
-  export interface Params$Resource$Projects$Locations$Flagreleases$Get extends StandardParameters {
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagreleases$List extends StandardParameters {
-    /**
-     * Filter the list as specified in https://google.aip.dev/160.
-     */
-    filter?: string;
-    /**
-     * Order results as specified in https://google.aip.dev/132.
-     */
-    orderBy?: string;
-    /**
-     * The maximum number of flag releases to send per page.
-     */
-    pageSize?: number;
-    /**
-     * The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     */
-    pageToken?: string;
-    /**
-     * Required. The parent of the flag release.
-     */
-    parent?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagreleases$Patch extends StandardParameters {
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagReleases/{flag_release_id\}"
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * Field mask is used to specify the fields to be overwritten in the FlagRelease resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagRelease will be overwritten.
-     */
-    updateMask?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagRelease;
-  }
-
-  export class Resource$Projects$Locations$Flagrevisions {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Create a new flag revision.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagRevisions.create({
-     *     // Required. The ID value for the new flag revision.
-     *     flagRevisionId: 'placeholder-value',
-     *     // Required. The parent of the flag revision.
-     *     parent: 'projects/my-project/locations/my-location',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "etag": "my_etag",
-     *       //   "evaluationSpec": {},
-     *       //   "flag": "my_flag",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "snapshot": {},
-     *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flag": "my_flag",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "snapshot": {},
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Flagrevisions$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>;
-    create(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Create,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRevision>,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Create,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    create(callback: BodyResponseCallback<Schema$FlagRevision>): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagrevisions$Create
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagrevisions$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagrevisions$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagRevisions').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRevision>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRevision>(parameters);
-      }
-    }
-
-    /**
-     * Delete a single flag revision.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagRevisions.delete({
-     *     // The etag known to the client for the expected state of the flag revision. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag revision. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     *     etag: 'placeholder-value',
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagRevisions/my-flagRevision',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {}
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Flagrevisions$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Delete,
-      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Delete,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(callback: BodyResponseCallback<Schema$Empty>): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagrevisions$Delete
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagrevisions$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagrevisions$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Empty>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Empty>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a single flag revision.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagRevisions.get({
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flagRevisions/my-flagRevision',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flag": "my_flag",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "snapshot": {},
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Flagrevisions$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>;
-    get(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRevision>,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Get,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$FlagRevision>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagrevisions$Get
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagrevisions$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagrevisions$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRevision>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRevision>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a collection of flag revisions.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagRevisions.list({
-     *     // Filter the list as specified in https://google.aip.dev/160.
-     *     filter: 'placeholder-value',
-     *     // Order results as specified in https://google.aip.dev/132.
-     *     orderBy: 'placeholder-value',
-     *     // The maximum number of flag revisions to send per page.
-     *     pageSize: 'placeholder-value',
-     *     // The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     *     pageToken: 'placeholder-value',
-     *     // Required. The parent of the flag revision.
-     *     parent: 'projects/my-project/locations/my-location',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "flagRevisions": [],
-     *   //   "nextPageToken": "my_nextPageToken",
-     *   //   "unreachable": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Projects$Locations$Flagrevisions$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Projects$Locations$Flagrevisions$List,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$ListFlagRevisionsResponse>>;
-    list(
-      params: Params$Resource$Projects$Locations$Flagrevisions$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagrevisions$List,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$ListFlagRevisionsResponse>,
-      callback: BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flagrevisions$List,
-      callback: BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-    ): void;
-    list(
-      callback: BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-    ): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagrevisions$List
-        | BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$ListFlagRevisionsResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$ListFlagRevisionsResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagrevisions$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagrevisions$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flagRevisions').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$ListFlagRevisionsResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$ListFlagRevisionsResponse>(parameters);
-      }
-    }
-
-    /**
-     * Update a single flag revision.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flagRevisions.patch({
-     *     // Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagRevisions/{flag_revision_id\}"
-     *     name: 'projects/my-project/locations/my-location/flagRevisions/my-flagRevision',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // Field mask is used to specify the fields to be overwritten in the FlagRevision resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagRevision will be overwritten.
-     *     updateMask: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "etag": "my_etag",
-     *       //   "evaluationSpec": {},
-     *       //   "flag": "my_flag",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "snapshot": {},
-     *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flag": "my_flag",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "snapshot": {},
-     *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    patch(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Patch,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    patch(
-      params?: Params$Resource$Projects$Locations$Flagrevisions$Patch,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Patch,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Patch,
-      options: MethodOptions | BodyResponseCallback<Schema$FlagRevision>,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flagrevisions$Patch,
-      callback: BodyResponseCallback<Schema$FlagRevision>
-    ): void;
-    patch(callback: BodyResponseCallback<Schema$FlagRevision>): void;
-    patch(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flagrevisions$Patch
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$FlagRevision>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$FlagRevision>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flagrevisions$Patch;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flagrevisions$Patch;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'PATCH',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$FlagRevision>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$FlagRevision>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Flagrevisions$Create extends StandardParameters {
-    /**
-     * Required. The ID value for the new flag revision.
-     */
-    flagRevisionId?: string;
-    /**
-     * Required. The parent of the flag revision.
-     */
-    parent?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagRevision;
-  }
-  export interface Params$Resource$Projects$Locations$Flagrevisions$Delete extends StandardParameters {
-    /**
-     * The etag known to the client for the expected state of the flag revision. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag revision. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     */
-    etag?: string;
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-  }
-  export interface Params$Resource$Projects$Locations$Flagrevisions$Get extends StandardParameters {
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagrevisions$List extends StandardParameters {
-    /**
-     * Filter the list as specified in https://google.aip.dev/160.
-     */
-    filter?: string;
-    /**
-     * Order results as specified in https://google.aip.dev/132.
-     */
-    orderBy?: string;
-    /**
-     * The maximum number of flag revisions to send per page.
-     */
-    pageSize?: number;
-    /**
-     * The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     */
-    pageToken?: string;
-    /**
-     * Required. The parent of the flag revision.
-     */
-    parent?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flagrevisions$Patch extends StandardParameters {
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flagRevisions/{flag_revision_id\}"
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * Field mask is used to specify the fields to be overwritten in the FlagRevision resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the FlagRevision will be overwritten.
-     */
-    updateMask?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$FlagRevision;
-  }
-
-  export class Resource$Projects$Locations$Flags {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Create a new flag.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flags.create({
-     *     // Required. The ID value for the new flag.
-     *     flagId: 'placeholder-value',
-     *     // Required. The parent of the flag.
-     *     parent: 'projects/my-project/locations/my-location',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "description": "my_description",
-     *       //   "etag": "my_etag",
-     *       //   "evaluationSpec": {},
-     *       //   "flagSet": "my_flagSet",
-     *       //   "flagValueType": "my_flagValueType",
-     *       //   "key": "my_key",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "state": "my_state",
-     *       //   "uid": "my_uid",
-     *       //   "unitKind": "my_unitKind",
-     *       //   "updateTime": "my_updateTime",
-     *       //   "valueType": "my_valueType",
-     *       //   "variants": []
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "description": "my_description",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flagSet": "my_flagSet",
-     *   //   "flagValueType": "my_flagValueType",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "state": "my_state",
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType",
-     *   //   "variants": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Flags$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Flags$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Flag>>;
-    create(
-      params: Params$Resource$Projects$Locations$Flags$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flags$Create,
-      options: MethodOptions | BodyResponseCallback<Schema$Flag>,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Flags$Create,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    create(callback: BodyResponseCallback<Schema$Flag>): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flags$Create
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Flag>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flags$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flags$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flags').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Flag>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Flag>(parameters);
-      }
-    }
-
-    /**
-     * Delete a single flag.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flags.delete({
-     *     // The etag known to the client for the expected state of the flag. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     *     etag: 'placeholder-value',
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flags/my-flag',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {}
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Flags$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Flags$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Flags$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flags$Delete,
-      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Flags$Delete,
-      callback: BodyResponseCallback<Schema$Empty>
-    ): void;
-    delete(callback: BodyResponseCallback<Schema$Empty>): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flags$Delete
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Empty>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flags$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flags$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Empty>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Empty>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a single flag.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flags.get({
-     *     // Required. The resource name of the resource within a service.
-     *     name: 'projects/my-project/locations/my-location/flags/my-flag',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "description": "my_description",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flagSet": "my_flagSet",
-     *   //   "flagValueType": "my_flagValueType",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "state": "my_state",
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType",
-     *   //   "variants": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Flags$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Flags$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Flag>>;
-    get(
-      params: Params$Resource$Projects$Locations$Flags$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flags$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$Flag>,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Flags$Get,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$Flag>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flags$Get
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Flag>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flags$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flags$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Flag>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Flag>(parameters);
-      }
-    }
-
-    /**
-     * Retrieve a collection of flags.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flags.list({
-     *     // Filter the list as specified in https://google.aip.dev/160.
-     *     filter: 'placeholder-value',
-     *     // Order results as specified in https://google.aip.dev/132.
-     *     orderBy: 'placeholder-value',
-     *     // The maximum number of flags to send per page.
-     *     pageSize: 'placeholder-value',
-     *     // The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     *     pageToken: 'placeholder-value',
-     *     // Required. The parent of the flag.
-     *     parent: 'projects/my-project/locations/my-location',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "flags": [],
-     *   //   "nextPageToken": "my_nextPageToken",
-     *   //   "unreachable": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Projects$Locations$Flags$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Projects$Locations$Flags$List,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$ListFlagsResponse>>;
-    list(
-      params: Params$Resource$Projects$Locations$Flags$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flags$List,
-      options: MethodOptions | BodyResponseCallback<Schema$ListFlagsResponse>,
-      callback: BodyResponseCallback<Schema$ListFlagsResponse>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Flags$List,
-      callback: BodyResponseCallback<Schema$ListFlagsResponse>
-    ): void;
-    list(callback: BodyResponseCallback<Schema$ListFlagsResponse>): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flags$List
-        | BodyResponseCallback<Schema$ListFlagsResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$ListFlagsResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$ListFlagsResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$ListFlagsResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flags$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flags$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+parent}/flags').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$ListFlagsResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$ListFlagsResponse>(parameters);
-      }
-    }
-
-    /**
-     * Update a single flag.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/saasservicemgmt.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await saasservicemgmt.projects.locations.flags.patch({
-     *     // Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flags/{flag_id\}"
-     *     name: 'projects/my-project/locations/my-location/flags/my-flag',
-     *     // An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     *     requestId: 'placeholder-value',
-     *     // Field mask is used to specify the fields to be overwritten in the Flag resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the Flag will be overwritten.
-     *     updateMask: 'placeholder-value',
-     *     // If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     *     validateOnly: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "annotations": {},
-     *       //   "createTime": "my_createTime",
-     *       //   "description": "my_description",
-     *       //   "etag": "my_etag",
-     *       //   "evaluationSpec": {},
-     *       //   "flagSet": "my_flagSet",
-     *       //   "flagValueType": "my_flagValueType",
-     *       //   "key": "my_key",
-     *       //   "labels": {},
-     *       //   "name": "my_name",
-     *       //   "state": "my_state",
-     *       //   "uid": "my_uid",
-     *       //   "unitKind": "my_unitKind",
-     *       //   "updateTime": "my_updateTime",
-     *       //   "valueType": "my_valueType",
-     *       //   "variants": []
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "annotations": {},
-     *   //   "createTime": "my_createTime",
-     *   //   "description": "my_description",
-     *   //   "etag": "my_etag",
-     *   //   "evaluationSpec": {},
-     *   //   "flagSet": "my_flagSet",
-     *   //   "flagValueType": "my_flagValueType",
-     *   //   "key": "my_key",
-     *   //   "labels": {},
-     *   //   "name": "my_name",
-     *   //   "state": "my_state",
-     *   //   "uid": "my_uid",
-     *   //   "unitKind": "my_unitKind",
-     *   //   "updateTime": "my_updateTime",
-     *   //   "valueType": "my_valueType",
-     *   //   "variants": []
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    patch(
-      params: Params$Resource$Projects$Locations$Flags$Patch,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    patch(
-      params?: Params$Resource$Projects$Locations$Flags$Patch,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$Flag>>;
-    patch(
-      params: Params$Resource$Projects$Locations$Flags$Patch,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flags$Patch,
-      options: MethodOptions | BodyResponseCallback<Schema$Flag>,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    patch(
-      params: Params$Resource$Projects$Locations$Flags$Patch,
-      callback: BodyResponseCallback<Schema$Flag>
-    ): void;
-    patch(callback: BodyResponseCallback<Schema$Flag>): void;
-    patch(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Flags$Patch
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$Flag>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$Flag>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Flags$Patch;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Flags$Patch;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://saasservicemgmt.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'PATCH',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$Flag>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$Flag>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Flags$Create extends StandardParameters {
-    /**
-     * Required. The ID value for the new flag.
-     */
-    flagId?: string;
-    /**
-     * Required. The parent of the flag.
-     */
-    parent?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$Flag;
-  }
-  export interface Params$Resource$Projects$Locations$Flags$Delete extends StandardParameters {
-    /**
-     * The etag known to the client for the expected state of the flag. This is used with state-changing methods to prevent accidental overwrites when multiple user agents might be acting in parallel on the same resource. An etag wildcard provide optimistic concurrency based on the expected existence of the flag. The Any wildcard (`*`) requires that the resource must already exists, and the Not Any wildcard (`!*`) requires that it must not.
-     */
-    etag?: string;
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-  }
-  export interface Params$Resource$Projects$Locations$Flags$Get extends StandardParameters {
-    /**
-     * Required. The resource name of the resource within a service.
-     */
-    name?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flags$List extends StandardParameters {
-    /**
-     * Filter the list as specified in https://google.aip.dev/160.
-     */
-    filter?: string;
-    /**
-     * Order results as specified in https://google.aip.dev/132.
-     */
-    orderBy?: string;
-    /**
-     * The maximum number of flags to send per page.
-     */
-    pageSize?: number;
-    /**
-     * The page token: If the next_page_token from a previous response is provided, this request will send the subsequent page.
-     */
-    pageToken?: string;
-    /**
-     * Required. The parent of the flag.
-     */
-    parent?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Flags$Patch extends StandardParameters {
-    /**
-     * Identifier. The resource name (full URI of the resource) following the standard naming scheme: "projects/{project\}/locations/{location\}/flags/{flag_id\}"
-     */
-    name?: string;
-    /**
-     * An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
-     */
-    requestId?: string;
-    /**
-     * Field mask is used to specify the fields to be overwritten in the Flag resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields in the Flag will be overwritten.
-     */
-    updateMask?: string;
-    /**
-     * If "validate_only" is set to true, the service will try to validate that this request would succeed, but will not actually make changes.
-     */
-    validateOnly?: boolean;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$Flag;
-  }
-
   export class Resource$Projects$Locations$Releases {
     context: APIRequestContext;
     constructor(context: APIRequestContext) {
@@ -5646,7 +1558,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -5674,7 +1586,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "applicationTemplateComponent": {},
      *       //   "blueprint": {},
      *       //   "createTime": "my_createTime",
      *       //   "etag": "my_etag",
@@ -5695,7 +1606,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "blueprint": {},
      *   //   "createTime": "my_createTime",
      *   //   "etag": "my_etag",
@@ -5783,7 +1693,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/releases').replace(
+            url: (rootUrl + '/v1/{+parent}/releases').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -5824,7 +1734,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -5925,7 +1835,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -5963,7 +1873,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -5985,7 +1895,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "blueprint": {},
      *   //   "createTime": "my_createTime",
      *   //   "etag": "my_etag",
@@ -6073,7 +1982,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -6111,7 +2020,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -6220,7 +2129,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/releases').replace(
+            url: (rootUrl + '/v1/{+parent}/releases').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -6261,7 +2170,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -6289,7 +2198,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "applicationTemplateComponent": {},
      *       //   "blueprint": {},
      *       //   "createTime": "my_createTime",
      *       //   "etag": "my_etag",
@@ -6310,7 +2218,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "blueprint": {},
      *   //   "createTime": "my_createTime",
      *   //   "etag": "my_etag",
@@ -6398,7 +2305,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -6536,7 +2443,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -6669,7 +2576,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/rolloutKinds').replace(
+            url: (rootUrl + '/v1/{+parent}/rolloutKinds').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -6710,7 +2617,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -6811,7 +2718,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -6849,7 +2756,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -6957,7 +2864,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -6995,7 +2902,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -7104,7 +3011,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/rolloutKinds').replace(
+            url: (rootUrl + '/v1/{+parent}/rolloutKinds').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -7145,7 +3052,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -7278,7 +3185,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -7416,7 +3323,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -7571,7 +3478,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/rollouts').replace(
+            url: (rootUrl + '/v1/{+parent}/rollouts').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -7612,7 +3519,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -7713,7 +3620,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -7751,7 +3658,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -7870,7 +3777,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -7908,7 +3815,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8017,7 +3924,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/rollouts').replace(
+            url: (rootUrl + '/v1/{+parent}/rollouts').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -8058,7 +3965,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8213,7 +4120,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -8351,7 +4258,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8379,8 +4286,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "applicationTemplate": {},
-     *       //   "blueprintRepo": "my_blueprintRepo",
      *       //   "conditions": [],
      *       //   "createTime": "my_createTime",
      *       //   "error": {},
@@ -8399,8 +4304,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplate": {},
-     *   //   "blueprintRepo": "my_blueprintRepo",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "error": {},
@@ -8486,10 +4389,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/saas').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
+            url: (rootUrl + '/v1/{+parent}/saas').replace(/([^:]\/)\/+/g, '$1'),
             method: 'POST',
             apiVersion: '',
           },
@@ -8527,7 +4427,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8628,7 +4528,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -8666,7 +4566,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8688,8 +4588,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplate": {},
-     *   //   "blueprintRepo": "my_blueprintRepo",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "error": {},
@@ -8775,7 +4673,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -8813,7 +4711,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8920,10 +4818,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/saas').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
+            url: (rootUrl + '/v1/{+parent}/saas').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -8961,7 +4856,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -8989,8 +4884,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "applicationTemplate": {},
-     *       //   "blueprintRepo": "my_blueprintRepo",
      *       //   "conditions": [],
      *       //   "createTime": "my_createTime",
      *       //   "error": {},
@@ -9009,8 +4902,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "applicationTemplate": {},
-     *   //   "blueprintRepo": "my_blueprintRepo",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "error": {},
@@ -9096,7 +4987,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -9234,7 +5125,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -9361,7 +5252,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/tenants').replace(
+            url: (rootUrl + '/v1/{+parent}/tenants').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -9402,7 +5293,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -9503,7 +5394,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -9541,7 +5432,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -9646,7 +5537,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -9684,7 +5575,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -9791,7 +5682,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/tenants').replace(
+            url: (rootUrl + '/v1/{+parent}/tenants').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -9832,7 +5723,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -9959,7 +5850,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -10097,7 +5988,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -10125,8 +6016,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "appParams": {},
-     *       //   "applicationTemplateComponent": {},
      *       //   "createTime": "my_createTime",
      *       //   "defaultFlagRevisions": [],
      *       //   "defaultRelease": "my_defaultRelease",
@@ -10147,8 +6036,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "appParams": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "createTime": "my_createTime",
      *   //   "defaultFlagRevisions": [],
      *   //   "defaultRelease": "my_defaultRelease",
@@ -10236,7 +6123,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/unitKinds').replace(
+            url: (rootUrl + '/v1/{+parent}/unitKinds').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -10277,7 +6164,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -10378,7 +6265,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -10416,7 +6303,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -10438,8 +6325,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "appParams": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "createTime": "my_createTime",
      *   //   "defaultFlagRevisions": [],
      *   //   "defaultRelease": "my_defaultRelease",
@@ -10527,7 +6412,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -10565,7 +6450,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -10674,7 +6559,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/unitKinds').replace(
+            url: (rootUrl + '/v1/{+parent}/unitKinds').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -10715,7 +6600,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -10743,8 +6628,6 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "appParams": {},
-     *       //   "applicationTemplateComponent": {},
      *       //   "createTime": "my_createTime",
      *       //   "defaultFlagRevisions": [],
      *       //   "defaultRelease": "my_defaultRelease",
@@ -10765,8 +6648,6 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "appParams": {},
-     *   //   "applicationTemplateComponent": {},
      *   //   "createTime": "my_createTime",
      *   //   "defaultFlagRevisions": [],
      *   //   "defaultRelease": "my_defaultRelease",
@@ -10854,7 +6735,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -10992,7 +6873,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11143,7 +7024,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/unitOperations').replace(
+            url: (rootUrl + '/v1/{+parent}/unitOperations').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -11184,7 +7065,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11285,7 +7166,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -11323,7 +7204,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11440,7 +7321,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -11478,7 +7359,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11589,7 +7470,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/unitOperations').replace(
+            url: (rootUrl + '/v1/{+parent}/unitOperations').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -11630,7 +7511,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11781,7 +7662,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
@@ -11919,7 +7800,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -11947,13 +7828,11 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "application": "my_application",
      *       //   "conditions": [],
      *       //   "createTime": "my_createTime",
      *       //   "dependencies": [],
      *       //   "dependents": [],
      *       //   "etag": "my_etag",
-     *       //   "flagConfigName": "my_flagConfigName",
      *       //   "flagRevisions": [],
      *       //   "inputVariables": [],
      *       //   "labels": {},
@@ -11982,13 +7861,11 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "application": "my_application",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "dependencies": [],
      *   //   "dependents": [],
      *   //   "etag": "my_etag",
-     *   //   "flagConfigName": "my_flagConfigName",
      *   //   "flagRevisions": [],
      *   //   "inputVariables": [],
      *   //   "labels": {},
@@ -12084,7 +7961,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/units').replace(
+            url: (rootUrl + '/v1/{+parent}/units').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -12125,7 +8002,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -12226,7 +8103,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'DELETE',
             apiVersion: '',
           },
@@ -12264,7 +8141,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -12286,13 +8163,11 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "application": "my_application",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "dependencies": [],
      *   //   "dependents": [],
      *   //   "etag": "my_etag",
-     *   //   "flagConfigName": "my_flagConfigName",
      *   //   "flagRevisions": [],
      *   //   "inputVariables": [],
      *   //   "labels": {},
@@ -12388,7 +8263,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'GET',
             apiVersion: '',
           },
@@ -12426,7 +8301,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -12533,7 +8408,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+parent}/units').replace(
+            url: (rootUrl + '/v1/{+parent}/units').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -12574,7 +8449,7 @@ export namespace saasservicemgmt_v1beta1 {
      * //   ```
      *
      * const {google} = require('googleapis');
-     * const saasservicemgmt = google.saasservicemgmt('v1beta1');
+     * const saasservicemgmt = google.saasservicemgmt('v1');
      *
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
@@ -12602,13 +8477,11 @@ export namespace saasservicemgmt_v1beta1 {
      *       // request body parameters
      *       // {
      *       //   "annotations": {},
-     *       //   "application": "my_application",
      *       //   "conditions": [],
      *       //   "createTime": "my_createTime",
      *       //   "dependencies": [],
      *       //   "dependents": [],
      *       //   "etag": "my_etag",
-     *       //   "flagConfigName": "my_flagConfigName",
      *       //   "flagRevisions": [],
      *       //   "inputVariables": [],
      *       //   "labels": {},
@@ -12637,13 +8510,11 @@ export namespace saasservicemgmt_v1beta1 {
      *   // Example response
      *   // {
      *   //   "annotations": {},
-     *   //   "application": "my_application",
      *   //   "conditions": [],
      *   //   "createTime": "my_createTime",
      *   //   "dependencies": [],
      *   //   "dependents": [],
      *   //   "etag": "my_etag",
-     *   //   "flagConfigName": "my_flagConfigName",
      *   //   "flagRevisions": [],
      *   //   "inputVariables": [],
      *   //   "labels": {},
@@ -12739,7 +8610,7 @@ export namespace saasservicemgmt_v1beta1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/v1beta1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
             method: 'PATCH',
             apiVersion: '',
           },
