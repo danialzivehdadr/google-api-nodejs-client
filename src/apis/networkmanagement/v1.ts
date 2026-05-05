@@ -827,6 +827,36 @@ export namespace networkmanagement_v1 {
     internalIp?: string | null;
   }
   /**
+   * For display only. Metadata associated with a GKE Network Policy.
+   */
+  export interface Schema$GkeNetworkPolicyInfo {
+    /**
+     * Possible values: ALLOW, DENY
+     */
+    action?: string | null;
+    /**
+     * Possible values: INGRESS, EGRESS
+     */
+    direction?: string | null;
+    /**
+     * The name of the Network Policy.
+     */
+    displayName?: string | null;
+    /**
+     * The URI of the Network Policy. Format for a Network Policy in a zonal cluster: `projects//zones//clusters//k8s/namespaces//networking.k8s.io/networkpolicies/` Format for a Network Policy in a regional cluster: `projects//locations//clusters//k8s/namespaces//networking.k8s.io/networkpolicies/`
+     */
+    uri?: string | null;
+  }
+  /**
+   * For display only. Contains information about why GKE Network Policy evaluation was skipped.
+   */
+  export interface Schema$GkeNetworkPolicySkippedInfo {
+    /**
+     * Reason why Network Policy evaluation was skipped.
+     */
+    reason?: string | null;
+  }
+  /**
    * For display only. Metadata associated with a Google Kubernetes Engine (GKE) Pod.
    */
   export interface Schema$GkePodInfo {
@@ -1349,6 +1379,15 @@ export namespace networkmanagement_v1 {
     version?: number | null;
   }
   /**
+   * For display only. Metadata associated with a Private Connection.
+   */
+  export interface Schema$PrivateConnectionInfo {
+    /**
+     * URI of the Private Connection in format "projects/{project_id\}/locations/{location\}/privateConnections/{private_connection_id\}"
+     */
+    uri?: string | null;
+  }
+  /**
    * Results of active probing from the last run of the test.
    */
   export interface Schema$ProbingDetails {
@@ -1623,7 +1662,7 @@ export namespace networkmanagement_v1 {
      */
     protocols?: string[] | null;
     /**
-     * Region of the route. DYNAMIC, PEERING_DYNAMIC, POLICY_BASED and ADVERTISED routes only. If set for POLICY_BASED route, this is a region of VLAN attachments for Cloud Interconnect the route applies to.
+     * Region of the route. DYNAMIC, PEERING_DYNAMIC, POLICY_BASED and ADVERTISED routes only. If set for POLICY_BASED route, this is a region of VLAN attachments for Cloud Interconnect the route applies to. If set to "all" for POLICY_BASED route, the route applies to VLAN attachments of Cloud Interconnect in all regions.
      */
     region?: string | null;
     /**
@@ -1770,6 +1809,10 @@ export namespace networkmanagement_v1 {
      */
     cloudSqlInstance?: Schema$CloudSQLInstanceInfo;
     /**
+     * Display information of a Datastream Private Connection.
+     */
+    datastreamPrivateConnection?: Schema$PrivateConnectionInfo;
+    /**
      * Display information of the final state "deliver" and reason.
      */
     deliver?: Schema$DeliverInfo;
@@ -1781,6 +1824,10 @@ export namespace networkmanagement_v1 {
      * Display information of a serverless direct VPC egress connection.
      */
     directVpcEgressConnection?: Schema$DirectVpcEgressConnectionInfo;
+    /**
+     * Display information of a DMS Private Connection.
+     */
+    dmsPrivateConnection?: Schema$PrivateConnectionInfo;
     /**
      * Display information of the final state "drop" and reason.
      */
@@ -1805,6 +1852,14 @@ export namespace networkmanagement_v1 {
      * Display information of a Google Kubernetes Engine cluster master.
      */
     gkeMaster?: Schema$GKEMasterInfo;
+    /**
+     * Display information of a GKE Network Policy.
+     */
+    gkeNetworkPolicy?: Schema$GkeNetworkPolicyInfo;
+    /**
+     * Display information of the reason why GKE Network Policy evaluation was skipped.
+     */
+    gkeNetworkPolicySkipped?: Schema$GkeNetworkPolicySkippedInfo;
     /**
      * Display information of a Google Kubernetes Engine Pod.
      */
@@ -2263,7 +2318,7 @@ export namespace networkmanagement_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -2293,7 +2348,7 @@ export namespace networkmanagement_v1 {
      *
      *   // Do the magic
      *   const res = await networkmanagement.organizations.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -2420,7 +2475,7 @@ export namespace networkmanagement_v1 {
   }
   export interface Params$Resource$Organizations$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -4093,7 +4148,7 @@ export namespace networkmanagement_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4123,7 +4178,7 @@ export namespace networkmanagement_v1 {
      *
      *   // Do the magic
      *   const res = await networkmanagement.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -4250,7 +4305,7 @@ export namespace networkmanagement_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
