@@ -1216,6 +1216,10 @@ export namespace vmwareengine_v1 {
      * Optional. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string | null;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean | null;
   }
   /**
    * Network configuration in the consumer project with which the peering has to be done.
@@ -1989,6 +1993,10 @@ export namespace vmwareengine_v1 {
      * Optional. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string | null;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean | null;
   }
   /**
    * Describes Private cloud Upgrade.
@@ -2491,7 +2499,7 @@ export namespace vmwareengine_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4225,6 +4233,8 @@ export namespace vmwareengine_v1 {
      *     parent: 'projects/my-project/locations/my-location',
      *     // Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -4835,6 +4845,8 @@ export namespace vmwareengine_v1 {
      *     requestId: 'placeholder-value',
      *     // Required. Field mask is used to specify the fields to be overwritten in the `NetworkPeering` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *     updateMask: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -4977,6 +4989,10 @@ export namespace vmwareengine_v1 {
      * Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -5034,6 +5050,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `NetworkPeering` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -5266,6 +5286,8 @@ export namespace vmwareengine_v1 {
      *     parent: 'projects/my-project/locations/my-location',
      *     // Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -6020,6 +6042,8 @@ export namespace vmwareengine_v1 {
      *     requestId: 'placeholder-value',
      *     // Required. Field mask is used to specify the fields to be overwritten in the `NetworkPolicy` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *     updateMask: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -6156,6 +6180,10 @@ export namespace vmwareengine_v1 {
      * Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -6227,6 +6255,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `NetworkPolicy` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -6280,6 +6312,8 @@ export namespace vmwareengine_v1 {
      *           'projects/my-project/locations/my-location/networkPolicies/my-networkPolicie',
      *         // A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *         requestId: 'placeholder-value',
+     *         // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -6901,6 +6935,8 @@ export namespace vmwareengine_v1 {
      *         requestId: 'placeholder-value',
      *         // Required. Field mask is used to specify the fields to be overwritten in the `ExternalAccessRule` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *         updateMask: 'placeholder-value',
+     *         // Optional. If set to `true`, only validates the request but doesn’t execute the// request. If set to `false`, validates and executes the request.
+     *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -7042,6 +7078,10 @@ export namespace vmwareengine_v1 {
      * A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -7099,6 +7139,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `ExternalAccessRule` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the// request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -7965,7 +8009,7 @@ export namespace vmwareengine_v1 {
      *     privateCloudId: 'placeholder-value',
      *     // Optional. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
-     *     // Optional. True if you want the request to be validated and not executed; false otherwise.
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
@@ -8860,6 +8904,8 @@ export namespace vmwareengine_v1 {
      *     requestId: 'placeholder-value',
      *     // Required. Field mask is used to specify the fields to be overwritten in the `PrivateCloud` resource by the update. The fields specified in `updateMask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *     updateMask: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -10360,7 +10406,7 @@ export namespace vmwareengine_v1 {
      */
     requestId?: string;
     /**
-     * Optional. True if you want the request to be validated and not executed; false otherwise.
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      */
     validateOnly?: boolean;
 
@@ -10444,6 +10490,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `PrivateCloud` resource by the update. The fields specified in `updateMask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -10601,7 +10651,7 @@ export namespace vmwareengine_v1 {
      *         'projects/my-project/locations/my-location/privateClouds/my-privateCloud',
      *       // Optional. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *       requestId: 'placeholder-value',
-     *       // Optional. True if you want the request to be validated and not executed; false otherwise.
+     *       // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      *       validateOnly: 'placeholder-value',
      *
      *       // Request body metadata
@@ -11355,7 +11405,8 @@ export namespace vmwareengine_v1 {
      *           // {
      *           //   "datastoreMountConfig": {},
      *           //   "ignoreColocation": false,
-     *           //   "requestId": "my_requestId"
+     *           //   "requestId": "my_requestId",
+     *           //   "validateOnly": false
      *           // }
      *         },
      *       },
@@ -11506,7 +11557,7 @@ export namespace vmwareengine_v1 {
      *       requestId: 'placeholder-value',
      *       // Required. Field mask is used to specify the fields to be overwritten in the `Cluster` resource by the update. The fields specified in the `updateMask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *       updateMask: 'placeholder-value',
-     *       // Optional. True if you want the request to be validated and not executed; false otherwise.
+     *       // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      *       validateOnly: 'placeholder-value',
      *
      *       // Request body metadata
@@ -11978,7 +12029,8 @@ export namespace vmwareengine_v1 {
      *           // request body parameters
      *           // {
      *           //   "datastore": "my_datastore",
-     *           //   "requestId": "my_requestId"
+     *           //   "requestId": "my_requestId",
+     *           //   "validateOnly": false
      *           // }
      *         },
      *       },
@@ -12106,7 +12158,7 @@ export namespace vmwareengine_v1 {
      */
     requestId?: string;
     /**
-     * Optional. True if you want the request to be validated and not executed; false otherwise.
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      */
     validateOnly?: boolean;
 
@@ -12188,7 +12240,7 @@ export namespace vmwareengine_v1 {
      */
     updateMask?: string;
     /**
-     * Optional. True if you want the request to be validated and not executed; false otherwise.
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
      */
     validateOnly?: boolean;
 
@@ -12592,6 +12644,8 @@ export namespace vmwareengine_v1 {
      *           'projects/my-project/locations/my-location/privateClouds/my-privateCloud',
      *         // Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *         requestId: 'placeholder-value',
+     *         // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -13199,6 +13253,8 @@ export namespace vmwareengine_v1 {
      *         requestId: 'placeholder-value',
      *         // Required. Field mask is used to specify the fields to be overwritten in the `ExternalAddress` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *         updateMask: 'placeholder-value',
+     *         // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -13335,6 +13391,10 @@ export namespace vmwareengine_v1 {
      * Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -13392,6 +13452,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `ExternalAddress` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -17311,6 +17375,8 @@ export namespace vmwareengine_v1 {
      *     privateConnectionId: 'placeholder-value',
      *     // Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -17919,6 +17985,8 @@ export namespace vmwareengine_v1 {
      *     requestId: 'placeholder-value',
      *     // Required. Field mask is used to specify the fields to be overwritten in the `PrivateConnection` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      *     updateMask: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -18059,6 +18127,10 @@ export namespace vmwareengine_v1 {
      * Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -18116,6 +18188,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the `PrivateConnection` resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
@@ -18344,6 +18420,8 @@ export namespace vmwareengine_v1 {
      *       parent: 'projects/my-project/locations/my-location',
      *       // Optional. A request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server guarantees that a request doesn't result in creation of duplicate commitments for at least 60 minutes. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *       requestId: 'placeholder-value',
+     *       // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *       validateOnly: 'placeholder-value',
      *       // Required. The user-provided identifier of the new VMware Engine network. This identifier must be unique among VMware Engine network resources within the parent and becomes the final token in the name URI. The identifier must meet the following requirements: * For networks of type LEGACY, adheres to the format: `{region-id\}-default`. Replace `{region-id\}` with the region where you want to create the VMware Engine network. For example, "us-central1-default". * Only contains 1-63 alphanumeric characters and hyphens * Begins with an alphabetical character * Ends with a non-hyphen character * Not formatted as a UUID * Complies with [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034) (section 3.5)
      *       vmwareEngineNetworkId: 'placeholder-value',
      *
@@ -18955,6 +19033,8 @@ export namespace vmwareengine_v1 {
      *     requestId: 'placeholder-value',
      *     // Required. Field mask is used to specify the fields to be overwritten in the VMware Engine network resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten. Only the following fields can be updated: `description`.
      *     updateMask: 'placeholder-value',
+     *     // Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -19088,6 +19168,10 @@ export namespace vmwareengine_v1 {
      */
     requestId?: string;
     /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
+    /**
      * Required. The user-provided identifier of the new VMware Engine network. This identifier must be unique among VMware Engine network resources within the parent and becomes the final token in the name URI. The identifier must meet the following requirements: * For networks of type LEGACY, adheres to the format: `{region-id\}-default`. Replace `{region-id\}` with the region where you want to create the VMware Engine network. For example, "us-central1-default". * Only contains 1-63 alphanumeric characters and hyphens * Begins with an alphabetical character * Ends with a non-hyphen character * Not formatted as a UUID * Complies with [RFC 1034](https://datatracker.ietf.org/doc/html/rfc1034) (section 3.5)
      */
     vmwareEngineNetworkId?: string;
@@ -19152,6 +19236,10 @@ export namespace vmwareengine_v1 {
      * Required. Field mask is used to specify the fields to be overwritten in the VMware Engine network resource by the update. The fields specified in the `update_mask` are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten. Only the following fields can be updated: `description`.
      */
     updateMask?: string;
+    /**
+     * Optional. If set to `true`, only validates the request but doesn’t execute the request. If set to `false`, validates and executes the request.
+     */
+    validateOnly?: boolean;
 
     /**
      * Request body metadata
