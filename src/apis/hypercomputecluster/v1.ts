@@ -167,7 +167,7 @@ export namespace hypercomputecluster_v1 {
      */
     createTime?: string | null;
     /**
-     * Optional. User-provided description of the cluster.
+     * Optional. User-provided description of the cluster. Maximum of 2048 characters.
      */
     description?: string | null;
     /**
@@ -179,7 +179,7 @@ export namespace hypercomputecluster_v1 {
      */
     name?: string | null;
     /**
-     * Optional. Network resources available to the cluster. Must contain at most one value. Keys specify the ID of the network resource by which it can be referenced elsewhere, and must conform to [RFC-1034](https://datatracker.ietf.org/doc/html/rfc1034) (lower-case, alphanumeric, and at most 63 characters).
+     * Optional. Network resources available to the cluster. Must contain exactly one value. Keys specify the ID of the network resource by which it can be referenced elsewhere, and must conform to [RFC-1034](https://datatracker.ietf.org/doc/html/rfc1034) (lower-case, alphanumeric, and at most 63 characters).
      */
     networkResources?: {[key: string]: Schema$NetworkResource} | null;
     /**
@@ -578,7 +578,7 @@ export namespace hypercomputecluster_v1 {
      */
     config?: Schema$NetworkResourceConfig;
     /**
-     * Reference to a network in Google Compute Engine.
+     * Output only. Reference to a network in Google Compute Engine.
      */
     network?: Schema$NetworkReference;
   }
@@ -678,6 +678,10 @@ export namespace hypercomputecluster_v1 {
      * Required. Immutable. Name of the Managed Lustre instance to create, in the format `projects/{project\}/locations/{location\}/instances/{instance\}`
      */
     lustre?: string | null;
+    /**
+     * Optional. Immutable. Throughput of the instance in MB/s/TiB. Valid values are 125, 250, 500, 1000. See [Performance tiers and maximum storage capacities](https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers) for more information.
+     */
+    perUnitStorageThroughput?: string | null;
   }
   /**
    * When set in a NetworkResourceConfig, indicates that a new network should be created.
@@ -958,7 +962,7 @@ export namespace hypercomputecluster_v1 {
    */
   export interface Schema$SlurmNodeSet {
     /**
-     * Optional. ID of the compute resource on which this nodeset will run. Must match a key in the cluster's compute_resources.
+     * Required. ID of the compute resource on which this nodeset will run. Must match a key in the cluster's compute_resources.
      */
     computeId?: string | null;
     /**
@@ -1059,7 +1063,7 @@ export namespace hypercomputecluster_v1 {
    */
   export interface Schema$StorageResource {
     /**
-     * Reference to a Google Cloud Storage bucket. Populated if and only if the storage resource was configured to use Google Cloud Storage.
+     * Output only. Reference to a Google Cloud Storage bucket. Populated if and only if the storage resource was configured to use Google Cloud Storage.
      */
     bucket?: Schema$BucketReference;
     /**
@@ -1067,11 +1071,11 @@ export namespace hypercomputecluster_v1 {
      */
     config?: Schema$StorageResourceConfig;
     /**
-     * Reference to a Filestore instance. Populated if and only if the storage resource was configured to use Filestore.
+     * Output only. Reference to a Filestore instance. Populated if and only if the storage resource was configured to use Filestore.
      */
     filestore?: Schema$FilestoreReference;
     /**
-     * Reference to a Managed Lustre instance. Populated if and only if the storage resource was configured to use Managed Lustre.
+     * Output only. Reference to a Managed Lustre instance. Populated if and only if the storage resource was configured to use Managed Lustre.
      */
     lustre?: Schema$LustreReference;
   }
@@ -1292,7 +1296,7 @@ export namespace hypercomputecluster_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -1322,7 +1326,7 @@ export namespace hypercomputecluster_v1 {
      *
      *   // Do the magic
      *   const res = await hypercomputecluster.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -1449,7 +1453,7 @@ export namespace hypercomputecluster_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
