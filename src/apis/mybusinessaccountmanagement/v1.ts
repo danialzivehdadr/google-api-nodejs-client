@@ -344,7 +344,7 @@ export namespace mybusinessaccountmanagement_v1 {
    */
   export interface Schema$TargetLocation {
     /**
-     * The address of the location to which the user is invited.
+     * The address of the location to which the user is invited. Not always populated.
      */
     address?: string | null;
     /**
