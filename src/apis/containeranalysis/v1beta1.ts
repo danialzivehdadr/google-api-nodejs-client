@@ -125,6 +125,23 @@ export namespace containeranalysis_v1beta1 {
   }
 
   /**
+   * AISkillAnalysisNote provides the metadata of an AI-based skill analysis.
+   */
+  export interface Schema$AISkillAnalysisNote {}
+  /**
+   * AISkillAnalysisOccurrence provides the results of an AI-based skill analysis.
+   */
+  export interface Schema$AISkillAnalysisOccurrence {
+    /**
+     * Findings produced by the analysis.
+     */
+    findings?: Schema$Finding[];
+    /**
+     * Name of the skill that produced this analysis.
+     */
+    skillName?: string | null;
+  }
+  /**
    * An alias to a repo revision.
    */
   export interface Schema$AliasContext {
@@ -573,6 +590,10 @@ export namespace containeranalysis_v1beta1 {
    */
   export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1Artifacts {
     /**
+     * Optional. A list of generic artifacts to be uploaded to Artifact Registry upon successful completion of all build steps. If any artifacts fail to be pushed, the build is marked FAILURE.
+     */
+    genericArtifacts?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsGenericArtifact[];
+    /**
      * Optional. A list of Go modules to be uploaded to Artifact Registry upon successful completion of all build steps. If any objects fail to be pushed, the build is marked FAILURE.
      */
     goModules?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsGoModule[];
@@ -592,6 +613,10 @@ export namespace containeranalysis_v1beta1 {
      * A list of objects to be uploaded to Cloud Storage upon successful completion of all build steps. Files in the workspace matching specified paths globs will be uploaded to the specified Cloud Storage location using the builder service account's credentials. The location and generation of the uploaded objects will be stored in the Build resource's results field. If any objects fail to be pushed, the build is marked FAILURE.
      */
     objects?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsArtifactObjects;
+    /**
+     * Optional. A list of OCI images to be uploaded to Artifact Registry upon successful completion of all build steps. OCI images in the specified paths will be uploaded to the specified Artifact Registry repository using the builder service account's credentials. If any images fail to be pushed, the build is marked FAILURE.
+     */
+    oci?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsOci[];
     /**
      * A list of Python packages to be uploaded to Artifact Registry upon successful completion of all build steps. The build service account credentials will be used to perform the upload. If any objects fail to be pushed, the build is marked FAILURE.
      */
@@ -613,6 +638,19 @@ export namespace containeranalysis_v1beta1 {
      * Output only. Stores timing information for pushing all artifact objects.
      */
     timing?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1TimeSpan;
+  }
+  /**
+   * Generic artifact to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsGenericArtifact {
+    /**
+     * Required. Path to the generic artifact in the build's workspace to be uploaded to Artifact Registry.
+     */
+    folder?: string | null;
+    /**
+     * Required. Registry path to upload the generic artifact to, in the form projects/$PROJECT/locations/$LOCATION/repositories/$REPO/packages/$PACKAGE/versions/$VERSION
+     */
+    registryPath?: string | null;
   }
   /**
    * Go module to upload to Artifact Registry upon successful completion of all build steps. A module refers to all dependencies in a go.mod file.
@@ -684,6 +722,23 @@ export namespace containeranalysis_v1beta1 {
      * Artifact Registry repository, in the form "https://$REGION-npm.pkg.dev/$PROJECT/$REPOSITORY" Npm package in the workspace specified by path will be zipped and uploaded to Artifact Registry with this location as a prefix.
      */
     repository?: string | null;
+  }
+  /**
+   * OCI image to upload to Artifact Registry upon successful completion of all build steps.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1ArtifactsOci {
+    /**
+     * Required. Path on the local file system where to find the container to upload. e.g. /workspace/my-image.tar
+     */
+    file?: string | null;
+    /**
+     * Required. Registry path to upload the container to. e.g. us-east1-docker.pkg.dev/my-project/my-repo/my-image
+     */
+    registryPath?: string | null;
+    /**
+     * Optional. Tags to apply to the uploaded image. e.g. latest, 1.0.0
+     */
+    tags?: string[] | null;
   }
   /**
    * Python package to upload to Artifact Registry upon successful completion of all build steps. A package can encapsulate multiple objects to be uploaded to a single repository.
@@ -990,6 +1045,10 @@ export namespace containeranalysis_v1beta1 {
      */
     pullTiming?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1TimeSpan;
     /**
+     * Declaration of results for this build step.
+     */
+    results?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1StepResult[];
+    /**
      * A shell script to be executed in the step. When script is provided, the user cannot specify the entrypoint or args.
      */
     script?: string | null;
@@ -1017,6 +1076,15 @@ export namespace containeranalysis_v1beta1 {
      * The ID(s) of the step(s) that this build step depends on. This build step will not start until all the build steps in `wait_for` have completed successfully. If `wait_for` is empty, this build step will start when all previous build steps in the `Build.Steps` list have completed successfully.
      */
     waitFor?: string[] | null;
+  }
+  /**
+   * Results for a build step.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1BuildStepResults {
+    /**
+     * Results for a build step.
+     */
+    results?: {[key: string]: string} | null;
   }
   /**
    * A non-fatal problem encountered during the execution of the build.
@@ -1048,6 +1116,10 @@ export namespace containeranalysis_v1beta1 {
      */
     name?: string | null;
     /**
+     * Output only. The OCI media type of the artifact. Non-OCI images, such as Docker images, will have an unspecified value.
+     */
+    ociMediaType?: string | null;
+    /**
      * Output only. Stores timing information for pushing the specified image.
      */
     pushTiming?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1TimeSpan;
@@ -1078,9 +1150,26 @@ export namespace containeranalysis_v1beta1 {
      */
     empty?: boolean | null;
     /**
+     * Represents a generic artifact as a build dependency.
+     */
+    genericArtifact?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1DependencyGenericArtifactDependency;
+    /**
      * Represents a git repository as a build dependency.
      */
     gitSource?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1DependencyGitSourceDependency;
+  }
+  /**
+   * Represents a generic artifact as a build dependency.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1DependencyGenericArtifactDependency {
+    /**
+     * Required. Where the artifact files should be placed on the worker.
+     */
+    destPath?: string | null;
+    /**
+     * Required. The location to download the artifact files from. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    resource?: string | null;
   }
   /**
    * Represents a git repository as a build dependency.
@@ -1265,6 +1354,18 @@ export namespace containeranalysis_v1beta1 {
      */
     buildStepOutputs?: string[] | null;
     /**
+     * Results for build steps. step_id -\>
+     */
+    buildStepResults?: {
+      [
+        key: string
+      ]: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1BuildStepResults;
+    } | null;
+    /**
+     * Output only. Generic artifacts uploaded to Artifact Registry at the end of the build.
+     */
+    genericArtifacts?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1UploadedGenericArtifact[];
+    /**
      * Optional. Go module artifacts uploaded to Artifact Registry at the end of the build.
      */
     goModules?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1UploadedGoModule[];
@@ -1391,6 +1492,23 @@ export namespace containeranalysis_v1beta1 {
     resolvedStorageSourceManifest?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1StorageSourceManifest;
   }
   /**
+   * StepResult is the declaration of a result for a build step.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1StepResult {
+    /**
+     * Optional. The content of the attestation to be generated.
+     */
+    attestationContent?: string | null;
+    /**
+     * Optional. The type of attestation to be generated.
+     */
+    attestationType?: string | null;
+    /**
+     * Required. The name of the result.
+     */
+    name?: string | null;
+  }
+  /**
    * Location of the source in an archive file in Cloud Storage.
    */
   export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1StorageSource {
@@ -1440,6 +1558,35 @@ export namespace containeranalysis_v1beta1 {
      * Start of time span.
      */
     startTime?: string | null;
+  }
+  /**
+   * A generic artifact uploaded to Artifact Registry using the GenericArtifact directive.
+   */
+  export interface Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1UploadedGenericArtifact {
+    /**
+     * Output only. The hash of the whole artifact.
+     */
+    artifactFingerprint?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1FileHashes;
+    /**
+     * Output only. Path to the artifact in Artifact Registry.
+     */
+    artifactRegistryPackage?: string | null;
+    /**
+     * Output only. The file hashes that make up the generic artifact.
+     */
+    fileHashes?: {
+      [
+        key: string
+      ]: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1FileHashes;
+    } | null;
+    /**
+     * Output only. Stores timing information for pushing the specified artifact.
+     */
+    pushTiming?: Schema$ContaineranalysisGoogleDevtoolsCloudbuildV1TimeSpan;
+    /**
+     * Output only. URI of the uploaded artifact. Ex: projects/p1/locations/us/repositories/r1/packages/p1/versions/v1
+     */
+    uri?: string | null;
   }
   /**
    * A Go module artifact uploaded to Artifact Registry using the GoModule directive.
@@ -2033,6 +2180,39 @@ export namespace containeranalysis_v1beta1 {
     notice?: string | null;
   }
   /**
+   * Finding provides details for a single finding within an AISkillAnalysisOccurrence.
+   */
+  export interface Schema$Finding {
+    /**
+     * Category of the finding.
+     */
+    category?: string | null;
+    /**
+     * Detailed description of the finding.
+     */
+    description?: string | null;
+    /**
+     * Path to the file where the finding was detected.
+     */
+    filePath?: string | null;
+    /**
+     * Unique identifier of the rule that produced this finding.
+     */
+    ruleId?: string | null;
+    /**
+     * Severity of the finding.
+     */
+    severity?: string | null;
+    /**
+     * Code snippet relevant to the finding.
+     */
+    snippet?: string | null;
+    /**
+     * Title of the finding.
+     */
+    title?: string | null;
+  }
+  /**
    * A set of properties that uniquely identify a given Docker image.
    */
   export interface Schema$Fingerprint {
@@ -2524,6 +2704,10 @@ export namespace containeranalysis_v1beta1 {
    */
   export interface Schema$Note {
     /**
+     * A note describing an AI Skill analysis.
+     */
+    aiSkillAnalysis?: Schema$AISkillAnalysisNote;
+    /**
      * A note describing an attestation role.
      */
     attestationAuthority?: Schema$Authority;
@@ -2624,6 +2808,10 @@ export namespace containeranalysis_v1beta1 {
    * An instance of an analysis type that has been found on a resource.
    */
   export interface Schema$Occurrence {
+    /**
+     * Describes a specific AI Skill Analysis occurrence.
+     */
+    aiSkillAnalysis?: Schema$AISkillAnalysisOccurrence;
     /**
      * Describes an attestation of an artifact.
      */
@@ -3833,6 +4021,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestationAuthority": {},
      *       //   "baseImage": {},
      *       //   "build": {},
@@ -3864,6 +4053,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -4158,6 +4348,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -4614,6 +4805,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestationAuthority": {},
      *       //   "baseImage": {},
      *       //   "build": {},
@@ -4645,6 +4837,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -5550,6 +5743,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestation": {},
      *       //   "build": {},
      *       //   "createTime": "my_createTime",
@@ -5579,6 +5773,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
@@ -5871,6 +6066,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
@@ -6178,6 +6374,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -6643,6 +6840,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestation": {},
      *       //   "build": {},
      *       //   "createTime": "my_createTime",
@@ -6672,6 +6870,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
@@ -7745,6 +7944,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestationAuthority": {},
      *       //   "baseImage": {},
      *       //   "build": {},
@@ -7776,6 +7976,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -8070,6 +8271,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -8526,6 +8728,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestationAuthority": {},
      *       //   "baseImage": {},
      *       //   "build": {},
@@ -8557,6 +8760,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -9455,6 +9659,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestation": {},
      *       //   "build": {},
      *       //   "createTime": "my_createTime",
@@ -9484,6 +9689,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
@@ -9776,6 +9982,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
@@ -10080,6 +10287,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestationAuthority": {},
      *   //   "baseImage": {},
      *   //   "build": {},
@@ -10543,6 +10751,7 @@ export namespace containeranalysis_v1beta1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aiSkillAnalysis": {},
      *       //   "attestation": {},
      *       //   "build": {},
      *       //   "createTime": "my_createTime",
@@ -10572,6 +10781,7 @@ export namespace containeranalysis_v1beta1 {
      *
      *   // Example response
      *   // {
+     *   //   "aiSkillAnalysis": {},
      *   //   "attestation": {},
      *   //   "build": {},
      *   //   "createTime": "my_createTime",
