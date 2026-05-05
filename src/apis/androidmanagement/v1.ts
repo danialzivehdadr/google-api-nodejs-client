@@ -2657,7 +2657,7 @@ export namespace androidmanagement_v1 {
      */
     privateSpacePolicy?: string | null;
     /**
-     * If true, screen capture is disabled for all users.
+     * If true, screen capture is disabled for all users. This also blocks Circle to Search (https://support.google.com/android/answer/14508957).
      */
     screenCaptureDisabled?: boolean | null;
   }
@@ -2754,7 +2754,7 @@ export namespace androidmanagement_v1 {
      */
     createWindowsDisabled?: boolean | null;
     /**
-     * Controls which apps are allowed to act as credential providers on Android 14 and above. These apps store credentials, see this (https://developer.android.com/training/sign-in/passkeys) and this (https://developer.android.com/reference/androidx/credentials/CredentialManager) for details. See also credentialProviderPolicy.
+     * Optional. Controls which apps are allowed to act as credential providers on Android 14 and above. These apps store credentials, see this (https://developer.android.com/training/sign-in/passkeys) and this (https://developer.android.com/reference/androidx/credentials/CredentialManager) for details. See also credentialProviderPolicy.
      */
     credentialProviderPolicyDefault?: string | null;
     /**
@@ -2886,7 +2886,7 @@ export namespace androidmanagement_v1 {
      */
     networkEscapeHatchEnabled?: boolean | null;
     /**
-     * Whether resetting network settings is disabled.
+     * Whether resetting network settings is disabled. This applies only on fully managed devices. A NonComplianceDetail with MANAGEMENT_MODE is reported for other management modes.
      */
     networkResetDisabled?: boolean | null;
     /**
@@ -2966,7 +2966,7 @@ export namespace androidmanagement_v1 {
      */
     safeBootDisabled?: boolean | null;
     /**
-     * Whether screen capture is disabled.
+     * Whether screen capture is disabled. This also blocks Circle to Search (https://support.google.com/android/answer/14508957).
      */
     screenCaptureDisabled?: boolean | null;
     /**
@@ -3144,7 +3144,7 @@ export namespace androidmanagement_v1 {
    */
   export interface Schema$PrivateDnsSettings {
     /**
-     * Optional. The hostname of the DNS server. This must be set if and only if private_dns_mode is set to PRIVATE_DNS_SPECIFIED_HOST. Supported on Android 10 and above on fully managed devices. A NonComplianceDetail with MANAGEMENT_MODE is reported on other management modes. A NonComplianceDetail with API_LEVEL is reported if the Android version is less than 10. A NonComplianceDetail with PENDING is reported if the device is not connected to a network. A NonComplianceDetail with nonComplianceReason INVALID_VALUE and specificNonComplianceReason PRIVATE_DNS_HOST_NOT_SERVING is reported if the specified host is not a DNS server or not supported on Android. A NonComplianceReason with nonComplianceReason INVALID_VALUE is reported if applying this setting fails for any other reason.
+     * Optional. The hostname of the DNS server. This must be set if and only if private_dns_mode is set to PRIVATE_DNS_SPECIFIED_HOST. Supported on Android 10 and above on fully managed devices. A NonComplianceDetail with MANAGEMENT_MODE is reported on other management modes. A NonComplianceDetail with API_LEVEL is reported if the Android version is less than 10. A NonComplianceDetail with PENDING is reported if the device is not connected to a network. A NonComplianceDetail with nonComplianceReason INVALID_VALUE and specificNonComplianceReason PRIVATE_DNS_HOST_NOT_SERVING is reported if the specified host is not a DNS server or not supported on Android. A NonComplianceDetail with INVALID_VALUE is reported if applying this setting fails for any other reason.
      */
     privateDnsHost?: string | null;
     /**
@@ -3591,10 +3591,6 @@ export namespace androidmanagement_v1 {
    * Configuration for managing system updatesNote: Google Play system updates (https://source.android.com/docs/core/ota/modular-system) (also called Mainline updates) are automatically downloaded but require a device reboot to be installed. Refer to the mainline section in Manage system updates (https://developer.android.com/work/dpc/system-updates#mainline) for further details.
    */
   export interface Schema$SystemUpdate {
-    /**
-     * If this is greater than zero, then this is the number of days after a pending update becoming available that a device can remain compliant, without taking the update. Has no effect otherwise.
-     */
-    allowedDaysWithoutUpdate?: number | null;
     /**
      * If the type is WINDOWED, the end of the maintenance window, measured as the number of minutes after midnight in device's local time. This value must be between 0 and 1439, inclusive. If this value is less than start_minutes, then the maintenance window spans midnight. If the maintenance window specified is smaller than 30 minutes, the actual window is extended to 30 minutes beyond the start time.
      */
