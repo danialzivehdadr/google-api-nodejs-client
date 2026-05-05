@@ -776,6 +776,10 @@ export namespace merchantapi_reports_v1beta {
      */
     productTypeL5?: string | null;
     /**
+     * Store type to which metrics apply. Can be `ONLINE_STORE` or `LOCAL_STORES`. Segment. For `LOCAL_STORES` store type, further segmentation by a specific store is not available.
+     */
+    storeType?: string | null;
+    /**
      * Title of the product. Segment.
      */
     title?: string | null;
