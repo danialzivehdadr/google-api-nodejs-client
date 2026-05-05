@@ -112,6 +112,8 @@ export namespace backupdr_v1 {
    */
   export class Backupdr {
     context: APIRequestContext;
+    folders: Resource$Folders;
+    organizations: Resource$Organizations;
     projects: Resource$Projects;
 
     constructor(options: GlobalOptions, google?: GoogleConfigurable) {
@@ -120,6 +122,8 @@ export namespace backupdr_v1 {
         google,
       };
 
+      this.folders = new Resource$Folders(this.context);
+      this.organizations = new Resource$Organizations(this.context);
       this.projects = new Resource$Projects(this.context);
     }
   }
@@ -467,6 +471,10 @@ export namespace backupdr_v1 {
      */
     expireTime?: string | null;
     /**
+     * Output only. Filestore specific backup properties.
+     */
+    filestoreInstanceBackupProperties?: Schema$FilestoreInstanceBackupProperties;
+    /**
      * Output only. Configuration for a Google Cloud resource.
      */
     gcpBackupPlanInfo?: Schema$GCPBackupPlanInfo;
@@ -767,6 +775,10 @@ export namespace backupdr_v1 {
      */
     backupVaultServiceAccount?: string | null;
     /**
+     * Optional. Defines optional properties specific to backups of disk-based resources, such as Compute Engine. This includes settings like whether to perform a guest flush.
+     */
+    computeInstanceBackupPlanProperties?: Schema$ComputeInstanceBackupPlanProperties;
+    /**
      * Output only. When the `BackupPlan` was created.
      */
     createTime?: string | null;
@@ -774,6 +786,10 @@ export namespace backupdr_v1 {
      * Optional. The description of the `BackupPlan` resource. The description allows for additional details about `BackupPlan` and its use cases to be provided. An example description is the following: "This is a backup plan that performs a daily backup at 6pm and retains data for 3 months". The description must be at most 2048 characters.
      */
     description?: string | null;
+    /**
+     * Optional. Defines optional properties specific to backups of disk-based resources, such as Compute Engine Persistent Disks. This includes settings like whether to perform a guest flush.
+     */
+    diskBackupPlanProperties?: Schema$DiskBackupPlanProperties;
     /**
      * Optional. `etag` is returned from the service in the response. As a user of the service, you may provide an etag value in this field to prevent stale resources.
      */
@@ -1123,6 +1139,15 @@ export namespace backupdr_v1 {
     edition?: string | null;
   }
   /**
+   * --- ComputeInstanceBackupPlanProperties Message ---
+   */
+  export interface Schema$ComputeInstanceBackupPlanProperties {
+    /**
+     * Optional. Indicates whether to perform a guest flush operation before taking a compute backup. When set to false, the system will create crash-consistent backups. Default value is false.
+     */
+    guestFlush?: boolean | null;
+  }
+  /**
    * ComputeInstanceBackupProperties represents Compute Engine instance backup properties.
    */
   export interface Schema$ComputeInstanceBackupProperties {
@@ -1142,6 +1167,10 @@ export namespace backupdr_v1 {
      * A list of guest accelerator cards' type and count to use for instances created from these properties.
      */
     guestAccelerator?: Schema$AcceleratorConfig[];
+    /**
+     * Optional. Indicates whether to perform a guest flush operation before taking a compute backup. When set to false, the system will create crash-consistent backups. Default value is false.
+     */
+    guestFlush?: boolean | null;
     /**
      * KeyRevocationActionType of the instance. Supported options are "STOP" and "NONE". The default value is "NONE" if it is not specified.
      */
@@ -1480,6 +1509,10 @@ export namespace backupdr_v1 {
      */
     diskDatasourceProperties?: Schema$DiskDataSourceProperties;
     /**
+     * Output only. FilestoreInstanceDataSourceProperties has a subset of FileStore instance properties that are useful at the Datasource level.
+     */
+    filestoreInstanceDatasourceProperties?: Schema$FilestoreInstanceDataSourceProperties;
+    /**
      * Output only. Full resource pathname URL of the source Google Cloud resource.
      */
     gcpResourcename?: string | null;
@@ -1504,6 +1537,10 @@ export namespace backupdr_v1 {
      * Output only. The properties of the Cloud SQL instance.
      */
     cloudSqlInstanceProperties?: Schema$CloudSqlInstanceDataSourceReferenceProperties;
+    /**
+     * Output only. The properties of the Filestore instance.
+     */
+    filestoreInstanceProperties?: Schema$FilestoreInstanceDataSourceReferenceProperties;
     /**
      * Output only. The resource name of the Google Cloud resource. Ex: projects/{project\}/zones/{zone\}/instances/{instance\}
      */
@@ -1555,6 +1592,15 @@ export namespace backupdr_v1 {
     totalStoredBytes?: string | null;
   }
   /**
+   * --- DiskBackupPlanProperties Message ---
+   */
+  export interface Schema$DiskBackupPlanProperties {
+    /**
+     * Optional. Indicates whether to perform a guest flush operation before taking a disk backup. When set to false, the system will create crash-consistent backups. Default value is false.
+     */
+    guestFlush?: boolean | null;
+  }
+  /**
    * DiskBackupProperties represents the properties of a Disk backup.
    */
   export interface Schema$DiskBackupProperties {
@@ -1574,6 +1620,10 @@ export namespace backupdr_v1 {
      * Indicates whether the source disk is using confidential compute mode.
      */
     enableConfidentialCompute?: boolean | null;
+    /**
+     * Optional. Defines if the guest flush is enabled for the source disk. Default value is false.
+     */
+    guestFlush?: boolean | null;
     /**
      * A list of guest OS features that are applicable to this backup.
      */
@@ -1887,6 +1937,19 @@ export namespace backupdr_v1 {
     isAssuredWorkload?: boolean | null;
   }
   /**
+   * Response for FetchResourceBackupConfigs.
+   */
+  export interface Schema$FetchResourceBackupConfigsResponse {
+    /**
+     * A token identifying a page of results the server should return.
+     */
+    nextPageToken?: string | null;
+    /**
+     * The list of ResourceBackupConfigs for the specified scope.
+     */
+    resourceBackupConfigs?: Schema$ResourceBackupConfig[];
+  }
+  /**
    * Response message for fetching usable BackupVaults.
    */
   export interface Schema$FetchUsableBackupVaultsResponse {
@@ -1911,6 +1974,41 @@ export namespace backupdr_v1 {
      * Output only. The time when the instance was created.
      */
     instanceCreateTime?: string | null;
+  }
+  /**
+   * FilestoreInstanceBackupProperties represents the properties of a Filestore instance that are backed up by the datasource. .
+   */
+  export interface Schema$FilestoreInstanceBackupProperties {
+    /**
+     * Output only. The source instance of the backup.
+     */
+    sourceInstance?: string | null;
+  }
+  /**
+   * FilestoreInstanceDataSourceProperties represents the properties of a Filestore resource that are stored in the DataSource. .
+   */
+  export interface Schema$FilestoreInstanceDataSourceProperties {
+    /**
+     * Output only. The instance creation timestamp.
+     */
+    instanceCreateTime?: string | null;
+    /**
+     * Output only. Name of the Filestore instance backed up by the datasource.
+     */
+    name?: string | null;
+  }
+  /**
+   * FilestoreInstanceDataSourceReferenceProperties represents the properties of a Filestore resource that are stored in the DataSourceReference. .
+   */
+  export interface Schema$FilestoreInstanceDataSourceReferenceProperties {
+    /**
+     * Output only. The instance creation timestamp.
+     */
+    instanceCreateTime?: string | null;
+    /**
+     * Output only. Name of the Filestore instance backed up by the datasource. Format: projects/{project\}/instances/{instance\}
+     */
+    name?: string | null;
   }
   /**
    * Message for finalizing a Backup.
@@ -2013,6 +2111,43 @@ export namespace backupdr_v1 {
     type?: string | null;
   }
   /**
+   * Represents the metadata of the long-running operation.
+   */
+  export interface Schema$GoogleCloudBackupdrV1OperationMetadata {
+    /**
+     * Output only. AdditionalInfo contains additional Info related to backup plan association resource.
+     */
+    additionalInfo?: {[key: string]: string} | null;
+    /**
+     * Output only. API version used to start the operation.
+     */
+    apiVersion?: string | null;
+    /**
+     * Output only. The time the operation was created.
+     */
+    createTime?: string | null;
+    /**
+     * Output only. The time the operation finished running.
+     */
+    endTime?: string | null;
+    /**
+     * Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have google.longrunning.Operation.error value with a google.rpc.Status.code of 1, corresponding to 'Code.CANCELLED'.
+     */
+    requestedCancellation?: boolean | null;
+    /**
+     * Output only. Human-readable status of the operation, if any.
+     */
+    statusMessage?: string | null;
+    /**
+     * Output only. Server-defined resource path for the target of the operation.
+     */
+    target?: string | null;
+    /**
+     * Output only. Name of the verb executed by the operation.
+     */
+    verb?: string | null;
+  }
+  /**
    * Feature type of the Guest OS.
    */
   export interface Schema$GuestOsFeature {
@@ -2054,6 +2189,10 @@ export namespace backupdr_v1 {
      * Required. The resource type to which the default service config will be applied. Examples include, "compute.googleapis.com/Instance" and "storage.googleapis.com/Bucket".
      */
     resourceType?: string | null;
+    /**
+     * Optional. If set, validates the request and returns the result, but does not actually run it.
+     */
+    validateOnly?: boolean | null;
   }
   /**
    * request message for InitiateBackup.
@@ -2299,6 +2438,9 @@ export namespace backupdr_v1 {
     name?: string | null;
   }
   export interface Schema$LocationMetadata {
+    /**
+     * List of features that are not supported in the location.
+     */
     unsupportedFeatures?: string[] | null;
   }
   /**
@@ -2516,43 +2658,6 @@ export namespace backupdr_v1 {
      * The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.
      */
     response?: {[key: string]: any} | null;
-  }
-  /**
-   * Represents the metadata of the long-running operation.
-   */
-  export interface Schema$OperationMetadata {
-    /**
-     * Output only. AdditionalInfo contains additional Info related to backup plan association resource.
-     */
-    additionalInfo?: {[key: string]: string} | null;
-    /**
-     * Output only. API version used to start the operation.
-     */
-    apiVersion?: string | null;
-    /**
-     * Output only. The time the operation was created.
-     */
-    createTime?: string | null;
-    /**
-     * Output only. The time the operation finished running.
-     */
-    endTime?: string | null;
-    /**
-     * Output only. Identifies whether the user has requested cancellation of the operation. Operations that have successfully been cancelled have google.longrunning.Operation.error value with a google.rpc.Status.code of 1, corresponding to 'Code.CANCELLED'.
-     */
-    requestedCancellation?: boolean | null;
-    /**
-     * Output only. Human-readable status of the operation, if any.
-     */
-    statusMessage?: string | null;
-    /**
-     * Output only. Server-defined resource path for the target of the operation.
-     */
-    target?: string | null;
-    /**
-     * Output only. Name of the verb executed by the operation.
-     */
-    verb?: string | null;
   }
   /**
    * Point in time recovery settings of the backup configuration resource.
@@ -3000,6 +3105,419 @@ export namespace backupdr_v1 {
     thirdPartyOauth2ClientId?: string | null;
   }
 
+  export class Resource$Folders {
+    context: APIRequestContext;
+    locations: Resource$Folders$Locations;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.locations = new Resource$Folders$Locations(this.context);
+    }
+  }
+
+  export class Resource$Folders$Locations {
+    context: APIRequestContext;
+    resourceBackupConfigs: Resource$Folders$Locations$Resourcebackupconfigs;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.resourceBackupConfigs =
+        new Resource$Folders$Locations$Resourcebackupconfigs(this.context);
+    }
+  }
+
+  export class Resource$Folders$Locations$Resourcebackupconfigs {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Fetches ResourceBackupConfigs.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/backupdr.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const backupdr = google.backupdr('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await backupdr.folders.locations.resourceBackupConfigs.fetch({
+     *     // Optional. Filtering results.
+     *     filter: 'placeholder-value',
+     *     // Optional. Hint for how to order the results.
+     *     orderBy: 'placeholder-value',
+     *     // Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     *     pageSize: 'placeholder-value',
+     *     // Optional. A token identifying a page of results the server should return.
+     *     pageToken: 'placeholder-value',
+     *     // Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     *     parent: 'folders/my-folder/locations/my-location',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "resourceBackupConfigs": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    fetch(
+      params: Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    fetch(
+      params?: Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+    >;
+    fetch(
+      params: Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    fetch(
+      params: Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      params: Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      paramsOrCallback?:
+        | Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://backupdr.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v1/{+parent}/resourceBackupConfigs:fetch'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters
+        );
+      }
+    }
+  }
+
+  export interface Params$Resource$Folders$Locations$Resourcebackupconfigs$Fetch extends StandardParameters {
+    /**
+     * Optional. Filtering results.
+     */
+    filter?: string;
+    /**
+     * Optional. Hint for how to order the results.
+     */
+    orderBy?: string;
+    /**
+     * Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     */
+    pageSize?: number;
+    /**
+     * Optional. A token identifying a page of results the server should return.
+     */
+    pageToken?: string;
+    /**
+     * Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     */
+    parent?: string;
+  }
+
+  export class Resource$Organizations {
+    context: APIRequestContext;
+    locations: Resource$Organizations$Locations;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.locations = new Resource$Organizations$Locations(this.context);
+    }
+  }
+
+  export class Resource$Organizations$Locations {
+    context: APIRequestContext;
+    resourceBackupConfigs: Resource$Organizations$Locations$Resourcebackupconfigs;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.resourceBackupConfigs =
+        new Resource$Organizations$Locations$Resourcebackupconfigs(
+          this.context
+        );
+    }
+  }
+
+  export class Resource$Organizations$Locations$Resourcebackupconfigs {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Fetches ResourceBackupConfigs.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/backupdr.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const backupdr = google.backupdr('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await backupdr.organizations.locations.resourceBackupConfigs.fetch({
+     *       // Optional. Filtering results.
+     *       filter: 'placeholder-value',
+     *       // Optional. Hint for how to order the results.
+     *       orderBy: 'placeholder-value',
+     *       // Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     *       pageSize: 'placeholder-value',
+     *       // Optional. A token identifying a page of results the server should return.
+     *       pageToken: 'placeholder-value',
+     *       // Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     *       parent: 'organizations/my-organization/locations/my-location',
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "resourceBackupConfigs": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    fetch(
+      params: Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    fetch(
+      params?: Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+    >;
+    fetch(
+      params: Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    fetch(
+      params: Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      params: Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      paramsOrCallback?:
+        | Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://backupdr.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v1/{+parent}/resourceBackupConfigs:fetch'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters
+        );
+      }
+    }
+  }
+
+  export interface Params$Resource$Organizations$Locations$Resourcebackupconfigs$Fetch extends StandardParameters {
+    /**
+     * Optional. Filtering results.
+     */
+    filter?: string;
+    /**
+     * Optional. Hint for how to order the results.
+     */
+    orderBy?: string;
+    /**
+     * Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     */
+    pageSize?: number;
+    /**
+     * Optional. A token identifying a page of results the server should return.
+     */
+    pageToken?: string;
+    /**
+     * Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     */
+    parent?: string;
+  }
+
   export class Resource$Projects {
     context: APIRequestContext;
     locations: Resource$Projects$Locations;
@@ -3322,7 +3840,7 @@ export namespace backupdr_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -3352,7 +3870,7 @@ export namespace backupdr_v1 {
      *
      *   // Do the magic
      *   const res = await backupdr.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -3484,7 +4002,7 @@ export namespace backupdr_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -4771,8 +5289,10 @@ export namespace backupdr_v1 {
      *       //   "backupRules": [],
      *       //   "backupVault": "my_backupVault",
      *       //   "backupVaultServiceAccount": "my_backupVaultServiceAccount",
+     *       //   "computeInstanceBackupPlanProperties": {},
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
+     *       //   "diskBackupPlanProperties": {},
      *       //   "etag": "my_etag",
      *       //   "labels": {},
      *       //   "logRetentionDays": "my_logRetentionDays",
@@ -5075,8 +5595,10 @@ export namespace backupdr_v1 {
      *   //   "backupRules": [],
      *   //   "backupVault": "my_backupVault",
      *   //   "backupVaultServiceAccount": "my_backupVaultServiceAccount",
+     *   //   "computeInstanceBackupPlanProperties": {},
      *   //   "createTime": "my_createTime",
      *   //   "description": "my_description",
+     *   //   "diskBackupPlanProperties": {},
      *   //   "etag": "my_etag",
      *   //   "labels": {},
      *   //   "logRetentionDays": "my_logRetentionDays",
@@ -5377,8 +5899,10 @@ export namespace backupdr_v1 {
      *       //   "backupRules": [],
      *       //   "backupVault": "my_backupVault",
      *       //   "backupVaultServiceAccount": "my_backupVaultServiceAccount",
+     *       //   "computeInstanceBackupPlanProperties": {},
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
+     *       //   "diskBackupPlanProperties": {},
      *       //   "etag": "my_etag",
      *       //   "labels": {},
      *       //   "logRetentionDays": "my_logRetentionDays",
@@ -9049,6 +9573,7 @@ export namespace backupdr_v1 {
      *   //   "enforcedRetentionEndTime": "my_enforcedRetentionEndTime",
      *   //   "etag": "my_etag",
      *   //   "expireTime": "my_expireTime",
+     *   //   "filestoreInstanceBackupProperties": {},
      *   //   "gcpBackupPlanInfo": {},
      *   //   "gcpResource": {},
      *   //   "kmsKeyVersions": [],
@@ -9365,6 +9890,7 @@ export namespace backupdr_v1 {
      *         //   "enforcedRetentionEndTime": "my_enforcedRetentionEndTime",
      *         //   "etag": "my_etag",
      *         //   "expireTime": "my_expireTime",
+     *         //   "filestoreInstanceBackupProperties": {},
      *         //   "gcpBackupPlanInfo": {},
      *         //   "gcpResource": {},
      *         //   "kmsKeyVersions": [],
@@ -12215,6 +12741,162 @@ export namespace backupdr_v1 {
     }
 
     /**
+     * Fetches ResourceBackupConfigs.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/backupdr.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const backupdr = google.backupdr('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await backupdr.projects.locations.resourceBackupConfigs.fetch({
+     *     // Optional. Filtering results.
+     *     filter: 'placeholder-value',
+     *     // Optional. Hint for how to order the results.
+     *     orderBy: 'placeholder-value',
+     *     // Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     *     pageSize: 'placeholder-value',
+     *     // Optional. A token identifying a page of results the server should return.
+     *     pageToken: 'placeholder-value',
+     *     // Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     *     parent: 'projects/my-project/locations/my-location',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "resourceBackupConfigs": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    fetch(
+      params: Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    fetch(
+      params?: Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+    >;
+    fetch(
+      params: Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    fetch(
+      params: Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      params: Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch,
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      callback: BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+    ): void;
+    fetch(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$FetchResourceBackupConfigsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$FetchResourceBackupConfigsResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://backupdr.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v1/{+parent}/resourceBackupConfigs:fetch'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$FetchResourceBackupConfigsResponse>(
+          parameters
+        );
+      }
+    }
+
+    /**
      * Lists ResourceBackupConfigs.
      * @example
      * ```js
@@ -12372,6 +13054,28 @@ export namespace backupdr_v1 {
     }
   }
 
+  export interface Params$Resource$Projects$Locations$Resourcebackupconfigs$Fetch extends StandardParameters {
+    /**
+     * Optional. Filtering results.
+     */
+    filter?: string;
+    /**
+     * Optional. Hint for how to order the results.
+     */
+    orderBy?: string;
+    /**
+     * Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will use 100 as default. Maximum value is 500 and values above 500 will be coerced to 500.
+     */
+    pageSize?: number;
+    /**
+     * Optional. A token identifying a page of results the server should return.
+     */
+    pageToken?: string;
+    /**
+     * Required. The project, folder or organization and location for which to retrieve resource backup configs. Format: 'projects/{project_id\}/locations/{location\}', 'folders/{folder_id\}/locations/{location\}', or 'organizations/{organization_id\}/locations/{location\}'.
+     */
+    parent?: string;
+  }
   export interface Params$Resource$Projects$Locations$Resourcebackupconfigs$List extends StandardParameters {
     /**
      * Optional. Filtering results.
@@ -12442,7 +13146,8 @@ export namespace backupdr_v1 {
      *       //   "backupPlanLocation": "my_backupPlanLocation",
      *       //   "cloudSqlInstanceInitializationConfig": {},
      *       //   "requestId": "my_requestId",
-     *       //   "resourceType": "my_resourceType"
+     *       //   "resourceType": "my_resourceType",
+     *       //   "validateOnly": false
      *       // }
      *     },
      *   });
