@@ -453,6 +453,10 @@ export namespace workstations_v1 {
    */
   export interface Schema$GceRegionalPersistentDisk {
     /**
+     * Optional. Number of seconds to wait after initially creating or subsequently shutting down the workstation before converting its disk into a snapshot. This generally saves costs at the expense of greater startup time on next workstation start, as the service will need to create a disk from the archival snapshot. A value of `"0s"` indicates that the disk will never be archived.
+     */
+    archiveTimeout?: string | null;
+    /**
      * Optional. The [type of the persistent disk](https://cloud.google.com/compute/docs/disks#disk-types) for the home directory. Defaults to `"pd-standard"`.
      */
     diskType?: string | null;
@@ -851,7 +855,7 @@ export namespace workstations_v1 {
      */
     etag?: string | null;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean | null;
   }
@@ -881,7 +885,7 @@ export namespace workstations_v1 {
      */
     etag?: string | null;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean | null;
   }
@@ -1056,6 +1060,14 @@ export namespace workstations_v1 {
      * Output only. Time when this workstation cluster was most recently updated.
      */
     updateTime?: string | null;
+    /**
+     * Optional. Specifies the redirect URL for unauthorized requests received by workstation VMs in this cluster. Redirects to this endpoint will send a base64 encoded `state` query param containing the target workstation name and original request hostname. The endpoint is responsible for retrieving a token using `GenerateAccessToken` and redirecting back to the original hostname with the token.
+     */
+    workstationAuthorizationUrl?: string | null;
+    /**
+     * Optional. Specifies the launch URL for workstations in this cluster. Requests sent to unstarted workstations will be redirected to this URL. Requests redirected to the launch endpoint will be sent with a `workstation` and `project` query parameter containing the full workstation resource name and project ID, respectively. The launch endpoint is responsible for starting the workstation, polling it until it reaches `STATE_RUNNING`, and then issuing a redirect to the workstation's host URL.
+     */
+    workstationLaunchUrl?: string | null;
   }
   /**
    * A workstation configuration resource in the Cloud Workstations API. Workstation configurations act as templates for workstations. The workstation configuration defines details such as the workstation virtual machine (VM) instance type, persistent storage, container image defining environment, which IDE or Code Editor to use, and more. Administrators and platform teams can also use [Identity and Access Management (IAM)](https://cloud.google.com/iam/docs/overview) rules to grant access to teams or to individual developers.
@@ -1328,7 +1340,7 @@ export namespace workstations_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -2159,7 +2171,7 @@ export namespace workstations_v1 {
      *   const res = await workstations.projects.locations.workstationClusters.create({
      *     // Required. Parent resource name.
      *     parent: 'projects/my-project/locations/my-location',
-     *     // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *     validateOnly: 'placeholder-value',
      *     // Required. ID to use for the workstation cluster.
      *     workstationClusterId: 'placeholder-value',
@@ -2186,7 +2198,9 @@ export namespace workstations_v1 {
      *       //   "subnetwork": "my_subnetwork",
      *       //   "tags": {},
      *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
+     *       //   "updateTime": "my_updateTime",
+     *       //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *       //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *       // }
      *     },
      *   });
@@ -2335,7 +2349,7 @@ export namespace workstations_v1 {
      *     force: 'placeholder-value',
      *     // Required. Name of the workstation cluster to delete.
      *     name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
-     *     // Optional. If set, validate the request and preview the review, but do not apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not apply it.
      *     validateOnly: 'placeholder-value',
      *   });
      *   console.log(res.data);
@@ -2499,7 +2513,9 @@ export namespace workstations_v1 {
      *   //   "subnetwork": "my_subnetwork",
      *   //   "tags": {},
      *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime"
+     *   //   "updateTime": "my_updateTime",
+     *   //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *   //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *   // }
      * }
      *
@@ -2785,7 +2801,7 @@ export namespace workstations_v1 {
      *     name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
      *     // Required. Mask that specifies which fields in the workstation cluster should be updated.
      *     updateMask: 'placeholder-value',
-     *     // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
@@ -2810,7 +2826,9 @@ export namespace workstations_v1 {
      *       //   "subnetwork": "my_subnetwork",
      *       //   "tags": {},
      *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
+     *       //   "updateTime": "my_updateTime",
+     *       //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *       //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *       // }
      *     },
      *   });
@@ -2926,7 +2944,7 @@ export namespace workstations_v1 {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -2953,7 +2971,7 @@ export namespace workstations_v1 {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not apply it.
+     * Optional. If set, validate the request and preview the result, but do not apply it.
      */
     validateOnly?: boolean;
   }
@@ -2995,7 +3013,7 @@ export namespace workstations_v1 {
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 
@@ -3052,7 +3070,7 @@ export namespace workstations_v1 {
      *         // Required. Parent resource name.
      *         parent:
      *           'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *         // Required. ID to use for the workstation configuration.
      *         workstationConfigId: 'placeholder-value',
@@ -3238,7 +3256,7 @@ export namespace workstations_v1 {
      *         force: 'placeholder-value',
      *         // Required. Name of the workstation configuration to delete.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *       },
      *     );
@@ -4009,7 +4027,7 @@ export namespace workstations_v1 {
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
      *         // Required. Mask specifying which fields in the workstation configuration should be updated.
      *         updateMask: 'placeholder-value',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
@@ -4466,7 +4484,7 @@ export namespace workstations_v1 {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -4493,7 +4511,7 @@ export namespace workstations_v1 {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
   }
@@ -4559,7 +4577,7 @@ export namespace workstations_v1 {
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 
@@ -4633,7 +4651,7 @@ export namespace workstations_v1 {
      *         // Required. Parent resource name.
      *         parent:
      *           'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *         // Required. ID to use for the workstation.
      *         workstationId: 'placeholder-value',
@@ -4808,7 +4826,7 @@ export namespace workstations_v1 {
      *         etag: 'placeholder-value',
      *         // Required. Name of the workstation to delete.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig/workstations/my-workstation',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *       },
      *     );
@@ -5714,13 +5732,13 @@ export namespace workstations_v1 {
      *   const res =
      *     await workstations.projects.locations.workstationClusters.workstationConfigs.workstations.patch(
      *       {
-     *         // Optional. If set and the workstation configuration is not found, a new workstation configuration is created. In this situation, update_mask is ignored.
+     *         // Optional. If set and the workstation is not found, a new workstation is created. In this situation, update_mask is ignored.
      *         allowMissing: 'placeholder-value',
      *         // Identifier. Full name of this workstation.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig/workstations/my-workstation',
-     *         // Required. Mask specifying which fields in the workstation configuration should be updated.
+     *         // Required. Mask specifying which fields in the workstation should be updated.
      *         updateMask: 'placeholder-value',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
@@ -6471,7 +6489,7 @@ export namespace workstations_v1 {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -6494,7 +6512,7 @@ export namespace workstations_v1 {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
   }
@@ -6559,7 +6577,7 @@ export namespace workstations_v1 {
   }
   export interface Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Patch extends StandardParameters {
     /**
-     * Optional. If set and the workstation configuration is not found, a new workstation configuration is created. In this situation, update_mask is ignored.
+     * Optional. If set and the workstation is not found, a new workstation is created. In this situation, update_mask is ignored.
      */
     allowMissing?: boolean;
     /**
@@ -6567,11 +6585,11 @@ export namespace workstations_v1 {
      */
     name?: string;
     /**
-     * Required. Mask specifying which fields in the workstation configuration should be updated.
+     * Required. Mask specifying which fields in the workstation should be updated.
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 

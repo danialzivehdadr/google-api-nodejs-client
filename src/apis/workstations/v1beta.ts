@@ -661,6 +661,27 @@ export namespace workstations_v1beta {
     workstations?: Schema$Workstation[];
   }
   /**
+   * OAuth token.
+   */
+  export interface Schema$OAuthToken {
+    /**
+     * Required. The OAuth token.
+     */
+    accessToken?: string | null;
+    /**
+     * Optional. The email address encapsulated in the OAuth token.
+     */
+    email?: string | null;
+    /**
+     * Optional. The time the OAuth access token will expire. This should be the time the access token was generated plus the expires_in offset returned from the Access Token Response.
+     */
+    expireTime?: string | null;
+    /**
+     * Optional. The scopes encapsulated in the OAuth token. See https://developers.google.com/identity/protocols/oauth2/scopes for more information.
+     */
+    scopes?: string | null;
+  }
+  /**
    * This resource represents a long-running operation that is the result of a network API call.
    */
   export interface Schema$Operation {
@@ -791,6 +812,15 @@ export namespace workstations_v1beta {
     serviceAttachmentUri?: string | null;
   }
   /**
+   * Request message for PushCredentials.
+   */
+  export interface Schema$PushCredentialsRequest {
+    /**
+     * Optional. Credentials used by Cloud Client Libraries, Google API Client Libraries, and other tooling within the user conainer: https://cloud.google.com/docs/authentication/application-default-credentials
+     */
+    applicationDefaultCredentials?: Schema$OAuthToken;
+  }
+  /**
    * A readiness check to be performed on a workstation.
    */
   export interface Schema$ReadinessCheck {
@@ -855,7 +885,7 @@ export namespace workstations_v1beta {
      */
     etag?: string | null;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean | null;
   }
@@ -885,7 +915,7 @@ export namespace workstations_v1beta {
      */
     etag?: string | null;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean | null;
   }
@@ -1101,6 +1131,14 @@ export namespace workstations_v1beta {
      * Output only. Time when this workstation cluster was most recently updated.
      */
     updateTime?: string | null;
+    /**
+     * Optional. Specifies the redirect URL for unauthorized requests received by workstation VMs in this cluster. Redirects to this endpoint will send a base64 encoded `state` query param containing the target workstation name and original request hostname. The endpoint is responsible for retrieving a token using `GenerateAccessToken` and redirecting back to the original hostname with the token.
+     */
+    workstationAuthorizationUrl?: string | null;
+    /**
+     * Optional. Specifies the launch URL for workstations in this cluster. Requests sent to unstarted workstations will be redirected to this URL. Requests redirected to the launch endpoint will be sent with a `workstation` and `project` query parameter containing the full workstation resource name and project ID, respectively. The launch endpoint is responsible for starting the workstation, polling it until it reaches `STATE_RUNNING`, and then issuing a redirect to the workstation's host URL.
+     */
+    workstationLaunchUrl?: string | null;
   }
   /**
    * A workstation configuration resource in the Cloud Workstations API. Workstation configurations act as templates for workstations. The workstation configuration defines details such as the workstation virtual machine (VM) instance type, persistent storage, container image defining environment, which IDE or Code Editor to use, and more. Administrators and platform teams can also use [Identity and Access Management (IAM)](https://cloud.google.com/iam/docs/overview) rules to grant access to teams or to individual developers.
@@ -1146,6 +1184,10 @@ export namespace workstations_v1beta {
      * Optional. Whether to enable Linux `auditd` logging on the workstation. When enabled, a service_account must also be specified that has `roles/logging.logWriter` and `roles/monitoring.metricWriter` on the project. Operating system audit logging is distinct from [Cloud Audit Logs](https://cloud.google.com/workstations/docs/audit-logging) and [Container output logging](https://cloud.google.com/workstations/docs/container-output-logging#overview). Operating system audit logs are available in the [Cloud Logging](https://cloud.google.com/logging/docs) console by querying: resource.type="gce_instance" log_name:"/logs/linux-auditd"
      */
     enableAuditAgent?: boolean | null;
+    /**
+     * Optional. Enables pushing user provided credentials to Workstations by calling workstations.pushCredentials. If application_default_credentials are supplied to pushCredentials, the provided token is returned when tools and applications running in the user container make a request for Default Application Credentials. Please note that any credentials supplied are made available to all users with access to the workstation.
+     */
+    enablePushingCredentials?: boolean | null;
     /**
      * Immutable. Encrypts resources of this workstation configuration using a customer-managed encryption key (CMEK). If specified, the boot disk of the Compute Engine instance and the persistent disk are encrypted using this encryption key. If this field is not set, the disks are encrypted using a generated key. Customer-managed encryption keys do not protect disk metadata. If the customer-managed encryption key is rotated, when the workstation instance is stopped, the system attempts to recreate the persistent disk with the new version of the key. Be sure to keep older versions of the key until the persistent disk is recreated. Otherwise, data on the persistent disk might be lost. If the encryption key is revoked, the workstation session automatically stops within 7 hours. Immutable after the workstation configuration is created.
      */
@@ -1904,7 +1946,7 @@ export namespace workstations_v1beta {
      *   const res = await workstations.projects.locations.workstationClusters.create({
      *     // Required. Parent resource name.
      *     parent: 'projects/my-project/locations/my-location',
-     *     // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *     validateOnly: 'placeholder-value',
      *     // Required. ID to use for the workstation cluster.
      *     workstationClusterId: 'placeholder-value',
@@ -1933,7 +1975,9 @@ export namespace workstations_v1beta {
      *       //   "subnetwork": "my_subnetwork",
      *       //   "tags": {},
      *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
+     *       //   "updateTime": "my_updateTime",
+     *       //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *       //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *       // }
      *     },
      *   });
@@ -2082,7 +2126,7 @@ export namespace workstations_v1beta {
      *     force: 'placeholder-value',
      *     // Required. Name of the workstation cluster to delete.
      *     name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
-     *     // Optional. If set, validate the request and preview the review, but do not apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not apply it.
      *     validateOnly: 'placeholder-value',
      *   });
      *   console.log(res.data);
@@ -2248,7 +2292,9 @@ export namespace workstations_v1beta {
      *   //   "subnetwork": "my_subnetwork",
      *   //   "tags": {},
      *   //   "uid": "my_uid",
-     *   //   "updateTime": "my_updateTime"
+     *   //   "updateTime": "my_updateTime",
+     *   //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *   //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *   // }
      * }
      *
@@ -2534,7 +2580,7 @@ export namespace workstations_v1beta {
      *     name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
      *     // Required. Mask that specifies which fields in the workstation cluster should be updated.
      *     updateMask: 'placeholder-value',
-     *     // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *     // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *     validateOnly: 'placeholder-value',
      *
      *     // Request body metadata
@@ -2561,7 +2607,9 @@ export namespace workstations_v1beta {
      *       //   "subnetwork": "my_subnetwork",
      *       //   "tags": {},
      *       //   "uid": "my_uid",
-     *       //   "updateTime": "my_updateTime"
+     *       //   "updateTime": "my_updateTime",
+     *       //   "workstationAuthorizationUrl": "my_workstationAuthorizationUrl",
+     *       //   "workstationLaunchUrl": "my_workstationLaunchUrl"
      *       // }
      *     },
      *   });
@@ -2677,7 +2725,7 @@ export namespace workstations_v1beta {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -2704,7 +2752,7 @@ export namespace workstations_v1beta {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not apply it.
+     * Optional. If set, validate the request and preview the result, but do not apply it.
      */
     validateOnly?: boolean;
   }
@@ -2746,7 +2794,7 @@ export namespace workstations_v1beta {
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 
@@ -2803,7 +2851,7 @@ export namespace workstations_v1beta {
      *         // Required. Parent resource name.
      *         parent:
      *           'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *         // Required. ID to use for the workstation configuration.
      *         workstationConfigId: 'placeholder-value',
@@ -2822,6 +2870,7 @@ export namespace workstations_v1beta {
      *           //   "disableTcpConnections": false,
      *           //   "displayName": "my_displayName",
      *           //   "enableAuditAgent": false,
+     *           //   "enablePushingCredentials": false,
      *           //   "encryptionKey": {},
      *           //   "ephemeralDirectories": [],
      *           //   "etag": "my_etag",
@@ -2992,7 +3041,7 @@ export namespace workstations_v1beta {
      *         force: 'placeholder-value',
      *         // Required. Name of the workstation configuration to delete.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *       },
      *     );
@@ -3152,6 +3201,7 @@ export namespace workstations_v1beta {
      *   //   "disableTcpConnections": false,
      *   //   "displayName": "my_displayName",
      *   //   "enableAuditAgent": false,
+     *   //   "enablePushingCredentials": false,
      *   //   "encryptionKey": {},
      *   //   "ephemeralDirectories": [],
      *   //   "etag": "my_etag",
@@ -3766,7 +3816,7 @@ export namespace workstations_v1beta {
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
      *         // Required. Mask specifying which fields in the workstation configuration should be updated.
      *         updateMask: 'placeholder-value',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
@@ -3783,6 +3833,7 @@ export namespace workstations_v1beta {
      *           //   "disableTcpConnections": false,
      *           //   "displayName": "my_displayName",
      *           //   "enableAuditAgent": false,
+     *           //   "enablePushingCredentials": false,
      *           //   "encryptionKey": {},
      *           //   "ephemeralDirectories": [],
      *           //   "etag": "my_etag",
@@ -4226,7 +4277,7 @@ export namespace workstations_v1beta {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -4253,7 +4304,7 @@ export namespace workstations_v1beta {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
   }
@@ -4319,7 +4370,7 @@ export namespace workstations_v1beta {
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 
@@ -4393,7 +4444,7 @@ export namespace workstations_v1beta {
      *         // Required. Parent resource name.
      *         parent:
      *           'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *         // Required. ID to use for the workstation.
      *         workstationId: 'placeholder-value',
@@ -4573,7 +4624,7 @@ export namespace workstations_v1beta {
      *         etag: 'placeholder-value',
      *         // Required. Name of the workstation to delete.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig/workstations/my-workstation',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *       },
      *     );
@@ -5482,13 +5533,13 @@ export namespace workstations_v1beta {
      *   const res =
      *     await workstations.projects.locations.workstationClusters.workstationConfigs.workstations.patch(
      *       {
-     *         // Optional. If set and the workstation configuration is not found, a new workstation configuration is created. In this situation, update_mask is ignored.
+     *         // Optional. If set and the workstation is not found, a new workstation is created. In this situation, update_mask is ignored.
      *         allowMissing: 'placeholder-value',
      *         // Identifier. Full name of this workstation.
      *         name: 'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig/workstations/my-workstation',
-     *         // Required. Mask specifying which fields in the workstation configuration should be updated.
+     *         // Required. Mask specifying which fields in the workstation should be updated.
      *         updateMask: 'placeholder-value',
-     *         // Optional. If set, validate the request and preview the review, but do not actually apply it.
+     *         // Optional. If set, validate the request and preview the result, but do not actually apply it.
      *         validateOnly: 'placeholder-value',
      *
      *         // Request body metadata
@@ -5614,6 +5665,160 @@ export namespace workstations_v1beta {
         params,
         requiredParams: ['name'],
         pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Pushes credentials to a running workstation on behalf of a user. Once complete, supported credential types (application_default_credentials) are made available to processes running in the user container.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/workstations.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const workstations = google.workstations('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await workstations.projects.locations.workstationClusters.workstationConfigs.workstations.pushCredentials(
+     *       {
+     *         // Required. Name of the workstation for which the credentials should be pushed.
+     *         workstation:
+     *           'projects/my-project/locations/my-location/workstationClusters/my-workstationCluster/workstationConfigs/my-workstationConfig/workstations/my-workstation',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {
+     *           //   "applicationDefaultCredentials": {}
+     *           // }
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    pushCredentials(
+      params: Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    pushCredentials(
+      params?: Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    pushCredentials(
+      params: Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    pushCredentials(
+      params: Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    pushCredentials(
+      params: Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    pushCredentials(callback: BodyResponseCallback<Schema$Operation>): void;
+    pushCredentials(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://workstations.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+workstation}:pushCredentials').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['workstation'],
+        pathParams: ['workstation'],
         context: this.context,
       };
       if (callback) {
@@ -6250,7 +6455,7 @@ export namespace workstations_v1beta {
      */
     parent?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
     /**
@@ -6273,7 +6478,7 @@ export namespace workstations_v1beta {
      */
     name?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
   }
@@ -6338,7 +6543,7 @@ export namespace workstations_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Patch extends StandardParameters {
     /**
-     * Optional. If set and the workstation configuration is not found, a new workstation configuration is created. In this situation, update_mask is ignored.
+     * Optional. If set and the workstation is not found, a new workstation is created. In this situation, update_mask is ignored.
      */
     allowMissing?: boolean;
     /**
@@ -6346,11 +6551,11 @@ export namespace workstations_v1beta {
      */
     name?: string;
     /**
-     * Required. Mask specifying which fields in the workstation configuration should be updated.
+     * Required. Mask specifying which fields in the workstation should be updated.
      */
     updateMask?: string;
     /**
-     * Optional. If set, validate the request and preview the review, but do not actually apply it.
+     * Optional. If set, validate the request and preview the result, but do not actually apply it.
      */
     validateOnly?: boolean;
 
@@ -6358,6 +6563,17 @@ export namespace workstations_v1beta {
      * Request body metadata
      */
     requestBody?: Schema$Workstation;
+  }
+  export interface Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Pushcredentials extends StandardParameters {
+    /**
+     * Required. Name of the workstation for which the credentials should be pushed.
+     */
+    workstation?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$PushCredentialsRequest;
   }
   export interface Params$Resource$Projects$Locations$Workstationclusters$Workstationconfigs$Workstations$Setiampolicy extends StandardParameters {
     /**
