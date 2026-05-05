@@ -102,7 +102,7 @@ export namespace firebasedataconnect_v1beta {
   /**
    * Firebase Data Connect API
    *
-   * Firebase Data Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.
+   * Firebase SQL Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.
    *
    * @example
    * ```js
@@ -200,7 +200,7 @@ export namespace firebasedataconnect_v1beta {
     updateTime?: string | null;
   }
   /**
-   * Data Connect specific properties for a path under response.data.
+   * SQL Connect specific properties for a path under response.data.
    */
   export interface Schema$DataConnectProperties {
     /**
@@ -221,7 +221,7 @@ export namespace firebasedataconnect_v1beta {
     path?: any[] | null;
   }
   /**
-   * A data source that backs Firebase Data Connect services.
+   * A data source that backs Firebase SQL Connect services.
    */
   export interface Schema$Datasource {
     /**
@@ -238,7 +238,7 @@ export namespace firebasedataconnect_v1beta {
    */
   export interface Schema$Empty {}
   /**
-   * The ExecuteMutation request to Firebase Data Connect.
+   * The ExecuteMutation request to Firebase SQL Connect.
    */
   export interface Schema$ExecuteMutationRequest {
     /**
@@ -251,7 +251,7 @@ export namespace firebasedataconnect_v1beta {
     variables?: {[key: string]: any} | null;
   }
   /**
-   * The ExecuteMutation response from Firebase Data Connect.
+   * The ExecuteMutation response from Firebase SQL Connect.
    */
   export interface Schema$ExecuteMutationResponse {
     /**
@@ -268,7 +268,7 @@ export namespace firebasedataconnect_v1beta {
     extensions?: Schema$GraphqlResponseExtensions;
   }
   /**
-   * The ExecuteQuery request to Firebase Data Connect.
+   * The ExecuteQuery request to Firebase SQL Connect.
    */
   export interface Schema$ExecuteQueryRequest {
     /**
@@ -281,7 +281,7 @@ export namespace firebasedataconnect_v1beta {
     variables?: {[key: string]: any} | null;
   }
   /**
-   * The ExecuteQuery response from Firebase Data Connect.
+   * The ExecuteQuery response from Firebase SQL Connect.
    */
   export interface Schema$ExecuteQueryResponse {
     /**
@@ -311,7 +311,7 @@ export namespace firebasedataconnect_v1beta {
     path?: string | null;
   }
   /**
-   * GraphqlError conforms to the GraphQL error spec. https://spec.graphql.org/draft/#sec-Errors Firebase Data Connect API surfaces `GraphqlError` in various APIs: - Upon compile error, `UpdateSchema` and `UpdateConnector` return Code.Invalid_Argument with a list of `GraphqlError` in error details. - Upon query compile error, `ExecuteGraphql`, `ExecuteGraphqlRead` and `IntrospectGraphql` return Code.OK with a list of `GraphqlError` in response body. - Upon query execution error, `ExecuteGraphql`, `ExecuteGraphqlRead`, `ExecuteMutation`, `ExecuteQuery`, `IntrospectGraphql`, `ImpersonateQuery` and `ImpersonateMutation` all return Code.OK with a list of `GraphqlError` in response body.
+   * GraphqlError conforms to the GraphQL error spec. https://spec.graphql.org/draft/#sec-Errors Firebase SQL Connect API surfaces `GraphqlError` in various APIs: - Upon compile error, `UpdateSchema` and `UpdateConnector` return Code.Invalid_Argument with a list of `GraphqlError` in error details. - Upon query compile error, `ExecuteGraphql`, `ExecuteGraphqlRead` and `IntrospectGraphql` return Code.OK with a list of `GraphqlError` in response body. - Upon query execution error, `ExecuteGraphql`, `ExecuteGraphqlRead`, `ExecuteMutation`, `ExecuteQuery`, `IntrospectGraphql`, `ImpersonateQuery` and `ImpersonateMutation` all return Code.OK with a list of `GraphqlError` in response body.
    */
   export interface Schema$GraphqlError {
     /**
@@ -340,7 +340,7 @@ export namespace firebasedataconnect_v1beta {
      */
     code?: string | null;
     /**
-     * More detailed error message to assist debugging. It contains application business logic that are inappropriate to leak publicly. In the emulator, Data Connect API always includes it to assist local development and debugging. In the backend, ConnectorService always hides it. GraphqlService without impersonation always include it. GraphqlService with impersonation includes it only if explicitly opted-in with `include_debug_details` in `GraphqlRequestExtensions`.
+     * More detailed error message to assist debugging. It contains application business logic that are inappropriate to leak publicly. In the emulator, SQL Connect API always includes it to assist local development and debugging. In the backend, ConnectorService always hides it. GraphqlService without impersonation always include it. GraphqlService with impersonation includes it only if explicitly opted-in with `include_debug_details` in `GraphqlRequestExtensions`.
      */
     debugDetails?: string | null;
     /**
@@ -357,7 +357,7 @@ export namespace firebasedataconnect_v1beta {
     workarounds?: Schema$Workaround[];
   }
   /**
-   * The GraphQL request to Firebase Data Connect. It strives to match the GraphQL over HTTP spec. https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#post
+   * The GraphQL request to Firebase SQL Connect. It strives to match the GraphQL over HTTP spec. https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#post
    */
   export interface Schema$GraphqlRequest {
     /**
@@ -387,7 +387,7 @@ export namespace firebasedataconnect_v1beta {
     impersonate?: Schema$Impersonation;
   }
   /**
-   * The GraphQL response from Firebase Data Connect. It strives to match the GraphQL over HTTP spec. Note: Firebase Data Connect always responds with `Content-Type: application/json`. https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#body
+   * The GraphQL response from Firebase SQL Connect. It strives to match the GraphQL over HTTP spec. Note: Firebase SQL Connect always responds with `Content-Type: application/json`. https://github.com/graphql/graphql-over-http/blob/main/spec/GraphQLOverHTTP.md#body
    */
   export interface Schema$GraphqlResponse {
     /**
@@ -408,7 +408,7 @@ export namespace firebasedataconnect_v1beta {
    */
   export interface Schema$GraphqlResponseExtensions {
     /**
-     * Data Connect specific GraphQL extension, a list of paths and properties.
+     * SQL Connect specific GraphQL extension, a list of paths and properties.
      */
     dataConnect?: Schema$DataConnectProperties[];
   }
@@ -426,7 +426,7 @@ export namespace firebasedataconnect_v1beta {
     uri?: string | null;
   }
   /**
-   * The Impersonate request to Firebase Data Connect.
+   * The Impersonate request to Firebase SQL Connect.
    */
   export interface Schema$ImpersonateRequest {
     /**
@@ -636,9 +636,13 @@ export namespace firebasedataconnect_v1beta {
      */
     database?: string | null;
     /**
-     * Output only. Ephemeral is true if this data connect service is served from temporary in-memory emulation of Postgres. While Cloud SQL is being provisioned, the data connect service provides the ephemeral service to help developers get started. Once the Cloud SQL is provisioned, Data Connect service will transfer its data on a best-effort basis to the Cloud SQL instance. WARNING: Ephemeral data sources will expire after 24 hour. The data will be lost if they aren't transferred to the Cloud SQL instance. WARNING: When `ephemeral=true`, mutations to the database are not guaranteed to be durably persisted, even if an OK status code is returned. All or parts of the data may be lost or reverted to earlier versions.
+     * Output only. Ephemeral is true if this SQL Connect service is served from temporary in-memory emulation of Postgres. While Cloud SQL is being provisioned, the SQL Connect service provides the ephemeral service to help developers get started. Once the Cloud SQL is provisioned, SQL Connect service will transfer its data on a best-effort basis to the Cloud SQL instance. WARNING: Ephemeral data sources will expire after 24 hour. The data will be lost if they aren't transferred to the Cloud SQL instance. WARNING: When `ephemeral=true`, mutations to the database are not guaranteed to be durably persisted, even if an OK status code is returned. All or parts of the data may be lost or reverted to earlier versions.
      */
     ephemeral?: boolean | null;
+    /**
+     * Optional. User-configured PostgreSQL schema. Defaults to "public" if not specified.
+     */
+    schema?: string | null;
     /**
      * Optional. Configure how to perform Postgresql schema migration.
      */
@@ -653,7 +657,7 @@ export namespace firebasedataconnect_v1beta {
     unlinked?: boolean | null;
   }
   /**
-   * The application schema of a Firebase Data Connect service.
+   * The application schema of a Firebase SQL Connect service.
    */
   export interface Schema$Schema {
     /**
@@ -702,7 +706,7 @@ export namespace firebasedataconnect_v1beta {
     updateTime?: string | null;
   }
   /**
-   * A Firebase Data Connect service.
+   * A Firebase SQL Connect service.
    */
   export interface Schema$Service {
     /**
@@ -726,7 +730,7 @@ export namespace firebasedataconnect_v1beta {
      */
     labels?: {[key: string]: string} | null;
     /**
-     * Identifier. The relative resource name of the Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase Data Connect and does not correspond to any of the instance IDs of the underlying data source connections.
+     * Identifier. The relative resource name of the Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase SQL Connect and does not correspond to any of the instance IDs of the underlying data source connections.
      */
     name?: string | null;
     /**
@@ -960,7 +964,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -990,7 +994,7 @@ export namespace firebasedataconnect_v1beta {
      *
      *   // Do the magic
      *   const res = await firebasedataconnect.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -1117,7 +1121,7 @@ export namespace firebasedataconnect_v1beta {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -2083,7 +2087,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Execute any GraphQL query and mutation against the Firebase Data Connect's generated GraphQL schema. Grants full read and write access to the connected data sources. Note: Use introspection query to explore the generated GraphQL schema.
+     * Execute any GraphQL query or mutation against the Firebase SQL Connect's generated GraphQL schema. Grants full read and write access to the connected data sources. Note: Use introspection query to explore the generated GraphQL schema.
      * @example
      * ```js
      * // Before running the sample:
@@ -2114,7 +2118,7 @@ export namespace firebasedataconnect_v1beta {
      *   // Do the magic
      *   const res =
      *     await firebasedataconnect.projects.locations.services.executeGraphql({
-     *       // Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     *       // Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      *       name: 'projects/my-project/locations/my-location/services/my-service',
      *
      *       // Request body metadata
@@ -2238,7 +2242,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Execute any GraphQL query against the Firebase Data Connect's generated GraphQL schema. Grants full read to the connected data sources. `ExecuteGraphqlRead` is identical to `ExecuteGraphql` except it only accepts read-only query.
+     * Execute any GraphQL query against the Firebase SQL Connect's generated GraphQL schema. Grants full read to the connected data sources. `ExecuteGraphqlRead` is identical to `ExecuteGraphql` except it only accepts read-only query.
      * @example
      * ```js
      * // Before running the sample:
@@ -2269,7 +2273,7 @@ export namespace firebasedataconnect_v1beta {
      *   // Do the magic
      *   const res =
      *     await firebasedataconnect.projects.locations.services.executeGraphqlRead({
-     *       // Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     *       // Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      *       name: 'projects/my-project/locations/my-location/services/my-service',
      *
      *       // Request body metadata
@@ -2536,7 +2540,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Execute introspection query against the Firebase Data Connect's generated GraphQL schema. GraphQL introspection query provides metadata such as what tables the schema have, what queries and mutations can be performed on the schema, and so on. Read more at https://graphql.org/learn/introspection. IntrospectGraphql can read schema metadata but cannot read rows from Cloud SQL instance, which can be done via ExecuteGraphqlRead.
+     * Execute introspection query against the Firebase SQL Connect's generated GraphQL schema. GraphQL introspection query provides metadata such as what tables the schema have, what queries and mutations can be performed on the schema, and so on. Read more at https://graphql.org/learn/introspection. IntrospectGraphql can read schema metadata but cannot read rows from Cloud SQL instance, which can be done via ExecuteGraphqlRead.
      * @example
      * ```js
      * // Before running the sample:
@@ -2567,7 +2571,7 @@ export namespace firebasedataconnect_v1beta {
      *   // Do the magic
      *   const res =
      *     await firebasedataconnect.projects.locations.services.introspectGraphql({
-     *       // Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     *       // Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      *       name: 'projects/my-project/locations/my-location/services/my-service',
      *
      *       // Request body metadata
@@ -2873,7 +2877,7 @@ export namespace firebasedataconnect_v1beta {
      *   const res = await firebasedataconnect.projects.locations.services.patch({
      *     // Optional. If true and the Service is not found, a new Service will be created. In this case, `update_mask` is ignored.
      *     allowMissing: 'placeholder-value',
-     *     // Identifier. The relative resource name of the Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase Data Connect and does not correspond to any of the instance IDs of the underlying data source connections.
+     *     // Identifier. The relative resource name of the Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase SQL Connect and does not correspond to any of the instance IDs of the underlying data source connections.
      *     name: 'projects/my-project/locations/my-location/services/my-service',
      *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
@@ -3055,7 +3059,7 @@ export namespace firebasedataconnect_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Services$Executegraphql extends StandardParameters {
     /**
-     * Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     * Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      */
     name?: string;
 
@@ -3066,7 +3070,7 @@ export namespace firebasedataconnect_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Services$Executegraphqlread extends StandardParameters {
     /**
-     * Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     * Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      */
     name?: string;
 
@@ -3083,7 +3087,7 @@ export namespace firebasedataconnect_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Services$Introspectgraphql extends StandardParameters {
     /**
-     * Required. The relative resource name of Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
+     * Required. The relative resource name of Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ```
      */
     name?: string;
 
@@ -3120,7 +3124,7 @@ export namespace firebasedataconnect_v1beta {
      */
     allowMissing?: boolean;
     /**
-     * Identifier. The relative resource name of the Firebase Data Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase Data Connect and does not correspond to any of the instance IDs of the underlying data source connections.
+     * Identifier. The relative resource name of the Firebase SQL Connect service, in the format: ``` projects/{project\}/locations/{location\}/services/{service\} ``` Note that the service ID is specific to Firebase SQL Connect and does not correspond to any of the instance IDs of the underlying data source connections.
      */
     name?: string;
     /**
@@ -3929,7 +3933,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Impersonate a mutation defined on a Firebase Data Connect connector. It grants the admin SDK access to mutations defined in the given connector. The caller can choose to impersonate a particular Firebase Auth user, or skip @auth completely.
+     * Impersonate a mutation defined on a Firebase SQL Connect connector. It grants the admin SDK access to mutations defined in the given connector. The caller can choose to impersonate a particular Firebase Auth user, or skip @auth completely.
      * @example
      * ```js
      * // Before running the sample:
@@ -4085,7 +4089,7 @@ export namespace firebasedataconnect_v1beta {
     }
 
     /**
-     * Impersonate a query defined on a Firebase Data Connect connector. It grants the admin SDK access to queries defined in the given connector. The caller can choose to impersonate a particular Firebase Auth user, or skip @auth completely.
+     * Impersonate a query defined on a Firebase SQL Connect connector. It grants the admin SDK access to queries defined in the given connector. The caller can choose to impersonate a particular Firebase Auth user, or skip @auth completely.
      * @example
      * ```js
      * // Before running the sample:
