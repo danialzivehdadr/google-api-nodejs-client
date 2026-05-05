@@ -77,7 +77,7 @@
       "version": "v1"
     },
     {
-      "description": "Accesses the latest features for managing Authorized Buyers accounts, Real-Time Bidding configurations and auction metrics, and Marketplace programmatic deals.",
+      "description": "Access the latest features for managing Authorized Buyers accounts, Real-Time Bidding configurations and auction metrics, and Marketplace programmatic deals.",
       "discoveryRestUrl": "https://adexchangebuyer.googleapis.com/$discovery/rest?version=v2beta1",
       "documentationLink": "https://developers.google.com/authorized-buyers/apis/reference/rest/",
       "icons": {
@@ -242,7 +242,22 @@
       "version": "v1"
     },
     {
-      "description": "Train high-quality custom machine learning models with minimal machine learning expertise and effort.",
+      "description": "Agent Registry is a centralized, unified catalog that lets you store, discover, and govern Model Context Protocol (MCP) servers, tools, and AI agents within Google Cloud.",
+      "discoveryRestUrl": "https://agentregistry.googleapis.com/$discovery/rest?version=v1alpha",
+      "documentationLink": "https://docs.cloud.google.com/agent-registry/overview",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "agentregistry:v1alpha",
+      "kind": "discovery#directoryItem",
+      "name": "agentregistry",
+      "preferred": true,
+      "title": "Agent Registry API",
+      "version": "v1alpha"
+    },
+    {
+      "description": "Build, scale, govern, and optimize sophisticated agents and models.",
       "discoveryRestUrl": "https://aiplatform.googleapis.com/$discovery/rest?version=v1beta1",
       "documentationLink": "https://cloud.google.com/vertex-ai/",
       "icons": {
@@ -253,11 +268,11 @@
       "kind": "discovery#directoryItem",
       "name": "aiplatform",
       "preferred": false,
-      "title": "Vertex AI API",
+      "title": "Agent Platform API",
       "version": "v1beta1"
     },
     {
-      "description": "Train high-quality custom machine learning models with minimal machine learning expertise and effort.",
+      "description": "Build, scale, govern, and optimize sophisticated agents and models.",
       "discoveryRestUrl": "https://aiplatform.googleapis.com/$discovery/rest?version=v1",
       "documentationLink": "https://cloud.google.com/vertex-ai/",
       "icons": {
@@ -268,7 +283,7 @@
       "kind": "discovery#directoryItem",
       "name": "aiplatform",
       "preferred": true,
-      "title": "Vertex AI API",
+      "title": "Agent Platform API",
       "version": "v1"
     },
     {
@@ -1188,7 +1203,7 @@
     {
       "description": "",
       "discoveryRestUrl": "https://certificatemanager.googleapis.com/$discovery/rest?version=v1",
-      "documentationLink": "https://cloud.google.com/certificate-manager",
+      "documentationLink": "https://docs.cloud.google.com/certificate-manager/docs/overview",
       "icons": {
         "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
         "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
@@ -1203,7 +1218,7 @@
     {
       "description": "",
       "discoveryRestUrl": "https://ces.googleapis.com/$discovery/rest?version=v1beta",
-      "documentationLink": "https://cloud.google.com/customer-engagement-ai/conversational-agents/ps/reference",
+      "documentationLink": "https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps",
       "icons": {
         "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
         "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
@@ -1218,7 +1233,7 @@
     {
       "description": "",
       "discoveryRestUrl": "https://ces.googleapis.com/$discovery/rest?version=v1",
-      "documentationLink": "https://cloud.google.com/customer-engagement-ai/conversational-agents/ps/reference",
+      "documentationLink": "https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps",
       "icons": {
         "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
         "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
@@ -2674,6 +2689,36 @@
       "version": "v1"
     },
     {
+      "description": "The Developer Knowledge API provides access to Google's developer knowledge.",
+      "discoveryRestUrl": "https://developerknowledge.googleapis.com/$discovery/rest?version=v1alpha",
+      "documentationLink": "https://developers.google.com/knowledge",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "developerknowledge:v1alpha",
+      "kind": "discovery#directoryItem",
+      "name": "developerknowledge",
+      "preferred": false,
+      "title": "Developer Knowledge API",
+      "version": "v1alpha"
+    },
+    {
+      "description": "The Developer Knowledge API provides access to Google's developer knowledge.",
+      "discoveryRestUrl": "https://developerknowledge.googleapis.com/$discovery/rest?version=v1",
+      "documentationLink": "https://developers.google.com/knowledge",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "developerknowledge:v1",
+      "kind": "discovery#directoryItem",
+      "name": "developerknowledge",
+      "preferred": true,
+      "title": "Developer Knowledge API",
+      "version": "v1"
+    },
+    {
       "description": "Build applications to efficiently manage large or complex trafficking, reporting, and attribution workflows for Campaign Manager 360.",
       "discoveryRestUrl": "https://dfareporting.googleapis.com/$discovery/rest?version=v3.5",
       "documentationLink": "https://developers.google.com/doubleclick-advertisers/",
@@ -3366,7 +3411,7 @@
       "version": "v1beta"
     },
     {
-      "description": "Firebase Data Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.",
+      "description": "Firebase SQL Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.",
       "discoveryRestUrl": "https://firebasedataconnect.googleapis.com/$discovery/rest?version=v1beta",
       "documentationLink": "https://firebase.google.com/docs/data-connect",
       "icons": {
@@ -3381,7 +3426,7 @@
       "version": "v1beta"
     },
     {
-      "description": "Firebase Data Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.",
+      "description": "Firebase SQL Connect is a relational database service for mobile and web apps that lets you build and scale using a fully-managed PostgreSQL database powered by Cloud SQL. The REST API lets developers manage the connections to their database, change the schema of their database, and query the database.",
       "discoveryRestUrl": "https://firebasedataconnect.googleapis.com/$discovery/rest?version=v1",
       "documentationLink": "https://firebase.google.com/docs/data-connect",
       "icons": {
@@ -3859,6 +3904,21 @@
       "preferred": true,
       "title": "Groups Settings API",
       "version": "v1"
+    },
+    {
+      "description": "The Google Health API lets you view and manage health and fitness metrics and measurement data.",
+      "discoveryRestUrl": "https://health.googleapis.com/$discovery/rest?version=v4",
+      "documentationLink": "https://developers.google.com/health",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "health:v4",
+      "kind": "discovery#directoryItem",
+      "name": "health",
+      "preferred": true,
+      "title": "Google Health API",
+      "version": "v4"
     },
     {
       "description": "Manage, store, and access healthcare data in Google Cloud Platform.",
@@ -6197,9 +6257,24 @@
       "id": "saasservicemgmt:v1beta1",
       "kind": "discovery#directoryItem",
       "name": "saasservicemgmt",
-      "preferred": true,
-      "title": "SaaS Runtime API",
+      "preferred": false,
+      "title": "App Lifecycle Manager API",
       "version": "v1beta1"
+    },
+    {
+      "description": "Model, deploy, and operate your SaaS at scale.",
+      "discoveryRestUrl": "https://saasservicemgmt.googleapis.com/$discovery/rest?version=v1",
+      "documentationLink": "https://cloud.google.com/saas-runtime/docs",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "saasservicemgmt:v1",
+      "kind": "discovery#directoryItem",
+      "name": "saasservicemgmt",
+      "preferred": true,
+      "title": "App Lifecycle Manager API",
+      "version": "v1"
     },
     {
       "description": "Enables client applications to check web resources (most commonly URLs) against Google-generated lists of unsafe web resources. The Safe Browsing APIs are for non-commercial use only. If you need to use APIs to detect malicious URLs for commercial purposes – meaning “for sale or revenue-generating purposes” – please refer to the Web Risk API.",
@@ -6272,9 +6347,24 @@
       "id": "searchads360:v0",
       "kind": "discovery#directoryItem",
       "name": "searchads360",
-      "preferred": true,
+      "preferred": false,
       "title": "Search Ads 360 Reporting API",
       "version": "v0"
+    },
+    {
+      "description": "The Search Ads 360 API allows developers to automate downloading reports from Search Ads 360.",
+      "discoveryRestUrl": "https://searchads360.googleapis.com/$discovery/rest?version=v23",
+      "documentationLink": "https://developers.google.com/search-ads/reporting",
+      "icons": {
+        "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+        "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
+      },
+      "id": "searchads360:v23",
+      "kind": "discovery#directoryItem",
+      "name": "searchads360",
+      "preferred": true,
+      "title": "Search Ads 360 Reporting API",
+      "version": "v23"
     },
     {
       "description": "The Search Console API provides access to both Search Console data (verified users only) and to public information on an URL basis (anyone)",

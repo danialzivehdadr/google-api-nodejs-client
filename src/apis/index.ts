@@ -57,6 +57,10 @@ import {
   VERSIONS as advisorynotificationsVersions,
   advisorynotifications,
 } from './advisorynotifications';
+import {
+  VERSIONS as agentregistryVersions,
+  agentregistry,
+} from './agentregistry';
 import {VERSIONS as aiplatformVersions, aiplatform} from './aiplatform';
 import {VERSIONS as airqualityVersions, airquality} from './airquality';
 import {VERSIONS as alertcenterVersions, alertcenter} from './alertcenter';
@@ -297,6 +301,10 @@ import {
   VERSIONS as developerconnectVersions,
   developerconnect,
 } from './developerconnect';
+import {
+  VERSIONS as developerknowledgeVersions,
+  developerknowledge,
+} from './developerknowledge';
 import {VERSIONS as dfareportingVersions, dfareporting} from './dfareporting';
 import {VERSIONS as dialogflowVersions, dialogflow} from './dialogflow';
 import {
@@ -409,6 +417,7 @@ import {
   VERSIONS as groupssettingsVersions,
   groupssettings,
 } from './groupssettings';
+import {VERSIONS as healthVersions, health} from './health';
 import {VERSIONS as healthcareVersions, healthcare} from './healthcare';
 import {VERSIONS as homegraphVersions, homegraph} from './homegraph';
 import {
@@ -799,6 +808,7 @@ export const APIS: APIList = {
   adsensehost: adsensehostVersions,
   adsenseplatform: adsenseplatformVersions,
   advisorynotifications: advisorynotificationsVersions,
+  agentregistry: agentregistryVersions,
   aiplatform: aiplatformVersions,
   airquality: airqualityVersions,
   alertcenter: alertcenterVersions,
@@ -904,6 +914,7 @@ export const APIS: APIList = {
   datastream: datastreamVersions,
   deploymentmanager: deploymentmanagerVersions,
   developerconnect: developerconnectVersions,
+  developerknowledge: developerknowledgeVersions,
   dfareporting: dfareportingVersions,
   dialogflow: dialogflowVersions,
   digitalassetlinks: digitalassetlinksVersions,
@@ -953,6 +964,7 @@ export const APIS: APIList = {
   gmailpostmastertools: gmailpostmastertoolsVersions,
   groupsmigration: groupsmigrationVersions,
   groupssettings: groupssettingsVersions,
+  health: healthVersions,
   healthcare: healthcareVersions,
   homegraph: homegraphVersions,
   hypercomputecluster: hypercomputeclusterVersions,
@@ -1123,6 +1135,7 @@ export class GeneratedAPIs {
   adsensehost = adsensehost;
   adsenseplatform = adsenseplatform;
   advisorynotifications = advisorynotifications;
+  agentregistry = agentregistry;
   aiplatform = aiplatform;
   airquality = airquality;
   alertcenter = alertcenter;
@@ -1228,6 +1241,7 @@ export class GeneratedAPIs {
   datastream = datastream;
   deploymentmanager = deploymentmanager;
   developerconnect = developerconnect;
+  developerknowledge = developerknowledge;
   dfareporting = dfareporting;
   dialogflow = dialogflow;
   digitalassetlinks = digitalassetlinks;
@@ -1277,6 +1291,7 @@ export class GeneratedAPIs {
   gmailpostmastertools = gmailpostmastertools;
   groupsmigration = groupsmigration;
   groupssettings = groupssettings;
+  health = health;
   healthcare = healthcare;
   homegraph = homegraph;
   hypercomputecluster = hypercomputecluster;

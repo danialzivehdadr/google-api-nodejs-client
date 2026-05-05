@@ -84,10 +84,6 @@
     "package": "@google-cloud/bigquery-migration"
   },
   {
-    "api": "bigtable",
-    "package": "@google-cloud/bigtable"
-  },
-  {
     "api": "cloudbilling",
     "package": "@google-cloud/billing"
   },
@@ -216,10 +212,6 @@
     "package": "@google-cloud/domains"
   },
   {
-    "api": "clouderrorreporting",
-    "package": "@google-cloud/error-reporting"
-  },
-  {
     "api": "essentialcontacts",
     "package": "@google-cloud/essential-contacts"
   },
@@ -310,10 +302,6 @@
   {
     "api": "livestream",
     "package": "@google-cloud/livestream"
-  },
-  {
-    "api": "logging",
-    "package": "@google-cloud/logging"
   },
   {
     "api": "logging",
@@ -430,10 +418,6 @@
   {
     "api": "policysimulator",
     "package": "@google-cloud/policysimulator"
-  },
-  {
-    "api": "pubsub",
-    "package": "@google-cloud/pubsub"
   },
   {
     "api": "publicca",
@@ -680,6 +664,10 @@
     "package": "@google-cloud/datalabeling"
   },
   {
+    "api": "datalineage",
+    "package": "@google-cloud/configmanagement"
+  },
+  {
     "api": "datamanager",
     "package": "@google-ads/datamanager"
   },
@@ -710,6 +698,10 @@
   {
     "api": "gdchardwaremanagement",
     "package": "@google-cloud/gdchardwaremanagement"
+  },
+  {
+    "api": "ces",
+    "package": "@google-cloud/ces"
   },
   {
     "api": "generativelanguage",
@@ -808,6 +800,10 @@
     "package": "@google-cloud/modelarmor"
   },
   {
+    "api": "navigationconnect",
+    "package": "@google-cloud/navconnect"
+  },
+  {
     "api": "oracledatabase",
     "package": "@google-cloud/oracledatabase"
   },
@@ -870,5 +866,13 @@
   {
     "api": "vectorsearch",
     "package": "@google-cloud/vectorsearch"
+  },
+  {
+    "api": "visionai",
+    "package": "@google-cloud/visionai"
+  },
+  {
+    "api": "workloadmanager",
+    "package": "@google-cloud/workloadmanager"
   }
 ]
