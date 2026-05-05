@@ -121,7 +121,6 @@ export namespace displayvideo_v3 {
     googleAudiences: Resource$Googleaudiences;
     guaranteedOrders: Resource$Guaranteedorders;
     inventorySourceGroups: Resource$Inventorysourcegroups;
-    inventorySources: Resource$Inventorysources;
     media: Resource$Media;
     partners: Resource$Partners;
     sdfdownloadtasks: Resource$Sdfdownloadtasks;
@@ -148,7 +147,6 @@ export namespace displayvideo_v3 {
       this.inventorySourceGroups = new Resource$Inventorysourcegroups(
         this.context
       );
-      this.inventorySources = new Resource$Inventorysources(this.context);
       this.media = new Resource$Media(this.context);
       this.partners = new Resource$Partners(this.context);
       this.sdfdownloadtasks = new Resource$Sdfdownloadtasks(this.context);
@@ -187,13 +185,17 @@ export namespace displayvideo_v3 {
    */
   export interface Schema$AdGroup {
     /**
-     * Required. The format of the ads in the ad group.
+     * Required. Immutable. The format of the ads in the ad group.
      */
     adGroupFormat?: string | null;
     /**
      * Output only. The unique ID of the ad group. Assigned by the system.
      */
     adGroupId?: string | null;
+    /**
+     * Optional. Required for Demand Gen ad groups. Specifies the inventory control of the ad group.
+     */
+    adGroupInventoryControl?: Schema$AdGroupInventoryControl;
     /**
      * Output only. The unique ID of the advertiser the ad group belongs to.
      */
@@ -211,7 +213,7 @@ export namespace displayvideo_v3 {
      */
     entityStatus?: string | null;
     /**
-     * Required. The unique ID of the line item that the ad group belongs to.
+     * Required. Immutable. The unique ID of the line item that the ad group belongs to.
      */
     lineItemId?: string | null;
     /**
@@ -236,7 +238,7 @@ export namespace displayvideo_v3 {
      */
     adGroupAdId?: string | null;
     /**
-     * Required. The unique ID of the ad group that the ad belongs to.
+     * Required. Immutable. The unique ID of the ad group that the ad belongs to.
      */
     adGroupId?: string | null;
     /**
@@ -259,6 +261,26 @@ export namespace displayvideo_v3 {
      * Output only. Details of a [non-skippable short video ad](//support.google.com/displayvideo/answer/6274216), equal to or less than 6 seconds, used for reach.
      */
     bumperAd?: Schema$BumperAd;
+    /**
+     * Optional. The DCM tracking ad info. Only valid for Demand Gen ads. To remove the DCM tracking ad info, please leave this field empty. Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    dcmTrackingInfo?: Schema$DcmTrackingInfo;
+    /**
+     * Details of a [Demand Gen carousel ad](//support.google.com/displayvideo/answer/15598924?&sjid=11207068802760924844-NC#CarouselAd). Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    demandGenCarouselAd?: Schema$DemandGenCarouselAd;
+    /**
+     * Details of a [Demand Gen image ad](//support.google.com/displayvideo/answer/15598924?&sjid=11207068802760924844-NC#ImageAd). Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    demandGenImageAd?: Schema$DemandGenImageAd;
+    /**
+     * Details of a [Demand Gen product ad](//support.google.com/displayvideo/answer/15598924?&sjid=11207068802760924844-NC#Product-onlyAd). Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    demandGenProductAd?: Schema$DemandGenProductAd;
+    /**
+     * Details of a [Demand Gen video ad](//support.google.com/displayvideo/answer/15598924?&sjid=11207068802760924844-NC#VideoAd). Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    demandGenVideoAd?: Schema$DemandGenVideoAd;
     /**
      * Required. The display name of the ad. Must be UTF-8 encoded with a maximum size of 255 bytes.
      */
@@ -308,6 +330,19 @@ export namespace displayvideo_v3 {
      * The assigned targeting option resource.
      */
     assignedTargetingOption?: Schema$AssignedTargetingOption;
+  }
+  /**
+   * The inventory control of the ad group.
+   */
+  export interface Schema$AdGroupInventoryControl {
+    /**
+     * The inventory strategy.
+     */
+    adGroupInventoryStrategy?: string | null;
+    /**
+     * The selected inventories.
+     */
+    selectedInventories?: Schema$SelectedInventories;
   }
   /**
    * Details of Scope3 (previously known as Adloox) brand safety settings.
@@ -1593,6 +1628,10 @@ export namespace displayvideo_v3 {
    */
   export interface Schema$BiddingStrategy {
     /**
+     * A bid strategy used by Demand Gen resources. It can only be used for a Demand Gen line item or ad group entity.
+     */
+    demandGenBid?: Schema$DemandGenBiddingStrategy;
+    /**
      * A strategy that uses a fixed bid price.
      */
     fixedBid?: Schema$FixedBidStrategy;
@@ -1661,15 +1700,49 @@ export namespace displayvideo_v3 {
     totalAmountMicros?: string | null;
   }
   /**
+   * Request message for BulkEditAdGroupAssignedTargetingOptions.
+   */
+  export interface Schema$BulkEditAdGroupAssignedTargetingOptionsRequest {
+    /**
+     * Required. The IDs of the ad groups the assigned targeting options will belong to. A maximum of 25 ad group IDs can be specified.
+     */
+    adGroupIds?: string[] | null;
+    /**
+     * Optional. The assigned targeting options to create in batch, specified as a list of `CreateAssignedTargetingOptionRequest`. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     */
+    createRequests?: Schema$CreateAssignedTargetingOptionsRequest[];
+    /**
+     * Optional. The assigned targeting options to delete in batch, specified as a list of `DeleteAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     */
+    deleteRequests?: Schema$DeleteAssignedTargetingOptionsRequest[];
+  }
+  /**
+   * Response message for BulkEditAssignedTargetingOptions.
+   */
+  export interface Schema$BulkEditAdGroupAssignedTargetingOptionsResponse {
+    /**
+     * Output only. The error information for each ad group that failed to update.
+     */
+    errors?: Schema$Status[];
+    /**
+     * Output only. The IDs of the ad groups which failed to update.
+     */
+    failedAdGroupIds?: string[] | null;
+    /**
+     * Output only. The IDs of the ad groups which were successfully updated.
+     */
+    updatedAdGroupIds?: string[] | null;
+  }
+  /**
    * Request message for BulkEditAdvertiserAssignedTargetingOptions.
    */
   export interface Schema$BulkEditAdvertiserAssignedTargetingOptionsRequest {
     /**
-     * The assigned targeting options to create in batch, specified as a list of `CreateAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     * The assigned targeting options to create in batch, specified as a list of `CreateAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      */
     createRequests?: Schema$CreateAssignedTargetingOptionsRequest[];
     /**
-     * The assigned targeting options to delete in batch, specified as a list of `DeleteAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     * The assigned targeting options to delete in batch, specified as a list of `DeleteAssignedTargetingOptionsRequest`. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      */
     deleteRequests?: Schema$DeleteAssignedTargetingOptionsRequest[];
   }
@@ -2088,6 +2161,39 @@ export namespace displayvideo_v3 {
      * Required. The performance goal of the campaign. Acceptable values for performance_goal_type are: * `PERFORMANCE_GOAL_TYPE_CPM` * `PERFORMANCE_GOAL_TYPE_CPC` * `PERFORMANCE_GOAL_TYPE_CPA` * `PERFORMANCE_GOAL_TYPE_CPIAVC` * `PERFORMANCE_GOAL_TYPE_CTR` * `PERFORMANCE_GOAL_TYPE_VIEWABILITY` * `PERFORMANCE_GOAL_TYPE_OTHER`
      */
     performanceGoal?: Schema$PerformanceGoal;
+  }
+  /**
+   * Details for a Demand Gen carousel card.
+   */
+  export interface Schema$CarouselCard {
+    /**
+     * Required. The text on the call-to-action button shown on the card. Must use 10 characters or less.
+     */
+    callToAction?: string | null;
+    /**
+     * Optional. The URL address of the webpage that people reach after they click the card on a mobile device.
+     */
+    finalMobileUrl?: string | null;
+    /**
+     * Required. The URL address of the webpage that people reach after they click the card.
+     */
+    finalUrl?: string | null;
+    /**
+     * Required. The headline of the card.
+     */
+    headline?: string | null;
+    /**
+     * Optional. The marketing image shown on the card.
+     */
+    marketingImage?: Schema$ImageAsset;
+    /**
+     * Optional. The portrait marketing image shown on the card.
+     */
+    portraitMarketingImage?: Schema$ImageAsset;
+    /**
+     * Optional. The square marketing image shown on the card.
+     */
+    squareMarketingImage?: Schema$ImageAsset;
   }
   /**
    * Details for assigned carrier and ISP targeting option. This will be populated in the details field of an AssignedTargetingOption when targeting_type is `TARGETING_TYPE_CARRIER_AND_ISP`.
@@ -2516,6 +2622,10 @@ export namespace displayvideo_v3 {
      * The percentage of post-view conversions to count, in millis (1/1000 of a percent). Must be between 0 and 100000 inclusive. For example, to track 50% of the post-click conversions, set a value of 50000.
      */
     postViewCountPercentageMillis?: string | null;
+    /**
+     * Optional. The attribution model to use for conversion measurement. This attribution model will determine how conversions are counted. The Primary model can be set by you for a floodlight config or group. More details [here](https://support.google.com/displayvideo/answer/7409983). Only applicable to Demand Gen line items. Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    primaryAttributionModelId?: string | null;
   }
   /**
    * Counter event of the creative.
@@ -2782,23 +2892,6 @@ export namespace displayvideo_v3 {
      * Output only. Indicates the third-party VAST tag creative requires VPAID (Digital Video Player-Ad Interface). Output only and only valid for third-party VAST tag creatives. Third-party VAST tag creatives are creatives with following hosting_source: * `HOSTING_SOURCE_THIRD_PARTY` combined with following creative_type: * `CREATIVE_TYPE_VIDEO`
      */
     vpaid?: boolean | null;
-  }
-  /**
-   * Creative requirements configuration for the inventory source.
-   */
-  export interface Schema$CreativeConfig {
-    /**
-     * The type of creative that can be assigned to the inventory source. Only the following types are supported: * `CREATIVE_TYPE_STANDARD` * `CREATIVE_TYPE_VIDEO`
-     */
-    creativeType?: string | null;
-    /**
-     * The configuration for display creatives. Applicable when creative_type is `CREATIVE_TYPE_STANDARD`.
-     */
-    displayCreativeConfig?: Schema$InventorySourceDisplayCreativeConfig;
-    /**
-     * The configuration for video creatives. Applicable when creative_type is `CREATIVE_TYPE_VIDEO`.
-     */
-    videoCreativeConfig?: Schema$InventorySourceVideoCreativeConfig;
   }
   /**
    * A single custom bidding algorithm.
@@ -3071,9 +3164,26 @@ export namespace displayvideo_v3 {
      */
     startHour?: number | null;
     /**
-     * Required. The mechanism used to determine which timezone to use for this day and time targeting setting.
+     * Required. The mechanism used to determine which timezone to use for this day and time targeting setting. For Demand Gen line items, this field is always `TIME_ZONE_RESOLUTION_ADVERTISER`.
      */
     timeZoneResolution?: string | null;
+  }
+  /**
+   * Details on the DCM tracking.
+   */
+  export interface Schema$DcmTrackingInfo {
+    /**
+     * Required. The DCM creative id.
+     */
+    creativeId?: string | null;
+    /**
+     * Required. The DCM placement id.
+     */
+    placementId?: string | null;
+    /**
+     * Required. The DCM tracking ad id.
+     */
+    trackingAdId?: string | null;
   }
   /**
    * A request listing which assigned targeting options of a given targeting type should be deleted.
@@ -3087,6 +3197,272 @@ export namespace displayvideo_v3 {
      * Required. Identifies the type of this assigned targeting option.
      */
     targetingType?: string | null;
+  }
+  /**
+   * Settings that control the bid strategy for Demand Gen resources.
+   */
+  export interface Schema$DemandGenBiddingStrategy {
+    /**
+     * Output only. The value effectively used by the bidding strategy. This field will be the same as value if set. If value is not set and the strategy is assigned to an ad group, this field will be inherited from the line item's bidding strategy. If type is not `DEMAND_GEN_BIDDING_STRATEGY_TYPE_TARGET_CPA` or `DEMAND_GEN_BIDDING_STRATEGY_TYPE_TARGET_ROAS`, this field will be 0.
+     */
+    effectiveBiddingValue?: string | null;
+    /**
+     * Output only. Source of the effective bidding value.
+     */
+    effectiveBiddingValueSource?: string | null;
+    /**
+     * Optional. The type of the bidding strategy. This can only be set when assigned to a line item. Ad groups will inherit this value from their line item.
+     */
+    type?: string | null;
+    /**
+     * Optional. The value used by the bidding strategy. This can be set when assigned to line items or ad groups. This field is only applicable for the following strategy types: * `DEMAND_GEN_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `DEMAND_GEN_BIDDING_STRATEGY_TYPE_TARGET_CPC` * `DEMAND_GEN_BIDDING_STRATEGY_TYPE_TARGET_ROAS` Value of this field is in micros of the advertiser's currency or ROAS value. For example, 1000000 represents 1.0 standard units of the currency or 100% ROAS value. If not using an applicable strategy, the value of this field will be 0.
+     */
+    value?: string | null;
+  }
+  /**
+   * Details for a Demand Gen carousel ad.
+   */
+  export interface Schema$DemandGenCarouselAd {
+    /**
+     * Required. The business name shown on the ad.
+     */
+    businessName?: string | null;
+    /**
+     * Required. The list of cards shown on the ad.
+     */
+    cards?: Schema$CarouselCard[];
+    /**
+     * Optional. The custom parameters and accompanying values to add to the tracking URL.
+     */
+    customParameters?: {[key: string]: string} | null;
+    /**
+     * Required. The description of the ad.
+     */
+    description?: string | null;
+    /**
+     * Required. The URL address of the webpage that people reach after they click the ad.
+     */
+    finalUrl?: string | null;
+    /**
+     * Optional. The suffix to append to landing page URLs.
+     */
+    finalUrlSuffix?: string | null;
+    /**
+     * Required. The headline of the ad.
+     */
+    headline?: string | null;
+    /**
+     * Required. The logo image used by this ad.
+     */
+    logo?: Schema$ImageAsset;
+    /**
+     * Output only. The URL address loaded in the background for tracking purposes.
+     */
+    trackingUrl?: string | null;
+    /**
+     * Optional. The tracking URL specified by the user manually.
+     */
+    userSpecifiedTrackingUrl?: string | null;
+  }
+  /**
+   * Details for a Demand Gen image ad.
+   */
+  export interface Schema$DemandGenImageAd {
+    /**
+     * Required. The business name shown on the ad.
+     */
+    businessName?: string | null;
+    /**
+     * Required. The call-to-action button shown on the ad.
+     */
+    callToAction?: string | null;
+    /**
+     * Optional. The custom parameters and accompanying values to add to the tracking URL.
+     */
+    customParameters?: {[key: string]: string} | null;
+    /**
+     * Required. The list of descriptions shown on the ad.
+     */
+    descriptions?: string[] | null;
+    /**
+     * Optional. The URL address of the webpage that people reach after they click the ad on a mobile device.
+     */
+    finalMobileUrl?: string | null;
+    /**
+     * Required. The URL address of the webpage that people reach after they click the ad.
+     */
+    finalUrl?: string | null;
+    /**
+     * Optional. The suffix to append to landing page URLs.
+     */
+    finalUrlSuffix?: string | null;
+    /**
+     * Required. The list of headlines shown on the ad.
+     */
+    headlines?: string[] | null;
+    /**
+     * The list of logo images shown on the ad.
+     */
+    logoImages?: Schema$ImageAsset[];
+    /**
+     * The list of marketing images shown on the ad.
+     */
+    marketingImages?: Schema$ImageAsset[];
+    /**
+     * The list of portrait marketing images shown on the ad.
+     */
+    portraitMarketingImages?: Schema$ImageAsset[];
+    /**
+     * The list of square marketing images shown on the ad.
+     */
+    squareMarketingImages?: Schema$ImageAsset[];
+    /**
+     * Output only. The URL address loaded in the background for tracking purposes.
+     */
+    trackingUrl?: string | null;
+    /**
+     * Optional. The tracking URL specified by the user manually.
+     */
+    userSpecifiedTrackingUrl?: string | null;
+  }
+  /**
+   * Details for a Demand Gen product ad.
+   */
+  export interface Schema$DemandGenProductAd {
+    /**
+     * Required. The business name shown on the ad.
+     */
+    businessName?: string | null;
+    /**
+     * Required. The call-to-action button shown on the ad. The supported values are: * `AUTOMATED` * `APPLY_NOW` * `BOOK_NOW` * `CONTACT_US` * `DOWNLOAD` * `GET_QUOTE` * `LEARN_MORE` * `SHOP_NOW` * `SIGN_UP` * `SUBSCRIBE`
+     */
+    callToAction?: string | null;
+    /**
+     * Optional. The custom parameters and accompanying values to add to the tracking URL.
+     */
+    customParameters?: {[key: string]: string} | null;
+    /**
+     * Required. The description of the ad.
+     */
+    description?: string | null;
+    /**
+     * Optional. The first piece after the domain in the display URL.
+     */
+    displayUrlBreadcrumb1?: string | null;
+    /**
+     * Optional. The second piece after the domain in the display URL.
+     */
+    displayUrlBreadcrumb2?: string | null;
+    /**
+     * Required. The URL address of the webpage that people reach after they click the ad.
+     */
+    finalUrl?: string | null;
+    /**
+     * Optional. The suffix to append to landing page URLs.
+     */
+    finalUrlSuffix?: string | null;
+    /**
+     * Required. The headline of the ad.
+     */
+    headline?: string | null;
+    /**
+     * Required. The logo image used by this ad.
+     */
+    logo?: Schema$ImageAsset;
+    /**
+     * Output only. The URL address loaded in the background for tracking purposes.
+     */
+    trackingUrl?: string | null;
+    /**
+     * Optional. The tracking URL specified by the user manually.
+     */
+    userSpecifiedTrackingUrl?: string | null;
+  }
+  /**
+   * Settings for Demand Gen line items.
+   */
+  export interface Schema$DemandGenSettings {
+    /**
+     * Optional. Immutable. Whether location and language targeting can be set at the line item level. Otherwise, relevant targeting types must be assigned directly to ad groups.
+     */
+    geoLanguageTargetingEnabled?: boolean | null;
+    /**
+     * Optional. The ID of the Merchant Center account used to provide a product feed. This Merchant Center account must already be linked to the advertiser.
+     */
+    linkedMerchantId?: string | null;
+    /**
+     * Optional. The third party measurement settings for the Demand Gen line item.
+     */
+    thirdPartyMeasurementConfigs?: Schema$ThirdPartyMeasurementConfigs;
+  }
+  /**
+   * Details for a Demand Gen video ad.
+   */
+  export interface Schema$DemandGenVideoAd {
+    /**
+     * Required. The business name shown on the ad.
+     */
+    businessName?: string | null;
+    /**
+     * Required. The call-to-action button shown on the ad. The supported values are: * `AUTOMATED` * `LEARN_MORE` * `GET_QUOTE` * `APPLY_NOW` * `SIGN_UP` * `CONTACT_US` * `SUBSCRIBE` * `DOWNLOAD` * `BOOK_NOW` * `SHOP_NOW` * `BUY_NOW` * `DONATE_NOW` * `ORDER_NOW` * `PLAY_NOW` * `SEE_MORE` * `START_NOW` * `VISIT_SITE` * `WATCH_NOW`
+     */
+    callToAction?: string | null;
+    /**
+     * Optional. The companion banner used by this ad.
+     */
+    companionBanner?: Schema$ImageAsset;
+    /**
+     * Optional. The custom parameters and accompanying values to add to the tracking URL.
+     */
+    customParameters?: {[key: string]: string} | null;
+    /**
+     * Required. The list of descriptions shown on the ad.
+     */
+    descriptions?: string[] | null;
+    /**
+     * Optional. The first piece after the domain in the display URL.
+     */
+    displayUrlBreadcrumb1?: string | null;
+    /**
+     * Optional. The second piece after the domain in the display URL.
+     */
+    displayUrlBreadcrumb2?: string | null;
+    /**
+     * Optional. The URL address of the webpage that people reach after they click the ad on a mobile device.
+     */
+    finalMobileUrl?: string | null;
+    /**
+     * Required. The URL address of the webpage that people reach after they click the ad.
+     */
+    finalUrl?: string | null;
+    /**
+     * Optional. The suffix to append to landing page URLs.
+     */
+    finalUrlSuffix?: string | null;
+    /**
+     * Required. The list of headlines shown on the ad.
+     */
+    headlines?: string[] | null;
+    /**
+     * Required. The logo image used by this ad.
+     */
+    logo?: Schema$ImageAsset;
+    /**
+     * Required. The list of long headlines shown on the ad.
+     */
+    longHeadlines?: string[] | null;
+    /**
+     * Output only. The URL address loaded in the background for tracking purposes.
+     */
+    trackingUrl?: string | null;
+    /**
+     * Optional. The tracking URL specified by the user manually.
+     */
+    userSpecifiedTrackingUrl?: string | null;
+    /**
+     * Required. The list of YouTube video assets used by this ad.
+     */
+    videos?: Schema$YoutubeVideoDetails[];
   }
   /**
    * Assigned device make and model targeting option details. This will be populated in the device_make_model_details field when targeting_type is `TARGETING_TYPE_DEVICE_MAKE_MODEL`.
@@ -3365,36 +3741,6 @@ export namespace displayvideo_v3 {
      * The IDs of advertisers with read access to the guaranteed order.
      */
     readAdvertiserIds?: string[] | null;
-  }
-  /**
-   * Request message for InventorySourceService.EditInventorySourceReadWriteAccessors.
-   */
-  export interface Schema$EditInventorySourceReadWriteAccessorsRequest {
-    /**
-     * The advertisers to add or remove from the list of advertisers that have read/write access to the inventory source. This change will remove an existing partner read/write accessor.
-     */
-    advertisersUpdate?: Schema$EditInventorySourceReadWriteAccessorsRequestAdvertisersUpdate;
-    /**
-     * Set the partner context as read/write accessor of the inventory source. This will remove all other current read/write advertiser accessors.
-     */
-    assignPartner?: boolean | null;
-    /**
-     * Required. The partner context by which the accessors change is being made.
-     */
-    partnerId?: string | null;
-  }
-  /**
-   * Update to the list of advertisers with read/write access to the inventory source.
-   */
-  export interface Schema$EditInventorySourceReadWriteAccessorsRequestAdvertisersUpdate {
-    /**
-     * The advertisers to add.
-     */
-    addedAdvertisers?: string[] | null;
-    /**
-     * The advertisers to remove.
-     */
-    removedAdvertisers?: string[] | null;
   }
   /**
    * A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); \}
@@ -3950,6 +4296,10 @@ export namespace displayvideo_v3 {
    */
   export interface Schema$ImageAsset {
     /**
+     * Required. The unique ID of the asset.
+     */
+    assetId?: string | null;
+    /**
      * Output only. File size of the image asset in bytes.
      */
     fileSize?: string | null;
@@ -4082,7 +4432,7 @@ export namespace displayvideo_v3 {
      */
     commonInStreamAttribute?: Schema$CommonInStreamAttribute;
     /**
-     * The custom parameters to pass custom values to tracking URL template.
+     * The custom parameters and accompanying values to add to the tracking URL.
      */
     customParameters?: {[key: string]: string} | null;
   }
@@ -4165,118 +4515,6 @@ export namespace displayvideo_v3 {
     integrationCode?: string | null;
   }
   /**
-   * An inventory source. Next ID: 22
-   */
-  export interface Schema$InventorySource {
-    /**
-     * Whether the inventory source has a guaranteed or non-guaranteed delivery.
-     */
-    commitment?: string | null;
-    /**
-     * The creative requirements of the inventory source. Not applicable for auction packages.
-     */
-    creativeConfigs?: Schema$CreativeConfig[];
-    /**
-     * The ID in the exchange space that uniquely identifies the inventory source. Must be unique across buyers within each exchange but not necessarily unique across exchanges.
-     */
-    dealId?: string | null;
-    /**
-     * The delivery method of the inventory source. * For non-guaranteed inventory sources, the only acceptable value is `INVENTORY_SOURCE_DELIVERY_METHOD_PROGRAMMATIC`. * For guaranteed inventory sources, acceptable values are `INVENTORY_SOURCE_DELIVERY_METHOD_TAG` and `INVENTORY_SOURCE_DELIVERY_METHOD_PROGRAMMATIC`.
-     */
-    deliveryMethod?: string | null;
-    /**
-     * The display name of the inventory source. Must be UTF-8 encoded with a maximum size of 240 bytes.
-     */
-    displayName?: string | null;
-    /**
-     * The exchange to which the inventory source belongs.
-     */
-    exchange?: string | null;
-    /**
-     * Immutable. The ID of the guaranteed order that this inventory source belongs to. Only applicable when commitment is `INVENTORY_SOURCE_COMMITMENT_GUARANTEED`.
-     */
-    guaranteedOrderId?: string | null;
-    /**
-     * Output only. The unique ID of the inventory source. Assigned by the system.
-     */
-    inventorySourceId?: string | null;
-    /**
-     * Output only. The product type of the inventory source, denoting the way through which it sells inventory.
-     */
-    inventorySourceProductType?: string | null;
-    /**
-     * Denotes the type of the inventory source.
-     */
-    inventorySourceType?: string | null;
-    /**
-     * Output only. The resource name of the inventory source.
-     */
-    name?: string | null;
-    /**
-     * The publisher/seller name of the inventory source.
-     */
-    publisherName?: string | null;
-    /**
-     * Required. The rate details of the inventory source.
-     */
-    rateDetails?: Schema$RateDetails;
-    /**
-     * Output only. The IDs of advertisers with read-only access to the inventory source.
-     */
-    readAdvertiserIds?: string[] | null;
-    /**
-     * Output only. The IDs of partners with read-only access to the inventory source. All advertisers of partners in this field inherit read-only access to the inventory source.
-     */
-    readPartnerIds?: string[] | null;
-    /**
-     * The partner or advertisers that have read/write access to the inventory source. Output only when commitment is `INVENTORY_SOURCE_COMMITMENT_GUARANTEED`, in which case the read/write accessors are inherited from the parent guaranteed order. Required when commitment is `INVENTORY_SOURCE_COMMITMENT_NON_GUARANTEED`. If commitment is `INVENTORY_SOURCE_COMMITMENT_NON_GUARANTEED` and a partner is set in this field, all advertisers under this partner will automatically have read-only access to the inventory source. These advertisers will not be included in read_advertiser_ids.
-     */
-    readWriteAccessors?: Schema$InventorySourceAccessors;
-    /**
-     * The status settings of the inventory source.
-     */
-    status?: Schema$InventorySourceStatus;
-    /**
-     * The time range when this inventory source starts and stops serving.
-     */
-    timeRange?: Schema$TimeRange;
-    /**
-     * Output only. The timestamp when the inventory source was last updated. Assigned by the system.
-     */
-    updateTime?: string | null;
-  }
-  /**
-   * The partner or advertisers with access to the inventory source.
-   */
-  export interface Schema$InventorySourceAccessors {
-    /**
-     * The advertisers with access to the inventory source. All advertisers must belong to the same partner.
-     */
-    advertisers?: Schema$InventorySourceAccessorsAdvertiserAccessors;
-    /**
-     * The partner with access to the inventory source.
-     */
-    partner?: Schema$InventorySourceAccessorsPartnerAccessor;
-  }
-  /**
-   * The advertisers with access to the inventory source.
-   */
-  export interface Schema$InventorySourceAccessorsAdvertiserAccessors {
-    /**
-     * The IDs of the advertisers.
-     */
-    advertiserIds?: string[] | null;
-  }
-  /**
-   * The partner with access to the inventory source.
-   */
-  export interface Schema$InventorySourceAccessorsPartnerAccessor {
-    /**
-     * The ID of the partner.
-     */
-    partnerId?: string | null;
-  }
-  /**
    * Targeting details for inventory source. This will be populated in the details field of an AssignedTargetingOption when targeting_type is `TARGETING_TYPE_INVENTORY_SOURCE`.
    */
   export interface Schema$InventorySourceAssignedTargetingOptionDetails {
@@ -4284,15 +4522,6 @@ export namespace displayvideo_v3 {
      * Required. ID of the inventory source. Should refer to the inventory_source_id field of an InventorySource resource.
      */
     inventorySourceId?: string | null;
-  }
-  /**
-   * The configuration for display creatives.
-   */
-  export interface Schema$InventorySourceDisplayCreativeConfig {
-    /**
-     * The size requirements for display creatives that can be assigned to the inventory source.
-     */
-    creativeSize?: Schema$Dimensions;
   }
   /**
    * A filtering option for filtering on Inventory Source entities.
@@ -4328,40 +4557,6 @@ export namespace displayvideo_v3 {
      * Required. ID of the inventory source group. Should refer to the inventory_source_group_id field of an InventorySourceGroup resource.
      */
     inventorySourceGroupId?: string | null;
-  }
-  /**
-   * The status related settings of the inventory source.
-   */
-  export interface Schema$InventorySourceStatus {
-    /**
-     * Output only. The configuration status of the inventory source. Only applicable for guaranteed inventory sources. Acceptable values are `INVENTORY_SOURCE_CONFIG_STATUS_PENDING` and `INVENTORY_SOURCE_CONFIG_STATUS_COMPLETED`. An inventory source must be configured (fill in the required fields, choose creatives, and select a default campaign) before it can serve.
-     */
-    configStatus?: string | null;
-    /**
-     * The user-provided reason for pausing this inventory source. Must not exceed 100 characters. Only applicable when entity_status is set to `ENTITY_STATUS_PAUSED`.
-     */
-    entityPauseReason?: string | null;
-    /**
-     * Whether or not the inventory source is servable. Acceptable values are `ENTITY_STATUS_ACTIVE`, `ENTITY_STATUS_ARCHIVED`, and `ENTITY_STATUS_PAUSED`. Default value is `ENTITY_STATUS_ACTIVE`.
-     */
-    entityStatus?: string | null;
-    /**
-     * Output only. The seller-provided reason for pausing this inventory source. Only applicable for inventory sources synced directly from the publishers and when seller_status is set to `ENTITY_STATUS_PAUSED`.
-     */
-    sellerPauseReason?: string | null;
-    /**
-     * Output only. The status set by the seller for the inventory source. Only applicable for inventory sources synced directly from the publishers. Acceptable values are `ENTITY_STATUS_ACTIVE` and `ENTITY_STATUS_PAUSED`.
-     */
-    sellerStatus?: string | null;
-  }
-  /**
-   * The configuration for video creatives.
-   */
-  export interface Schema$InventorySourceVideoCreativeConfig {
-    /**
-     * The duration requirements for the video creatives that can be assigned to the inventory source.
-     */
-    duration?: string | null;
   }
   /**
    * A single invoice.
@@ -4452,6 +4647,10 @@ export namespace displayvideo_v3 {
    * Details for assigned keyword targeting option. This will be populated in the details field of an AssignedTargetingOption when targeting_type is `TARGETING_TYPE_KEYWORD`.
    */
   export interface Schema$KeywordAssignedTargetingOptionDetails {
+    /**
+     * Optional. The policy names to exempt the keyword from. When attempting to target a keyword that violates a policy, the error returned will include the name of the relevant policy. Use that name in this field to exempt the targeted keyword from the policy. This field is only applicable for positively-targeted keywords assigned to Demand Gen resources. Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    exemptedPolicyNames?: string[] | null;
     /**
      * Required. The keyword, for example `car insurance`. Positive keyword cannot be offensive word. Must be UTF-8 encoded with a maximum size of 255 bytes. Maximum number of characters is 80. Maximum number of words is 10.
      */
@@ -4545,6 +4744,10 @@ export namespace displayvideo_v3 {
      */
     creativeIds?: string[] | null;
     /**
+     * Optional. Settings specific to Demand Gen line items. Only applicable to Demand Gen line items. Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    demandGenSettings?: Schema$DemandGenSettings;
+    /**
      * Required. The display name of the line item. Must be UTF-8 encoded with a maximum size of 240 bytes.
      */
     displayName?: string | null;
@@ -4561,7 +4764,7 @@ export namespace displayvideo_v3 {
      */
     flight?: Schema$LineItemFlight;
     /**
-     * Required. The impression frequency cap settings of the line item. The max_impressions field in this settings object must be used if assigning a limited cap.
+     * Optional. Required if the line item type is not `LINE_ITEM_TYPE_DEMAND_GEN`. The impression frequency cap settings of the line item. The max_impressions field in this settings object must be used if assigning a limited cap.
      */
     frequencyCap?: Schema$FrequencyCap;
     /**
@@ -4588,6 +4791,10 @@ export namespace displayvideo_v3 {
      * Output only. The resource name of the line item.
      */
     name?: string | null;
+    /**
+     * Optional. Whether to enable DV360's bid optimization for fixed bid line items. By default, DV360 optimizes your fixed bid by automatically lowering bids for impressions that are less likely to perform well. This optimization is enabled by default (value is true). When this field is set to `false`, this optimization is disabled, and the bid will not be lowered for any reason. This setting only applies to line items with a `bidding_strategy` of type `FIXED_BID`.
+     */
+    optimizeFixedBidding?: boolean | null;
     /**
      * Required. The budget spending speed setting of the line item.
      */
@@ -4639,7 +4846,7 @@ export namespace displayvideo_v3 {
    */
   export interface Schema$LineItemBudget {
     /**
-     * Required. The type of the budget allocation. `LINE_ITEM_BUDGET_ALLOCATION_TYPE_AUTOMATIC` is only applicable when automatic budget allocation is enabled for the parent insertion order.
+     * Required. The type of the budget allocation. `LINE_ITEM_BUDGET_ALLOCATION_TYPE_AUTOMATIC` is only applicable when automatic budget allocation is enabled for the parent insertion order. This field must be set to `LINE_ITEM_BUDGET_ALLOCATION_TYPE_FIXED` for Demand Gen line items.
      */
     budgetAllocationType?: string | null;
     /**
@@ -4886,16 +5093,6 @@ export namespace displayvideo_v3 {
     inventorySourceGroups?: Schema$InventorySourceGroup[];
     /**
      * A token to retrieve the next page of results. Pass this value in the page_token field in the subsequent call to `ListInventorySourceGroups` method to retrieve the next page of results.
-     */
-    nextPageToken?: string | null;
-  }
-  export interface Schema$ListInventorySourcesResponse {
-    /**
-     * The list of inventory sources. This list will be absent if empty.
-     */
-    inventorySources?: Schema$InventorySource[];
-    /**
-     * A token to retrieve the next page of results. Pass this value in the page_token field in the subsequent call to `ListInventorySources` method to retrieve the next page of results.
      */
     nextPageToken?: string | null;
   }
@@ -5186,23 +5383,6 @@ export namespace displayvideo_v3 {
     mobileDeviceIds?: string[] | null;
   }
   /**
-   * Represents an amount of money with its currency type.
-   */
-  export interface Schema$Money {
-    /**
-     * The three-letter currency code defined in ISO 4217.
-     */
-    currencyCode?: string | null;
-    /**
-     * Number of nano (10^-9) units of the amount. The value must be between -999,999,999 and +999,999,999 inclusive. If `units` is positive, `nanos` must be positive or zero. If `units` is zero, `nanos` can be positive, zero, or negative. If `units` is negative, `nanos` must be negative or zero. For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
-     */
-    nanos?: number | null;
-    /**
-     * The whole units of the amount. For example if `currencyCode` is `"USD"`, then 1 unit is one US dollar.
-     */
-    units?: string | null;
-  }
-  /**
    * Details for native content position assigned targeting option. This will be populated in the native_content_position_details field when targeting_type is `TARGETING_TYPE_NATIVE_CONTENT_POSITION`. Explicitly targeting all options is not supported. Remove all native content position targeting options to achieve this effect.
    */
   export interface Schema$NativeContentPositionAssignedTargetingOptionDetails {
@@ -5276,7 +5456,7 @@ export namespace displayvideo_v3 {
      */
     commonInStreamAttribute?: Schema$CommonInStreamAttribute;
     /**
-     * The custom parameters to pass custom values to tracking URL template.
+     * The custom parameters and accompanying values to add to the tracking URL.
      */
     customParameters?: {[key: string]: string} | null;
   }
@@ -5587,7 +5767,7 @@ export namespace displayvideo_v3 {
      */
     markupAmount?: string | null;
     /**
-     * Required. The markup type of the partner revenue model.
+     * Required. The markup type of the partner revenue model. This field must be set to `PARTNER_REVENUE_MODEL_MARKUP_TYPE_TOTAL_MEDIA_COST_MARKUP` for Demand Gen line items.
      */
     markupType?: string | null;
   }
@@ -5781,27 +5961,6 @@ export namespace displayvideo_v3 {
      * Status of the publisher review.
      */
     status?: string | null;
-  }
-  /**
-   * The rate related settings of the inventory source.
-   */
-  export interface Schema$RateDetails {
-    /**
-     * The rate type. Acceptable values are `INVENTORY_SOURCE_RATE_TYPE_CPM_FIXED`, `INVENTORY_SOURCE_RATE_TYPE_CPM_FLOOR`, and `INVENTORY_SOURCE_RATE_TYPE_CPD`.
-     */
-    inventorySourceRateType?: string | null;
-    /**
-     * Output only. The amount that the buyer has committed to spending on the inventory source up front. Only applicable for guaranteed inventory sources.
-     */
-    minimumSpend?: Schema$Money;
-    /**
-     * The rate for the inventory source.
-     */
-    rate?: Schema$Money;
-    /**
-     * Required for guaranteed inventory sources. The number of impressions guaranteed by the seller.
-     */
-    unitsPurchased?: string | null;
   }
   /**
    * Targeting details for regional location list. This will be populated in the details field of an AssignedTargetingOption when targeting_type is `TARGETING_TYPE_REGIONAL_LOCATION_LIST`.
@@ -6001,6 +6160,35 @@ export namespace displayvideo_v3 {
     targetingOptions?: Schema$TargetingOption[];
   }
   /**
+   * The inventory control of the ad group.
+   */
+  export interface Schema$SelectedInventories {
+    /**
+     * Whether the ad group is opted-in to Discover inventory.
+     */
+    allowDiscover?: boolean | null;
+    /**
+     * Whether the ad group is opted-in to Gmail inventory.
+     */
+    allowGmail?: boolean | null;
+    /**
+     * Whether the ad group is opted-in to Google Display Network inventory.
+     */
+    allowGoogleDisplayNetwork?: boolean | null;
+    /**
+     * Whether the ad group is opted-in to YouTube in-feed inventory.
+     */
+    allowYoutubeFeed?: boolean | null;
+    /**
+     * Whether the ad group is opted-in to YouTube shorts inventory.
+     */
+    allowYoutubeShorts?: boolean | null;
+    /**
+     * Whether the ad group is opted-in to YouTube in-stream inventory.
+     */
+    allowYoutubeStream?: boolean | null;
+  }
+  /**
    * Targeting details for sensitive category. This will be populated in the details field of an AssignedTargetingOption when targeting_type is `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION`.
    */
   export interface Schema$SensitiveCategoryAssignedTargetingOptionDetails {
@@ -6108,6 +6296,10 @@ export namespace displayvideo_v3 {
      * Required. Whether to enable Optimized Targeting for the line item. Optimized targeting is not compatible with all bid strategies. Attempting to set this field to `true` for a line item using the BiddingStrategy field fixed_bid or one of the following combinations of BiddingStrategy fields and BiddingStrategyPerformanceGoalType will result in an error: maximize_auto_spend_bid: * `BIDDING_STRATEGY_PERFORMANCE_GOAL_TYPE_CIVA` * `BIDDING_STRATEGY_PERFORMANCE_GOAL_TYPE_IVO_TEN` * `BIDDING_STRATEGY_PERFORMANCE_GOAL_TYPE_AV_VIEWED` performance_goal_auto_bid: * `BIDDING_STRATEGY_PERFORMANCE_GOAL_TYPE_VIEWABLE_CPM` This also applies if the line item inherits one of the above bid strategies from the parent insertion order. Bid strategies set at the insertion order-level will be inherited by their line items if the `InsertionOrder` budget field automationType is set to `INSERTION_ORDER_AUTOMATION_TYPE_BUDGET` or `INSERTION_ORDER_AUTOMATION_TYPE_BID_BUDGET`.
      */
     enableOptimizedTargeting?: boolean | null;
+    /**
+     * Optional. Whether to exclude demographic expansion for Optimized Targeting. This field can only be set for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This field is only available to allowlisted users.
+     */
+    excludeDemographicExpansion?: boolean | null;
   }
   /**
    * Represents a single targeting option, which is a targetable concept in DV360.
@@ -6267,19 +6459,19 @@ export namespace displayvideo_v3 {
    */
   export interface Schema$ThirdPartyMeasurementConfigs {
     /**
-     * Optional. The third-party vendors measuring brand lift. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_DYNATA` * `THIRD_PARTY_VENDOR_KANTAR` * `THIRD_PARTY_VENDOR_KANTAR_MILLWARD_BROWN` * `THIRD_PARTY_VENDOR_GOOGLE_INTERNAL` * `THIRD_PARTY_VENDOR_INTAGE` * `THIRD_PARTY_VENDOR_NIELSEN` * `THIRD_PARTY_VENDOR_MACROMILL`
+     * Optional. The third-party vendors measuring brand lift. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_DYNATA` * `THIRD_PARTY_VENDOR_KANTAR` * `THIRD_PARTY_VENDOR_INTAGE` * `THIRD_PARTY_VENDOR_NIELSEN` * `THIRD_PARTY_VENDOR_MACROMILL`
      */
     brandLiftVendorConfigs?: Schema$ThirdPartyVendorConfig[];
     /**
-     * Optional. The third-party vendors measuring brand safety. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_ZERF` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE` * `THIRD_PARTY_VENDOR_GOOGLE_INTERNAL` * `THIRD_PARTY_VENDOR_ZEFR`
+     * Optional. The third-party vendors measuring brand safety. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_ZEFR` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE`
      */
     brandSafetyVendorConfigs?: Schema$ThirdPartyVendorConfig[];
     /**
-     * Optional. The third-party vendors measuring reach. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_NIELSEN` * `THIRD_PARTY_VENDOR_COMSCORE` * `THIRD_PARTY_VENDOR_KANTAR` * `THIRD_PARTY_VENDOR_GOOGLE_INTERNAL` * `THIRD_PARTY_VENDOR_KANTAR_MILLWARD_BROWN` * `THIRD_PARTY_VENDOR_VIDEO_RESEARCH` * `THIRD_PARTY_VENDOR_MEDIA_SCOPE` * `THIRD_PARTY_VENDOR_AUDIENCE_PROJECT` * `THIRD_PARTY_VENDOR_VIDEO_AMP` * `THIRD_PARTY_VENDOR_ISPOT_TV`
+     * Optional. The third-party vendors measuring reach. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_NIELSEN` * `THIRD_PARTY_VENDOR_COMSCORE` * `THIRD_PARTY_VENDOR_KANTAR` * `THIRD_PARTY_VENDOR_VIDEO_RESEARCH` * `THIRD_PARTY_VENDOR_MEDIA_SCOPE` * `THIRD_PARTY_VENDOR_AUDIENCE_PROJECT` * `THIRD_PARTY_VENDOR_VIDEO_AMP` * `THIRD_PARTY_VENDOR_ISPOT_TV` * `THIRD_PARTY_VENDOR_GEMIUS`
      */
     reachVendorConfigs?: Schema$ThirdPartyVendorConfig[];
     /**
-     * Optional. The third-party vendors measuring viewability. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_MOAT` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE` * `THIRD_PARTY_VENDOR_COMSCORE` * `THIRD_PARTY_VENDOR_TELEMETRY` * `THIRD_PARTY_VENDOR_MEETRICS` * `THIRD_PARTY_VENDOR_GOOGLE_INTERNAL`
+     * Optional. The third-party vendors measuring viewability. The following third-party vendors are applicable: * `THIRD_PARTY_VENDOR_MOAT` * `THIRD_PARTY_VENDOR_DOUBLE_VERIFY` * `THIRD_PARTY_VENDOR_INTEGRAL_AD_SCIENCE` * `THIRD_PARTY_VENDOR_COMSCORE` * `THIRD_PARTY_VENDOR_TELEMETRY` * `THIRD_PARTY_VENDOR_MEETRICS`
      */
     viewabilityVendorConfigs?: Schema$ThirdPartyVendorConfig[];
   }
@@ -6334,19 +6526,6 @@ export namespace displayvideo_v3 {
      * Third party brand verifier -- Integral Ad Science.
      */
     integralAdScience?: Schema$IntegralAdScience;
-  }
-  /**
-   * A time range.
-   */
-  export interface Schema$TimeRange {
-    /**
-     * Required. The upper bound of a time range, inclusive.
-     */
-    endTime?: string | null;
-    /**
-     * Required. The lower bound of a time range, inclusive.
-     */
-    startTime?: string | null;
   }
   /**
    * Timer event of the creative.
@@ -6509,6 +6688,10 @@ export namespace displayvideo_v3 {
      */
     allowInStream?: boolean | null;
     /**
+     * Optional. Indicates whether ads can serve as non-skippable in-stream format.
+     */
+    allowNonSkippableInStream?: boolean | null;
+    /**
      * Optional. Whether ads can serve as shorts format.
      */
     allowShorts?: boolean | null;
@@ -6585,7 +6768,7 @@ export namespace displayvideo_v3 {
      */
     companionBanners?: Schema$ImageAsset[];
     /**
-     * The custom parameters to pass custom values to tracking URL template.
+     * The custom parameters and accompanying values to add to the tracking URL.
      */
     customParameters?: {[key: string]: string} | null;
     /**
@@ -6613,7 +6796,7 @@ export namespace displayvideo_v3 {
      */
     headlines?: string[] | null;
     /**
-     * The list of lone headlines shown on the call-to-action banner.
+     * The list of long headlines shown on the call-to-action banner.
      */
     longHeadlines?: string[] | null;
     /**
@@ -6678,7 +6861,7 @@ export namespace displayvideo_v3 {
      */
     type?: string | null;
     /**
-     * The value used by the bidding strategy. When the bidding strategy is assigned at the line item level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_SHARE_OF_VOICE` When the bidding strategy is assigned at the ad group level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPV` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` If not using an applicable strategy, the value of this field will be 0.
+     * The value used by the bidding strategy. When the bidding strategy is assigned at the line item level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` When the bidding strategy is assigned at the ad group level, this field is only applicable for the following strategy types: * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_MANUAL_CPV` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPA` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_RESERVE_CPM` * `YOUTUBE_AND_PARTNERS_BIDDING_STRATEGY_TYPE_TARGET_ROAS` If not using an applicable strategy, the value of this field will be 0.
      */
     value?: string | null;
   }
@@ -6720,7 +6903,7 @@ export namespace displayvideo_v3 {
      */
     leadFormId?: string | null;
     /**
-     * Optional. The ID of the merchant which is linked to the line item for product feed.
+     * Optional. The ID of the Merchant Center account used to provide a product feed. This Merchant Center account must already be linked to the advertiser.
      */
     linkedMerchantId?: string | null;
     /**
@@ -6787,7 +6970,7 @@ export namespace displayvideo_v3 {
      */
     unavailableReason?: string | null;
     /**
-     * Required. The YouTube video asset id. This is ad_asset.ad_asset_id.
+     * Required. The YouTube video asset id. This is the adAssetId of an AdAsset resource.
      */
     videoAssetId?: string | null;
   }
@@ -8166,6 +8349,327 @@ export namespace displayvideo_v3 {
     }
 
     /**
+     * Creates an ad group ad. This method is only supported for Demand Gen ads. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroupAds.create({
+     *     // Output only. The unique ID of the advertiser the ad belongs to.
+     *     advertiserId: '[^/]+',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "adGroupAdId": "my_adGroupAdId",
+     *       //   "adGroupId": "my_adGroupId",
+     *       //   "adPolicy": {},
+     *       //   "adUrls": [],
+     *       //   "advertiserId": "my_advertiserId",
+     *       //   "audioAd": {},
+     *       //   "bumperAd": {},
+     *       //   "dcmTrackingInfo": {},
+     *       //   "demandGenCarouselAd": {},
+     *       //   "demandGenImageAd": {},
+     *       //   "demandGenProductAd": {},
+     *       //   "demandGenVideoAd": {},
+     *       //   "displayName": "my_displayName",
+     *       //   "displayVideoSourceAd": {},
+     *       //   "entityStatus": "my_entityStatus",
+     *       //   "inStreamAd": {},
+     *       //   "mastheadAd": {},
+     *       //   "name": "my_name",
+     *       //   "nonSkippableAd": {},
+     *       //   "videoDiscoverAd": {},
+     *       //   "videoPerformanceAd": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "adGroupAdId": "my_adGroupAdId",
+     *   //   "adGroupId": "my_adGroupId",
+     *   //   "adPolicy": {},
+     *   //   "adUrls": [],
+     *   //   "advertiserId": "my_advertiserId",
+     *   //   "audioAd": {},
+     *   //   "bumperAd": {},
+     *   //   "dcmTrackingInfo": {},
+     *   //   "demandGenCarouselAd": {},
+     *   //   "demandGenImageAd": {},
+     *   //   "demandGenProductAd": {},
+     *   //   "demandGenVideoAd": {},
+     *   //   "displayName": "my_displayName",
+     *   //   "displayVideoSourceAd": {},
+     *   //   "entityStatus": "my_entityStatus",
+     *   //   "inStreamAd": {},
+     *   //   "mastheadAd": {},
+     *   //   "name": "my_name",
+     *   //   "nonSkippableAd": {},
+     *   //   "videoDiscoverAd": {},
+     *   //   "videoPerformanceAd": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Advertisers$Adgroupads$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Advertisers$Adgroupads$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AdGroupAd>>;
+    create(
+      params: Params$Resource$Advertisers$Adgroupads$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroupads$Create,
+      options: MethodOptions | BodyResponseCallback<Schema$AdGroupAd>,
+      callback: BodyResponseCallback<Schema$AdGroupAd>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroupads$Create,
+      callback: BodyResponseCallback<Schema$AdGroupAd>
+    ): void;
+    create(callback: BodyResponseCallback<Schema$AdGroupAd>): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroupads$Create
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AdGroupAd>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroupads$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroupads$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v3/advertisers/{+advertiserId}/adGroupAds'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId'],
+        pathParams: ['advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AdGroupAd>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AdGroupAd>(parameters);
+      }
+    }
+
+    /**
+     * Deletes an ad group ad. This method is only supported for Demand Gen ads. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroupAds.delete({
+     *     // Required. The ID of the ad to delete. Only Demand Gen ads are supported.
+     *     adGroupAdId: '[^/]+',
+     *     // Required. The ID of the advertiser the ad belongs to.
+     *     advertiserId: '[^/]+',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {}
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Advertisers$Adgroupads$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Advertisers$Adgroupads$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
+    delete(
+      params: Params$Resource$Advertisers$Adgroupads$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroupads$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroupads$Delete,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Empty>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroupads$Delete
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroupads$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroupads$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v3/advertisers/{+advertiserId}/adGroupAds/{+adGroupAdId}'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId', 'adGroupAdId'],
+        pathParams: ['adGroupAdId', 'advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Empty>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Empty>(parameters);
+      }
+    }
+
+    /**
      * Gets an ad group ad.
      * @example
      * ```js
@@ -8212,6 +8716,11 @@ export namespace displayvideo_v3 {
      *   //   "advertiserId": "my_advertiserId",
      *   //   "audioAd": {},
      *   //   "bumperAd": {},
+     *   //   "dcmTrackingInfo": {},
+     *   //   "demandGenCarouselAd": {},
+     *   //   "demandGenImageAd": {},
+     *   //   "demandGenProductAd": {},
+     *   //   "demandGenVideoAd": {},
      *   //   "displayName": "my_displayName",
      *   //   "displayVideoSourceAd": {},
      *   //   "entityStatus": "my_entityStatus",
@@ -8465,8 +8974,218 @@ export namespace displayvideo_v3 {
         return createAPIRequest<Schema$ListAdGroupAdsResponse>(parameters);
       }
     }
+
+    /**
+     * Updates an ad group ad. This method is only supported for Demand Gen ads. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroupAds.patch({
+     *     // Output only. The unique ID of the ad. Assigned by the system.
+     *     adGroupAdId: '[^/]+',
+     *     // Output only. The unique ID of the advertiser the ad belongs to.
+     *     advertiserId: '[^/]+',
+     *     // Required. The mask to control which fields to update.
+     *     updateMask: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "adGroupAdId": "my_adGroupAdId",
+     *       //   "adGroupId": "my_adGroupId",
+     *       //   "adPolicy": {},
+     *       //   "adUrls": [],
+     *       //   "advertiserId": "my_advertiserId",
+     *       //   "audioAd": {},
+     *       //   "bumperAd": {},
+     *       //   "dcmTrackingInfo": {},
+     *       //   "demandGenCarouselAd": {},
+     *       //   "demandGenImageAd": {},
+     *       //   "demandGenProductAd": {},
+     *       //   "demandGenVideoAd": {},
+     *       //   "displayName": "my_displayName",
+     *       //   "displayVideoSourceAd": {},
+     *       //   "entityStatus": "my_entityStatus",
+     *       //   "inStreamAd": {},
+     *       //   "mastheadAd": {},
+     *       //   "name": "my_name",
+     *       //   "nonSkippableAd": {},
+     *       //   "videoDiscoverAd": {},
+     *       //   "videoPerformanceAd": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "adGroupAdId": "my_adGroupAdId",
+     *   //   "adGroupId": "my_adGroupId",
+     *   //   "adPolicy": {},
+     *   //   "adUrls": [],
+     *   //   "advertiserId": "my_advertiserId",
+     *   //   "audioAd": {},
+     *   //   "bumperAd": {},
+     *   //   "dcmTrackingInfo": {},
+     *   //   "demandGenCarouselAd": {},
+     *   //   "demandGenImageAd": {},
+     *   //   "demandGenProductAd": {},
+     *   //   "demandGenVideoAd": {},
+     *   //   "displayName": "my_displayName",
+     *   //   "displayVideoSourceAd": {},
+     *   //   "entityStatus": "my_entityStatus",
+     *   //   "inStreamAd": {},
+     *   //   "mastheadAd": {},
+     *   //   "name": "my_name",
+     *   //   "nonSkippableAd": {},
+     *   //   "videoDiscoverAd": {},
+     *   //   "videoPerformanceAd": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    patch(
+      params: Params$Resource$Advertisers$Adgroupads$Patch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    patch(
+      params?: Params$Resource$Advertisers$Adgroupads$Patch,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AdGroupAd>>;
+    patch(
+      params: Params$Resource$Advertisers$Adgroupads$Patch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    patch(
+      params: Params$Resource$Advertisers$Adgroupads$Patch,
+      options: MethodOptions | BodyResponseCallback<Schema$AdGroupAd>,
+      callback: BodyResponseCallback<Schema$AdGroupAd>
+    ): void;
+    patch(
+      params: Params$Resource$Advertisers$Adgroupads$Patch,
+      callback: BodyResponseCallback<Schema$AdGroupAd>
+    ): void;
+    patch(callback: BodyResponseCallback<Schema$AdGroupAd>): void;
+    patch(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroupads$Patch
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AdGroupAd>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AdGroupAd>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroupads$Patch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroupads$Patch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v3/advertisers/{+advertiserId}/adGroupAds/{+adGroupAdId}'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId', 'adGroupAdId'],
+        pathParams: ['adGroupAdId', 'advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AdGroupAd>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AdGroupAd>(parameters);
+      }
+    }
   }
 
+  export interface Params$Resource$Advertisers$Adgroupads$Create extends StandardParameters {
+    /**
+     * Output only. The unique ID of the advertiser the ad belongs to.
+     */
+    advertiserId?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AdGroupAd;
+  }
+  export interface Params$Resource$Advertisers$Adgroupads$Delete extends StandardParameters {
+    /**
+     * Required. The ID of the ad to delete. Only Demand Gen ads are supported.
+     */
+    adGroupAdId?: string;
+    /**
+     * Required. The ID of the advertiser the ad belongs to.
+     */
+    advertiserId?: string;
+  }
   export interface Params$Resource$Advertisers$Adgroupads$Get extends StandardParameters {
     /**
      * Required. The ID of the ad to fetch.
@@ -8499,6 +9218,25 @@ export namespace displayvideo_v3 {
      */
     pageToken?: string;
   }
+  export interface Params$Resource$Advertisers$Adgroupads$Patch extends StandardParameters {
+    /**
+     * Output only. The unique ID of the ad. Assigned by the system.
+     */
+    adGroupAdId?: string;
+    /**
+     * Output only. The unique ID of the advertiser the ad belongs to.
+     */
+    advertiserId?: string;
+    /**
+     * Required. The mask to control which fields to update.
+     */
+    updateMask?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AdGroupAd;
+  }
 
   export class Resource$Advertisers$Adgroups {
     context: APIRequestContext;
@@ -8508,6 +9246,167 @@ export namespace displayvideo_v3 {
       this.targetingTypes = new Resource$Advertisers$Adgroups$Targetingtypes(
         this.context
       );
+    }
+
+    /**
+     * Bulk edits targeting options for multiple ad groups. The same set of delete and create requests will be applied to all specified ad groups. Specifically, the operation will delete the assigned targeting options provided in BulkEditAdGroupAssignedTargetingOptionsRequest.delete_requests from each ad group, and then create the assigned targeting options provided in BulkEditAdGroupAssignedTargetingOptionsRequest.create_requests. This method is only supported for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await displayvideo.advertisers.adGroups.bulkEditAssignedTargetingOptions({
+     *       // Required. The ID of the advertiser the ad groups belong to.
+     *       advertiserId: '[^/]+',
+     *
+     *       // Request body metadata
+     *       requestBody: {
+     *         // request body parameters
+     *         // {
+     *         //   "adGroupIds": [],
+     *         //   "createRequests": [],
+     *         //   "deleteRequests": []
+     *         // }
+     *       },
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "errors": [],
+     *   //   "failedAdGroupIds": [],
+     *   //   "updatedAdGroupIds": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    bulkEditAssignedTargetingOptions(
+      params: Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    bulkEditAssignedTargetingOptions(
+      params?: Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+    >;
+    bulkEditAssignedTargetingOptions(
+      params: Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    bulkEditAssignedTargetingOptions(
+      params: Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>,
+      callback: BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+    ): void;
+    bulkEditAssignedTargetingOptions(
+      params: Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions,
+      callback: BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+    ): void;
+    bulkEditAssignedTargetingOptions(
+      callback: BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+    ): void;
+    bulkEditAssignedTargetingOptions(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions
+        | BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v3/advertisers/{+advertiserId}/adGroups:bulkEditAssignedTargetingOptions'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId'],
+        pathParams: ['advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$BulkEditAdGroupAssignedTargetingOptionsResponse>(
+          parameters
+        );
+      }
     }
 
     /**
@@ -8673,6 +9572,307 @@ export namespace displayvideo_v3 {
     }
 
     /**
+     * Creates a new ad group. Returns the newly created ad group if successful. This method is only supported for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroups.create({
+     *     // Output only. The unique ID of the advertiser the ad group belongs to.
+     *     advertiserId: '[^/]+',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "adGroupFormat": "my_adGroupFormat",
+     *       //   "adGroupId": "my_adGroupId",
+     *       //   "adGroupInventoryControl": {},
+     *       //   "advertiserId": "my_advertiserId",
+     *       //   "bidStrategy": {},
+     *       //   "displayName": "my_displayName",
+     *       //   "entityStatus": "my_entityStatus",
+     *       //   "lineItemId": "my_lineItemId",
+     *       //   "name": "my_name",
+     *       //   "productFeedData": {},
+     *       //   "targetingExpansion": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "adGroupFormat": "my_adGroupFormat",
+     *   //   "adGroupId": "my_adGroupId",
+     *   //   "adGroupInventoryControl": {},
+     *   //   "advertiserId": "my_advertiserId",
+     *   //   "bidStrategy": {},
+     *   //   "displayName": "my_displayName",
+     *   //   "entityStatus": "my_entityStatus",
+     *   //   "lineItemId": "my_lineItemId",
+     *   //   "name": "my_name",
+     *   //   "productFeedData": {},
+     *   //   "targetingExpansion": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Advertisers$Adgroups$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AdGroup>>;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Create,
+      options: MethodOptions | BodyResponseCallback<Schema$AdGroup>,
+      callback: BodyResponseCallback<Schema$AdGroup>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Create,
+      callback: BodyResponseCallback<Schema$AdGroup>
+    ): void;
+    create(callback: BodyResponseCallback<Schema$AdGroup>): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Create
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AdGroup>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroups$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v3/advertisers/{+advertiserId}/adGroups').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId'],
+        pathParams: ['advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AdGroup>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AdGroup>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a AdGroup. Returns error code `NOT_FOUND` if the ad group does not exist. This method is only supported for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroups.delete({
+     *     // Required. The ID of the ad group to delete.
+     *     adGroupId: '[^/]+',
+     *     // Required. The ID of the advertiser this ad group belongs to.
+     *     advertiserId: '[^/]+',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {}
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Advertisers$Adgroups$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Delete,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Empty>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Delete
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroups$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v3/advertisers/{+advertiserId}/adGroups/{+adGroupId}'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId', 'adGroupId'],
+        pathParams: ['adGroupId', 'advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Empty>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Empty>(parameters);
+      }
+    }
+
+    /**
      * Gets an ad group.
      * @example
      * ```js
@@ -8714,6 +9914,7 @@ export namespace displayvideo_v3 {
      *   // {
      *   //   "adGroupFormat": "my_adGroupFormat",
      *   //   "adGroupId": "my_adGroupId",
+     *   //   "adGroupInventoryControl": {},
      *   //   "advertiserId": "my_advertiserId",
      *   //   "bidStrategy": {},
      *   //   "displayName": "my_displayName",
@@ -8966,8 +10167,187 @@ export namespace displayvideo_v3 {
         return createAPIRequest<Schema$ListAdGroupsResponse>(parameters);
       }
     }
+
+    /**
+     * Updates an existing ad group. Returns the updated ad group if successful. This method is only supported for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await displayvideo.advertisers.adGroups.patch({
+     *     // Output only. The unique ID of the ad group. Assigned by the system.
+     *     adGroupId: '[^/]+',
+     *     // Output only. The unique ID of the advertiser the ad group belongs to.
+     *     advertiserId: '[^/]+',
+     *     // Required. The mask to control which fields to update.
+     *     updateMask: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "adGroupFormat": "my_adGroupFormat",
+     *       //   "adGroupId": "my_adGroupId",
+     *       //   "adGroupInventoryControl": {},
+     *       //   "advertiserId": "my_advertiserId",
+     *       //   "bidStrategy": {},
+     *       //   "displayName": "my_displayName",
+     *       //   "entityStatus": "my_entityStatus",
+     *       //   "lineItemId": "my_lineItemId",
+     *       //   "name": "my_name",
+     *       //   "productFeedData": {},
+     *       //   "targetingExpansion": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "adGroupFormat": "my_adGroupFormat",
+     *   //   "adGroupId": "my_adGroupId",
+     *   //   "adGroupInventoryControl": {},
+     *   //   "advertiserId": "my_advertiserId",
+     *   //   "bidStrategy": {},
+     *   //   "displayName": "my_displayName",
+     *   //   "entityStatus": "my_entityStatus",
+     *   //   "lineItemId": "my_lineItemId",
+     *   //   "name": "my_name",
+     *   //   "productFeedData": {},
+     *   //   "targetingExpansion": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    patch(
+      params: Params$Resource$Advertisers$Adgroups$Patch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    patch(
+      params?: Params$Resource$Advertisers$Adgroups$Patch,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AdGroup>>;
+    patch(
+      params: Params$Resource$Advertisers$Adgroups$Patch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    patch(
+      params: Params$Resource$Advertisers$Adgroups$Patch,
+      options: MethodOptions | BodyResponseCallback<Schema$AdGroup>,
+      callback: BodyResponseCallback<Schema$AdGroup>
+    ): void;
+    patch(
+      params: Params$Resource$Advertisers$Adgroups$Patch,
+      callback: BodyResponseCallback<Schema$AdGroup>
+    ): void;
+    patch(callback: BodyResponseCallback<Schema$AdGroup>): void;
+    patch(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Patch
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AdGroup>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AdGroup>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Patch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Advertisers$Adgroups$Patch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v3/advertisers/{+advertiserId}/adGroups/{+adGroupId}'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId', 'adGroupId'],
+        pathParams: ['adGroupId', 'advertiserId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AdGroup>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AdGroup>(parameters);
+      }
+    }
   }
 
+  export interface Params$Resource$Advertisers$Adgroups$Bulkeditassignedtargetingoptions extends StandardParameters {
+    /**
+     * Required. The ID of the advertiser the ad groups belong to.
+     */
+    advertiserId?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$BulkEditAdGroupAssignedTargetingOptionsRequest;
+  }
   export interface Params$Resource$Advertisers$Adgroups$Bulklistadgroupassignedtargetingoptions extends StandardParameters {
     /**
      * Required. The IDs of the ad groups to list assigned targeting options for.
@@ -8993,6 +10373,27 @@ export namespace displayvideo_v3 {
      * Optional. A token that lets the client fetch the next page of results. Typically, this is the value of next_page_token returned from the previous call to the `BulkListAdGroupAssignedTargetingOptions` method. If not specified, the first page of results will be returned.
      */
     pageToken?: string;
+  }
+  export interface Params$Resource$Advertisers$Adgroups$Create extends StandardParameters {
+    /**
+     * Output only. The unique ID of the advertiser the ad group belongs to.
+     */
+    advertiserId?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AdGroup;
+  }
+  export interface Params$Resource$Advertisers$Adgroups$Delete extends StandardParameters {
+    /**
+     * Required. The ID of the ad group to delete.
+     */
+    adGroupId?: string;
+    /**
+     * Required. The ID of the advertiser this ad group belongs to.
+     */
+    advertiserId?: string;
   }
   export interface Params$Resource$Advertisers$Adgroups$Get extends StandardParameters {
     /**
@@ -9026,6 +10427,25 @@ export namespace displayvideo_v3 {
      */
     pageToken?: string;
   }
+  export interface Params$Resource$Advertisers$Adgroups$Patch extends StandardParameters {
+    /**
+     * Output only. The unique ID of the ad group. Assigned by the system.
+     */
+    adGroupId?: string;
+    /**
+     * Output only. The unique ID of the advertiser the ad group belongs to.
+     */
+    advertiserId?: string;
+    /**
+     * Required. The mask to control which fields to update.
+     */
+    updateMask?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AdGroup;
+  }
 
   export class Resource$Advertisers$Adgroups$Targetingtypes {
     context: APIRequestContext;
@@ -9043,6 +10463,424 @@ export namespace displayvideo_v3 {
     context: APIRequestContext;
     constructor(context: APIRequestContext) {
       this.context = context;
+    }
+
+    /**
+     * Assigns a targeting option to an ad group. Returns the assigned targeting option if successful. This method is only supported for Demand Gen ad groups. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.create(
+     *       {
+     *         // Required. The ID of the ad group the assigned targeting option will belong to.
+     *         adGroupId: '[^/]+',
+     *         // Required. The ID of the advertiser the ad group belongs to.
+     *         advertiserId: '[^/]+',
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     *         targetingType: '[^/]+',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {
+     *           //   "ageRangeDetails": {},
+     *           //   "appCategoryDetails": {},
+     *           //   "appDetails": {},
+     *           //   "assignedTargetingOptionId": "my_assignedTargetingOptionId",
+     *           //   "assignedTargetingOptionIdAlias": "my_assignedTargetingOptionIdAlias",
+     *           //   "audienceGroupDetails": {},
+     *           //   "audioContentTypeDetails": {},
+     *           //   "authorizedSellerStatusDetails": {},
+     *           //   "browserDetails": {},
+     *           //   "businessChainDetails": {},
+     *           //   "carrierAndIspDetails": {},
+     *           //   "categoryDetails": {},
+     *           //   "channelDetails": {},
+     *           //   "contentDurationDetails": {},
+     *           //   "contentGenreDetails": {},
+     *           //   "contentInstreamPositionDetails": {},
+     *           //   "contentOutstreamPositionDetails": {},
+     *           //   "contentStreamTypeDetails": {},
+     *           //   "contentThemeExclusionDetails": {},
+     *           //   "dayAndTimeDetails": {},
+     *           //   "deviceMakeModelDetails": {},
+     *           //   "deviceTypeDetails": {},
+     *           //   "digitalContentLabelExclusionDetails": {},
+     *           //   "environmentDetails": {},
+     *           //   "exchangeDetails": {},
+     *           //   "genderDetails": {},
+     *           //   "geoRegionDetails": {},
+     *           //   "householdIncomeDetails": {},
+     *           //   "inheritance": "my_inheritance",
+     *           //   "inventorySourceDetails": {},
+     *           //   "inventorySourceGroupDetails": {},
+     *           //   "keywordDetails": {},
+     *           //   "languageDetails": {},
+     *           //   "name": "my_name",
+     *           //   "nativeContentPositionDetails": {},
+     *           //   "negativeKeywordListDetails": {},
+     *           //   "omidDetails": {},
+     *           //   "onScreenPositionDetails": {},
+     *           //   "operatingSystemDetails": {},
+     *           //   "parentalStatusDetails": {},
+     *           //   "poiDetails": {},
+     *           //   "proximityLocationListDetails": {},
+     *           //   "regionalLocationListDetails": {},
+     *           //   "sensitiveCategoryExclusionDetails": {},
+     *           //   "sessionPositionDetails": {},
+     *           //   "subExchangeDetails": {},
+     *           //   "targetingType": "my_targetingType",
+     *           //   "thirdPartyVerifierDetails": {},
+     *           //   "urlDetails": {},
+     *           //   "userRewardedContentDetails": {},
+     *           //   "videoPlayerSizeDetails": {},
+     *           //   "viewabilityDetails": {},
+     *           //   "youtubeChannelDetails": {},
+     *           //   "youtubeVideoDetails": {}
+     *           // }
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "ageRangeDetails": {},
+     *   //   "appCategoryDetails": {},
+     *   //   "appDetails": {},
+     *   //   "assignedTargetingOptionId": "my_assignedTargetingOptionId",
+     *   //   "assignedTargetingOptionIdAlias": "my_assignedTargetingOptionIdAlias",
+     *   //   "audienceGroupDetails": {},
+     *   //   "audioContentTypeDetails": {},
+     *   //   "authorizedSellerStatusDetails": {},
+     *   //   "browserDetails": {},
+     *   //   "businessChainDetails": {},
+     *   //   "carrierAndIspDetails": {},
+     *   //   "categoryDetails": {},
+     *   //   "channelDetails": {},
+     *   //   "contentDurationDetails": {},
+     *   //   "contentGenreDetails": {},
+     *   //   "contentInstreamPositionDetails": {},
+     *   //   "contentOutstreamPositionDetails": {},
+     *   //   "contentStreamTypeDetails": {},
+     *   //   "contentThemeExclusionDetails": {},
+     *   //   "dayAndTimeDetails": {},
+     *   //   "deviceMakeModelDetails": {},
+     *   //   "deviceTypeDetails": {},
+     *   //   "digitalContentLabelExclusionDetails": {},
+     *   //   "environmentDetails": {},
+     *   //   "exchangeDetails": {},
+     *   //   "genderDetails": {},
+     *   //   "geoRegionDetails": {},
+     *   //   "householdIncomeDetails": {},
+     *   //   "inheritance": "my_inheritance",
+     *   //   "inventorySourceDetails": {},
+     *   //   "inventorySourceGroupDetails": {},
+     *   //   "keywordDetails": {},
+     *   //   "languageDetails": {},
+     *   //   "name": "my_name",
+     *   //   "nativeContentPositionDetails": {},
+     *   //   "negativeKeywordListDetails": {},
+     *   //   "omidDetails": {},
+     *   //   "onScreenPositionDetails": {},
+     *   //   "operatingSystemDetails": {},
+     *   //   "parentalStatusDetails": {},
+     *   //   "poiDetails": {},
+     *   //   "proximityLocationListDetails": {},
+     *   //   "regionalLocationListDetails": {},
+     *   //   "sensitiveCategoryExclusionDetails": {},
+     *   //   "sessionPositionDetails": {},
+     *   //   "subExchangeDetails": {},
+     *   //   "targetingType": "my_targetingType",
+     *   //   "thirdPartyVerifierDetails": {},
+     *   //   "urlDetails": {},
+     *   //   "userRewardedContentDetails": {},
+     *   //   "videoPlayerSizeDetails": {},
+     *   //   "viewabilityDetails": {},
+     *   //   "youtubeChannelDetails": {},
+     *   //   "youtubeVideoDetails": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AssignedTargetingOption>>;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$AssignedTargetingOption>,
+      callback: BodyResponseCallback<Schema$AssignedTargetingOption>
+    ): void;
+    create(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create,
+      callback: BodyResponseCallback<Schema$AssignedTargetingOption>
+    ): void;
+    create(
+      callback: BodyResponseCallback<Schema$AssignedTargetingOption>
+    ): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create
+        | BodyResponseCallback<Schema$AssignedTargetingOption>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AssignedTargetingOption>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AssignedTargetingOption>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AssignedTargetingOption>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v3/advertisers/{+advertiserId}/adGroups/{+adGroupId}/targetingTypes/{+targetingType}/assignedTargetingOptions'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['advertiserId', 'adGroupId', 'targetingType'],
+        pathParams: ['adGroupId', 'advertiserId', 'targetingType'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AssignedTargetingOption>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AssignedTargetingOption>(parameters);
+      }
+    }
+
+    /**
+     * Deletes an assigned targeting option from an ad group. This method is only supported for Demand Gen ad groups with the AdGroupFormat `AD_GROUP_FORMAT_DEMAND_GEN`. Retrieval and management of Demand Gen resources is currently in beta. This method is only available to allowlisted users.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const displayvideo = google.displayvideo('v3');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/display-video'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await displayvideo.advertisers.adGroups.targetingTypes.assignedTargetingOptions.delete(
+     *       {
+     *         // Required. The ID of the ad group the assigned targeting option belongs to.
+     *         adGroupId: '[^/]+',
+     *         // Required. The ID of the advertiser the ad group belongs to.
+     *         advertiserId: '[^/]+',
+     *         // Required. The ID of the assigned targeting option to delete.
+     *         assignedTargetingOptionId: '[^/]+',
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     *         targetingType: '[^/]+',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {}
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Empty>>;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Empty>,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(
+      params: Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete,
+      callback: BodyResponseCallback<Schema$Empty>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Empty>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Empty>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Empty>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v3/advertisers/{+advertiserId}/adGroups/{+adGroupId}/targetingTypes/{+targetingType}/assignedTargetingOptions/{+assignedTargetingOptionId}'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: [
+          'advertiserId',
+          'adGroupId',
+          'targetingType',
+          'assignedTargetingOptionId',
+        ],
+        pathParams: [
+          'adGroupId',
+          'advertiserId',
+          'assignedTargetingOptionId',
+          'targetingType',
+        ],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Empty>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Empty>(parameters);
+      }
     }
 
     /**
@@ -9084,7 +10922,7 @@ export namespace displayvideo_v3 {
      *         advertiserId: '[^/]+',
      *         // Required. An identifier unique to the targeting type in this line item that identifies the assigned targeting option being requested.
      *         assignedTargetingOptionId: '[^/]+',
-     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
      *         targetingType: '[^/]+',
      *       },
      *     );
@@ -9302,7 +11140,7 @@ export namespace displayvideo_v3 {
      *         pageSize: 'placeholder-value',
      *         // Optional. A token identifying a page of results the server should return. Typically, this is the value of next_page_token returned from the previous call to `ListAdGroupAssignedTargetingOptions` method. If not specified, the first page of results will be returned.
      *         pageToken: 'placeholder-value',
-     *         // Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     *         // Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
      *         targetingType: '[^/]+',
      *       },
      *     );
@@ -9422,6 +11260,43 @@ export namespace displayvideo_v3 {
     }
   }
 
+  export interface Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Create extends StandardParameters {
+    /**
+     * Required. The ID of the ad group the assigned targeting option will belong to.
+     */
+    adGroupId?: string;
+    /**
+     * Required. The ID of the advertiser the ad group belongs to.
+     */
+    advertiserId?: string;
+    /**
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     */
+    targetingType?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AssignedTargetingOption;
+  }
+  export interface Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Delete extends StandardParameters {
+    /**
+     * Required. The ID of the ad group the assigned targeting option belongs to.
+     */
+    adGroupId?: string;
+    /**
+     * Required. The ID of the advertiser the ad group belongs to.
+     */
+    advertiserId?: string;
+    /**
+     * Required. The ID of the assigned targeting option to delete.
+     */
+    assignedTargetingOptionId?: string;
+    /**
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     */
+    targetingType?: string;
+  }
   export interface Params$Resource$Advertisers$Adgroups$Targetingtypes$Assignedtargetingoptions$Get extends StandardParameters {
     /**
      * Required. The ID of the ad group the assigned targeting option belongs to.
@@ -9436,7 +11311,7 @@ export namespace displayvideo_v3 {
      */
     assignedTargetingOptionId?: string;
     /**
-     * Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
      */
     targetingType?: string;
   }
@@ -9466,7 +11341,7 @@ export namespace displayvideo_v3 {
      */
     pageToken?: string;
     /**
-     * Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
+     * Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_SESSION_POSITION` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_YOUTUBE_CHANNEL` * `TARGETING_TYPE_YOUTUBE_VIDEO`
      */
     targetingType?: string;
   }
@@ -14843,6 +16718,7 @@ export namespace displayvideo_v3 {
      *       //   "containsEuPoliticalAds": "my_containsEuPoliticalAds",
      *       //   "conversionCounting": {},
      *       //   "creativeIds": [],
+     *       //   "demandGenSettings": {},
      *       //   "displayName": "my_displayName",
      *       //   "entityStatus": "my_entityStatus",
      *       //   "excludeNewExchanges": false,
@@ -14854,6 +16730,7 @@ export namespace displayvideo_v3 {
      *       //   "lineItemType": "my_lineItemType",
      *       //   "mobileApp": {},
      *       //   "name": "my_name",
+     *       //   "optimizeFixedBidding": false,
      *       //   "pacing": {},
      *       //   "partnerCosts": [],
      *       //   "partnerRevenueModel": {},
@@ -14876,6 +16753,7 @@ export namespace displayvideo_v3 {
      *   //   "containsEuPoliticalAds": "my_containsEuPoliticalAds",
      *   //   "conversionCounting": {},
      *   //   "creativeIds": [],
+     *   //   "demandGenSettings": {},
      *   //   "displayName": "my_displayName",
      *   //   "entityStatus": "my_entityStatus",
      *   //   "excludeNewExchanges": false,
@@ -14887,6 +16765,7 @@ export namespace displayvideo_v3 {
      *   //   "lineItemType": "my_lineItemType",
      *   //   "mobileApp": {},
      *   //   "name": "my_name",
+     *   //   "optimizeFixedBidding": false,
      *   //   "pacing": {},
      *   //   "partnerCosts": [],
      *   //   "partnerRevenueModel": {},
@@ -15328,6 +17207,7 @@ export namespace displayvideo_v3 {
      *   //   "containsEuPoliticalAds": "my_containsEuPoliticalAds",
      *   //   "conversionCounting": {},
      *   //   "creativeIds": [],
+     *   //   "demandGenSettings": {},
      *   //   "displayName": "my_displayName",
      *   //   "entityStatus": "my_entityStatus",
      *   //   "excludeNewExchanges": false,
@@ -15339,6 +17219,7 @@ export namespace displayvideo_v3 {
      *   //   "lineItemType": "my_lineItemType",
      *   //   "mobileApp": {},
      *   //   "name": "my_name",
+     *   //   "optimizeFixedBidding": false,
      *   //   "pacing": {},
      *   //   "partnerCosts": [],
      *   //   "partnerRevenueModel": {},
@@ -15641,6 +17522,7 @@ export namespace displayvideo_v3 {
      *       //   "containsEuPoliticalAds": "my_containsEuPoliticalAds",
      *       //   "conversionCounting": {},
      *       //   "creativeIds": [],
+     *       //   "demandGenSettings": {},
      *       //   "displayName": "my_displayName",
      *       //   "entityStatus": "my_entityStatus",
      *       //   "excludeNewExchanges": false,
@@ -15652,6 +17534,7 @@ export namespace displayvideo_v3 {
      *       //   "lineItemType": "my_lineItemType",
      *       //   "mobileApp": {},
      *       //   "name": "my_name",
+     *       //   "optimizeFixedBidding": false,
      *       //   "pacing": {},
      *       //   "partnerCosts": [],
      *       //   "partnerRevenueModel": {},
@@ -15674,6 +17557,7 @@ export namespace displayvideo_v3 {
      *   //   "containsEuPoliticalAds": "my_containsEuPoliticalAds",
      *   //   "conversionCounting": {},
      *   //   "creativeIds": [],
+     *   //   "demandGenSettings": {},
      *   //   "displayName": "my_displayName",
      *   //   "entityStatus": "my_entityStatus",
      *   //   "excludeNewExchanges": false,
@@ -15685,6 +17569,7 @@ export namespace displayvideo_v3 {
      *   //   "lineItemType": "my_lineItemType",
      *   //   "mobileApp": {},
      *   //   "name": "my_name",
+     *   //   "optimizeFixedBidding": false,
      *   //   "pacing": {},
      *   //   "partnerCosts": [],
      *   //   "partnerRevenueModel": {},
@@ -16403,7 +18288,7 @@ export namespace displayvideo_v3 {
      *         assignedTargetingOptionId: '[^/]+',
      *         // Required. The ID of the line item the assigned targeting option belongs to.
      *         lineItemId: '[^/]+',
-     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_INVENTORY_MODE` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
      *         targetingType: '[^/]+',
      *       },
      *     );
@@ -16621,7 +18506,7 @@ export namespace displayvideo_v3 {
      *         pageSize: 'placeholder-value',
      *         // A token identifying a page of results the server should return. Typically, this is the value of next_page_token returned from the previous call to `ListLineItemAssignedTargetingOptions` method. If not specified, the first page of results will be returned.
      *         pageToken: 'placeholder-value',
-     *         // Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_INVENTORY_MODE` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
+     *         // Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
      *         targetingType: '[^/]+',
      *       },
      *     );
@@ -16792,7 +18677,7 @@ export namespace displayvideo_v3 {
      */
     lineItemId?: string;
     /**
-     * Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_INVENTORY_MODE` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
      */
     targetingType?: string;
   }
@@ -16822,7 +18707,7 @@ export namespace displayvideo_v3 {
      */
     pageToken?: string;
     /**
-     * Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_INVENTORY_MODE` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
+     * Required. Identifies the type of assigned targeting options to list. Supported targeting types include: * `TARGETING_TYPE_AGE_RANGE` * `TARGETING_TYPE_APP` * `TARGETING_TYPE_APP_CATEGORY` * `TARGETING_TYPE_AUDIENCE_GROUP` * `TARGETING_TYPE_AUDIO_CONTENT_TYPE` * `TARGETING_TYPE_AUTHORIZED_SELLER_STATUS` * `TARGETING_TYPE_BROWSER` * `TARGETING_TYPE_BUSINESS_CHAIN` * `TARGETING_TYPE_CARRIER_AND_ISP` * `TARGETING_TYPE_CATEGORY` * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_CONTENT_DURATION` * `TARGETING_TYPE_CONTENT_GENRE` * `TARGETING_TYPE_CONTENT_INSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_OUTSTREAM_POSITION` * `TARGETING_TYPE_CONTENT_STREAM_TYPE` * `TARGETING_TYPE_DAY_AND_TIME` * `TARGETING_TYPE_DEVICE_MAKE_MODEL` * `TARGETING_TYPE_DEVICE_TYPE` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_ENVIRONMENT` * `TARGETING_TYPE_EXCHANGE` * `TARGETING_TYPE_GENDER` * `TARGETING_TYPE_GEO_REGION` * `TARGETING_TYPE_HOUSEHOLD_INCOME` * `TARGETING_TYPE_INVENTORY_SOURCE` * `TARGETING_TYPE_INVENTORY_SOURCE_GROUP` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_LANGUAGE` * `TARGETING_TYPE_NATIVE_CONTENT_POSITION` * `TARGETING_TYPE_NEGATIVE_KEYWORD_LIST` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_ON_SCREEN_POSITION` * `TARGETING_TYPE_OPERATING_SYSTEM` * `TARGETING_TYPE_PARENTAL_STATUS` * `TARGETING_TYPE_POI` * `TARGETING_TYPE_PROXIMITY_LOCATION_LIST` * `TARGETING_TYPE_REGIONAL_LOCATION_LIST` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_SUB_EXCHANGE` * `TARGETING_TYPE_THIRD_PARTY_VERIFIER` * `TARGETING_TYPE_URL` * `TARGETING_TYPE_USER_REWARDED_CONTENT` * `TARGETING_TYPE_VIDEO_PLAYER_SIZE` * `TARGETING_TYPE_VIEWABILITY` * `TARGETING_TYPE_YOUTUBE_CHANNEL` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items) * `TARGETING_TYPE_YOUTUBE_VIDEO` (only for `LINE_ITEM_TYPE_YOUTUBE_AND_PARTNERS_VIDEO_SEQUENCE` line items)
      */
     targetingType?: string;
   }
@@ -19931,7 +21816,7 @@ export namespace displayvideo_v3 {
      *       {
      *         // Required. The ID of the advertiser.
      *         advertiserId: '[^/]+',
-     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      *         targetingType: '[^/]+',
      *
      *         // Request body metadata
@@ -20194,7 +22079,7 @@ export namespace displayvideo_v3 {
      *         advertiserId: '[^/]+',
      *         // Required. The ID of the assigned targeting option to delete.
      *         assignedTargetingOptionId: '[^/]+',
-     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     *         // Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      *         targetingType: '[^/]+',
      *       },
      *     );
@@ -20683,7 +22568,7 @@ export namespace displayvideo_v3 {
      */
     advertiserId?: string;
     /**
-     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      */
     targetingType?: string;
 
@@ -20702,7 +22587,7 @@ export namespace displayvideo_v3 {
      */
     assignedTargetingOptionId?: string;
     /**
-     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD` * `TARGETING_TYPE_INVENTORY_MODE`
+     * Required. Identifies the type of this assigned targeting option. Supported targeting types: * `TARGETING_TYPE_CHANNEL` * `TARGETING_TYPE_DIGITAL_CONTENT_LABEL_EXCLUSION` * `TARGETING_TYPE_OMID` * `TARGETING_TYPE_SENSITIVE_CATEGORY_EXCLUSION` * `TARGETING_TYPE_KEYWORD`
      */
     targetingType?: string;
   }
@@ -27995,938 +29880,6 @@ export namespace displayvideo_v3 {
      * The ID of the partner that has access to the assignment. If the parent inventory source group is advertiser-owned, the assignment cannot be accessed via a partner.
      */
     partnerId?: string;
-  }
-
-  export class Resource$Inventorysources {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Creates a new inventory source. Returns the newly created inventory source if successful.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const displayvideo = google.displayvideo('v3');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/display-video'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await displayvideo.inventorySources.create({
-     *     // The ID of the advertiser that the request is being made within.
-     *     advertiserId: 'placeholder-value',
-     *     // The ID of the partner that the request is being made within.
-     *     partnerId: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "commitment": "my_commitment",
-     *       //   "creativeConfigs": [],
-     *       //   "dealId": "my_dealId",
-     *       //   "deliveryMethod": "my_deliveryMethod",
-     *       //   "displayName": "my_displayName",
-     *       //   "exchange": "my_exchange",
-     *       //   "guaranteedOrderId": "my_guaranteedOrderId",
-     *       //   "inventorySourceId": "my_inventorySourceId",
-     *       //   "inventorySourceProductType": "my_inventorySourceProductType",
-     *       //   "inventorySourceType": "my_inventorySourceType",
-     *       //   "name": "my_name",
-     *       //   "publisherName": "my_publisherName",
-     *       //   "rateDetails": {},
-     *       //   "readAdvertiserIds": [],
-     *       //   "readPartnerIds": [],
-     *       //   "readWriteAccessors": {},
-     *       //   "status": {},
-     *       //   "timeRange": {},
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "commitment": "my_commitment",
-     *   //   "creativeConfigs": [],
-     *   //   "dealId": "my_dealId",
-     *   //   "deliveryMethod": "my_deliveryMethod",
-     *   //   "displayName": "my_displayName",
-     *   //   "exchange": "my_exchange",
-     *   //   "guaranteedOrderId": "my_guaranteedOrderId",
-     *   //   "inventorySourceId": "my_inventorySourceId",
-     *   //   "inventorySourceProductType": "my_inventorySourceProductType",
-     *   //   "inventorySourceType": "my_inventorySourceType",
-     *   //   "name": "my_name",
-     *   //   "publisherName": "my_publisherName",
-     *   //   "rateDetails": {},
-     *   //   "readAdvertiserIds": [],
-     *   //   "readPartnerIds": [],
-     *   //   "readWriteAccessors": {},
-     *   //   "status": {},
-     *   //   "timeRange": {},
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Inventorysources$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Inventorysources$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>;
-    create(
-      params: Params$Resource$Inventorysources$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Inventorysources$Create,
-      options: MethodOptions | BodyResponseCallback<Schema$InventorySource>,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    create(
-      params: Params$Resource$Inventorysources$Create,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    create(callback: BodyResponseCallback<Schema$InventorySource>): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Inventorysources$Create
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Inventorysources$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Inventorysources$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v3/inventorySources').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: [],
-        pathParams: [],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$InventorySource>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$InventorySource>(parameters);
-      }
-    }
-
-    /**
-     * Edits read/write accessors of an inventory source. Returns the updated read_write_accessors for the inventory source.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const displayvideo = google.displayvideo('v3');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/display-video'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await displayvideo.inventorySources.editInventorySourceReadWriteAccessors({
-     *       // Required. The ID of inventory source to update.
-     *       inventorySourceId: '[^/]+',
-     *
-     *       // Request body metadata
-     *       requestBody: {
-     *         // request body parameters
-     *         // {
-     *         //   "advertisersUpdate": {},
-     *         //   "assignPartner": false,
-     *         //   "partnerId": "my_partnerId"
-     *         // }
-     *       },
-     *     });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "advertisers": {},
-     *   //   "partner": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    editInventorySourceReadWriteAccessors(
-      params: Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    editInventorySourceReadWriteAccessors(
-      params?: Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$InventorySourceAccessors>>;
-    editInventorySourceReadWriteAccessors(
-      params: Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    editInventorySourceReadWriteAccessors(
-      params: Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$InventorySourceAccessors>,
-      callback: BodyResponseCallback<Schema$InventorySourceAccessors>
-    ): void;
-    editInventorySourceReadWriteAccessors(
-      params: Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors,
-      callback: BodyResponseCallback<Schema$InventorySourceAccessors>
-    ): void;
-    editInventorySourceReadWriteAccessors(
-      callback: BodyResponseCallback<Schema$InventorySourceAccessors>
-    ): void;
-    editInventorySourceReadWriteAccessors(
-      paramsOrCallback?:
-        | Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors
-        | BodyResponseCallback<Schema$InventorySourceAccessors>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$InventorySourceAccessors>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$InventorySourceAccessors>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$InventorySourceAccessors>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (
-              rootUrl +
-              '/v3/inventorySources/{+inventorySourceId}:editInventorySourceReadWriteAccessors'
-            ).replace(/([^:]\/)\/+/g, '$1'),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['inventorySourceId'],
-        pathParams: ['inventorySourceId'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$InventorySourceAccessors>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$InventorySourceAccessors>(parameters);
-      }
-    }
-
-    /**
-     * Gets an inventory source.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const displayvideo = google.displayvideo('v3');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/display-video'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await displayvideo.inventorySources.get({
-     *     // Optional. The ID of the DV360 advertiser to which the fetched inventory source is permissioned. If the user only has access to the advertiser and not the parent partner, use this field to specify the relevant advertiser.
-     *     advertiserId: 'placeholder-value',
-     *     // Required. The ID of the inventory source to fetch.
-     *     inventorySourceId: '[^/]+',
-     *     // Required. The ID of the DV360 partner to which the fetched inventory source is permissioned.
-     *     partnerId: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "commitment": "my_commitment",
-     *   //   "creativeConfigs": [],
-     *   //   "dealId": "my_dealId",
-     *   //   "deliveryMethod": "my_deliveryMethod",
-     *   //   "displayName": "my_displayName",
-     *   //   "exchange": "my_exchange",
-     *   //   "guaranteedOrderId": "my_guaranteedOrderId",
-     *   //   "inventorySourceId": "my_inventorySourceId",
-     *   //   "inventorySourceProductType": "my_inventorySourceProductType",
-     *   //   "inventorySourceType": "my_inventorySourceType",
-     *   //   "name": "my_name",
-     *   //   "publisherName": "my_publisherName",
-     *   //   "rateDetails": {},
-     *   //   "readAdvertiserIds": [],
-     *   //   "readPartnerIds": [],
-     *   //   "readWriteAccessors": {},
-     *   //   "status": {},
-     *   //   "timeRange": {},
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Inventorysources$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Inventorysources$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>;
-    get(
-      params: Params$Resource$Inventorysources$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Inventorysources$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$InventorySource>,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    get(
-      params: Params$Resource$Inventorysources$Get,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$InventorySource>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Inventorysources$Get
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Inventorysources$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Inventorysources$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (
-              rootUrl + '/v3/inventorySources/{+inventorySourceId}'
-            ).replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['inventorySourceId'],
-        pathParams: ['inventorySourceId'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$InventorySource>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$InventorySource>(parameters);
-      }
-    }
-
-    /**
-     * Lists inventory sources that are accessible to the current user. The order is defined by the order_by parameter. If a filter by entity_status is not specified, inventory sources with entity status `ENTITY_STATUS_ARCHIVED` will not be included in the results.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const displayvideo = google.displayvideo('v3');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/display-video'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await displayvideo.inventorySources.list({
-     *     // The ID of the advertiser that has access to the inventory source.
-     *     advertiserId: 'placeholder-value',
-     *     // Allows filtering by inventory source fields. Supported syntax: * Filter expressions are made up of one or more restrictions. * Restrictions can be combined by `AND` or `OR` logical operators. A sequence of restrictions implicitly uses `AND`. * A restriction has the form of `{field\} {operator\} {value\}`. * All fields must use the `EQUALS (=)` operator. Supported fields: * `status.entityStatus` * `commitment` * `deliveryMethod` * `rateDetails.rateType` * `exchange` Examples: * All active inventory sources: `status.entityStatus="ENTITY_STATUS_ACTIVE"` * Inventory sources belonging to Google Ad Manager or Rubicon exchanges: `exchange="EXCHANGE_GOOGLE_AD_MANAGER" OR exchange="EXCHANGE_RUBICON"` The length of this field should be no more than 500 characters. Reference our [filter `LIST` requests](/display-video/api/guides/how-tos/filters) guide for more information.
-     *     filter: 'placeholder-value',
-     *     // Field by which to sort the list. Acceptable values are: * `displayName` (default) The default sorting order is ascending. To specify descending order for a field, a suffix "desc" should be added to the field name. For example, `displayName desc`.
-     *     orderBy: 'placeholder-value',
-     *     // Requested page size. Must be between `1` and `200`. If unspecified will default to `100`.
-     *     pageSize: 'placeholder-value',
-     *     // A token identifying a page of results the server should return. Typically, this is the value of next_page_token returned from the previous call to `ListInventorySources` method. If not specified, the first page of results will be returned.
-     *     pageToken: 'placeholder-value',
-     *     // The ID of the partner that has access to the inventory source.
-     *     partnerId: 'placeholder-value',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "inventorySources": [],
-     *   //   "nextPageToken": "my_nextPageToken"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Inventorysources$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Inventorysources$List,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$ListInventorySourcesResponse>>;
-    list(
-      params: Params$Resource$Inventorysources$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Inventorysources$List,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$ListInventorySourcesResponse>,
-      callback: BodyResponseCallback<Schema$ListInventorySourcesResponse>
-    ): void;
-    list(
-      params: Params$Resource$Inventorysources$List,
-      callback: BodyResponseCallback<Schema$ListInventorySourcesResponse>
-    ): void;
-    list(
-      callback: BodyResponseCallback<Schema$ListInventorySourcesResponse>
-    ): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Inventorysources$List
-        | BodyResponseCallback<Schema$ListInventorySourcesResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$ListInventorySourcesResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$ListInventorySourcesResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$ListInventorySourcesResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Inventorysources$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Inventorysources$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v3/inventorySources').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: [],
-        pathParams: [],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$ListInventorySourcesResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$ListInventorySourcesResponse>(
-          parameters
-        );
-      }
-    }
-
-    /**
-     * Updates an existing inventory source. Returns the updated inventory source if successful.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/displayvideo.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const displayvideo = google.displayvideo('v3');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/display-video'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await displayvideo.inventorySources.patch({
-     *     // The ID of the advertiser that the request is being made within.
-     *     advertiserId: 'placeholder-value',
-     *     // Output only. The unique ID of the inventory source. Assigned by the system.
-     *     inventorySourceId: '[^/]+',
-     *     // The ID of the partner that the request is being made within.
-     *     partnerId: 'placeholder-value',
-     *     // Required. The mask to control which fields to update.
-     *     updateMask: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "commitment": "my_commitment",
-     *       //   "creativeConfigs": [],
-     *       //   "dealId": "my_dealId",
-     *       //   "deliveryMethod": "my_deliveryMethod",
-     *       //   "displayName": "my_displayName",
-     *       //   "exchange": "my_exchange",
-     *       //   "guaranteedOrderId": "my_guaranteedOrderId",
-     *       //   "inventorySourceId": "my_inventorySourceId",
-     *       //   "inventorySourceProductType": "my_inventorySourceProductType",
-     *       //   "inventorySourceType": "my_inventorySourceType",
-     *       //   "name": "my_name",
-     *       //   "publisherName": "my_publisherName",
-     *       //   "rateDetails": {},
-     *       //   "readAdvertiserIds": [],
-     *       //   "readPartnerIds": [],
-     *       //   "readWriteAccessors": {},
-     *       //   "status": {},
-     *       //   "timeRange": {},
-     *       //   "updateTime": "my_updateTime"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "commitment": "my_commitment",
-     *   //   "creativeConfigs": [],
-     *   //   "dealId": "my_dealId",
-     *   //   "deliveryMethod": "my_deliveryMethod",
-     *   //   "displayName": "my_displayName",
-     *   //   "exchange": "my_exchange",
-     *   //   "guaranteedOrderId": "my_guaranteedOrderId",
-     *   //   "inventorySourceId": "my_inventorySourceId",
-     *   //   "inventorySourceProductType": "my_inventorySourceProductType",
-     *   //   "inventorySourceType": "my_inventorySourceType",
-     *   //   "name": "my_name",
-     *   //   "publisherName": "my_publisherName",
-     *   //   "rateDetails": {},
-     *   //   "readAdvertiserIds": [],
-     *   //   "readPartnerIds": [],
-     *   //   "readWriteAccessors": {},
-     *   //   "status": {},
-     *   //   "timeRange": {},
-     *   //   "updateTime": "my_updateTime"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    patch(
-      params: Params$Resource$Inventorysources$Patch,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    patch(
-      params?: Params$Resource$Inventorysources$Patch,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>;
-    patch(
-      params: Params$Resource$Inventorysources$Patch,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    patch(
-      params: Params$Resource$Inventorysources$Patch,
-      options: MethodOptions | BodyResponseCallback<Schema$InventorySource>,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    patch(
-      params: Params$Resource$Inventorysources$Patch,
-      callback: BodyResponseCallback<Schema$InventorySource>
-    ): void;
-    patch(callback: BodyResponseCallback<Schema$InventorySource>): void;
-    patch(
-      paramsOrCallback?:
-        | Params$Resource$Inventorysources$Patch
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$InventorySource>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$InventorySource>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Inventorysources$Patch;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Inventorysources$Patch;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl = options.rootUrl || 'https://displayvideo.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (
-              rootUrl + '/v3/inventorySources/{+inventorySourceId}'
-            ).replace(/([^:]\/)\/+/g, '$1'),
-            method: 'PATCH',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['inventorySourceId'],
-        pathParams: ['inventorySourceId'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$InventorySource>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$InventorySource>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Inventorysources$Create extends StandardParameters {
-    /**
-     * The ID of the advertiser that the request is being made within.
-     */
-    advertiserId?: string;
-    /**
-     * The ID of the partner that the request is being made within.
-     */
-    partnerId?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$InventorySource;
-  }
-  export interface Params$Resource$Inventorysources$Editinventorysourcereadwriteaccessors extends StandardParameters {
-    /**
-     * Required. The ID of inventory source to update.
-     */
-    inventorySourceId?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$EditInventorySourceReadWriteAccessorsRequest;
-  }
-  export interface Params$Resource$Inventorysources$Get extends StandardParameters {
-    /**
-     * Optional. The ID of the DV360 advertiser to which the fetched inventory source is permissioned. If the user only has access to the advertiser and not the parent partner, use this field to specify the relevant advertiser.
-     */
-    advertiserId?: string;
-    /**
-     * Required. The ID of the inventory source to fetch.
-     */
-    inventorySourceId?: string;
-    /**
-     * Required. The ID of the DV360 partner to which the fetched inventory source is permissioned.
-     */
-    partnerId?: string;
-  }
-  export interface Params$Resource$Inventorysources$List extends StandardParameters {
-    /**
-     * The ID of the advertiser that has access to the inventory source.
-     */
-    advertiserId?: string;
-    /**
-     * Allows filtering by inventory source fields. Supported syntax: * Filter expressions are made up of one or more restrictions. * Restrictions can be combined by `AND` or `OR` logical operators. A sequence of restrictions implicitly uses `AND`. * A restriction has the form of `{field\} {operator\} {value\}`. * All fields must use the `EQUALS (=)` operator. Supported fields: * `status.entityStatus` * `commitment` * `deliveryMethod` * `rateDetails.rateType` * `exchange` Examples: * All active inventory sources: `status.entityStatus="ENTITY_STATUS_ACTIVE"` * Inventory sources belonging to Google Ad Manager or Rubicon exchanges: `exchange="EXCHANGE_GOOGLE_AD_MANAGER" OR exchange="EXCHANGE_RUBICON"` The length of this field should be no more than 500 characters. Reference our [filter `LIST` requests](/display-video/api/guides/how-tos/filters) guide for more information.
-     */
-    filter?: string;
-    /**
-     * Field by which to sort the list. Acceptable values are: * `displayName` (default) The default sorting order is ascending. To specify descending order for a field, a suffix "desc" should be added to the field name. For example, `displayName desc`.
-     */
-    orderBy?: string;
-    /**
-     * Requested page size. Must be between `1` and `200`. If unspecified will default to `100`.
-     */
-    pageSize?: number;
-    /**
-     * A token identifying a page of results the server should return. Typically, this is the value of next_page_token returned from the previous call to `ListInventorySources` method. If not specified, the first page of results will be returned.
-     */
-    pageToken?: string;
-    /**
-     * The ID of the partner that has access to the inventory source.
-     */
-    partnerId?: string;
-  }
-  export interface Params$Resource$Inventorysources$Patch extends StandardParameters {
-    /**
-     * The ID of the advertiser that the request is being made within.
-     */
-    advertiserId?: string;
-    /**
-     * Output only. The unique ID of the inventory source. Assigned by the system.
-     */
-    inventorySourceId?: string;
-    /**
-     * The ID of the partner that the request is being made within.
-     */
-    partnerId?: string;
-    /**
-     * Required. The mask to control which fields to update.
-     */
-    updateMask?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$InventorySource;
   }
 
   export class Resource$Media {
