@@ -300,6 +300,36 @@ export namespace looker_v1 {
     gcsUri?: string | null;
   }
   /**
+   * Ingress IP allowlist configuration.
+   */
+  export interface Schema$IngressIpAllowlistConfig {
+    /**
+     * Optional. List of IP range rules to allow ingress traffic.
+     */
+    allowlistRules?: Schema$IngressIpAllowlistRule[];
+    /**
+     * Optional. Whether ingress IP allowlist functionality is enabled on the Looker instance.
+     */
+    enabled?: boolean | null;
+    /**
+     * Optional. Whether google service connections are enabled for the instance.
+     */
+    googleServicesEnabled?: boolean | null;
+  }
+  /**
+   * Ingress IP allowlist rule.
+   */
+  export interface Schema$IngressIpAllowlistRule {
+    /**
+     * Optional. Description for the IP range.
+     */
+    description?: string | null;
+    /**
+     * Optional. The IP range to allow ingress traffic from.
+     */
+    ipRange?: string | null;
+  }
+  /**
    * A Looker instance.
    */
   export interface Schema$Instance {
@@ -307,6 +337,10 @@ export namespace looker_v1 {
      * Looker Instance Admin settings.
      */
     adminSettings?: Schema$AdminSettings;
+    /**
+     * Optional. Indicates whether catalog integration is disabled for the Looker instance.
+     */
+    catalogIntegrationOptOut?: boolean | null;
     /**
      * Optional. Storage class of the instance.
      */
@@ -351,6 +385,10 @@ export namespace looker_v1 {
      * Optional. Whether Gemini feature is enabled on the Looker instance or not.
      */
     geminiEnabled?: boolean | null;
+    /**
+     * Optional. Ingress IP allowlist configuration for the Looker instance.
+     */
+    ingressIpAllowlistConfig?: Schema$IngressIpAllowlistConfig;
     /**
      * Output only. Private Ingress IP (IPv4).
      */
@@ -943,7 +981,7 @@ export namespace looker_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -1171,6 +1209,7 @@ export namespace looker_v1 {
      *       // request body parameters
      *       // {
      *       //   "adminSettings": {},
+     *       //   "catalogIntegrationOptOut": false,
      *       //   "classType": "my_classType",
      *       //   "consumerNetwork": "my_consumerNetwork",
      *       //   "controlledEgressConfig": {},
@@ -1182,6 +1221,7 @@ export namespace looker_v1 {
      *       //   "encryptionConfig": {},
      *       //   "fipsEnabled": false,
      *       //   "geminiEnabled": false,
+     *       //   "ingressIpAllowlistConfig": {},
      *       //   "ingressPrivateIp": "my_ingressPrivateIp",
      *       //   "ingressPublicIp": "my_ingressPublicIp",
      *       //   "lastDenyMaintenancePeriod": {},
@@ -1640,6 +1680,7 @@ export namespace looker_v1 {
      *   // Example response
      *   // {
      *   //   "adminSettings": {},
+     *   //   "catalogIntegrationOptOut": false,
      *   //   "classType": "my_classType",
      *   //   "consumerNetwork": "my_consumerNetwork",
      *   //   "controlledEgressConfig": {},
@@ -1651,6 +1692,7 @@ export namespace looker_v1 {
      *   //   "encryptionConfig": {},
      *   //   "fipsEnabled": false,
      *   //   "geminiEnabled": false,
+     *   //   "ingressIpAllowlistConfig": {},
      *   //   "ingressPrivateIp": "my_ingressPrivateIp",
      *   //   "ingressPublicIp": "my_ingressPublicIp",
      *   //   "lastDenyMaintenancePeriod": {},
@@ -2100,6 +2142,7 @@ export namespace looker_v1 {
      *       // request body parameters
      *       // {
      *       //   "adminSettings": {},
+     *       //   "catalogIntegrationOptOut": false,
      *       //   "classType": "my_classType",
      *       //   "consumerNetwork": "my_consumerNetwork",
      *       //   "controlledEgressConfig": {},
@@ -2111,6 +2154,7 @@ export namespace looker_v1 {
      *       //   "encryptionConfig": {},
      *       //   "fipsEnabled": false,
      *       //   "geminiEnabled": false,
+     *       //   "ingressIpAllowlistConfig": {},
      *       //   "ingressPrivateIp": "my_ingressPrivateIp",
      *       //   "ingressPublicIp": "my_ingressPublicIp",
      *       //   "lastDenyMaintenancePeriod": {},
