@@ -234,6 +234,10 @@ export namespace places_v1 {
      */
     includedRegionCodes?: string[] | null;
     /**
+     * Optional. If true, include businesses that are not yet open but will open in the future.
+     */
+    includeFutureOpeningBusinesses?: boolean | null;
+    /**
      * Optional. Include pure service area businesses if the field is set to true. Pure service area business is a business that visits or delivers to customers directly but does not serve customers at their business address. For example, businesses like cleaning services or plumbers. Those businesses do not have a physical address or location on Google Maps. Places will not return fields including `location`, `plus_code`, and other location related fields for these businesses.
      */
     includePureServiceAreaBusinesses?: boolean | null;
@@ -773,6 +777,10 @@ export namespace places_v1 {
      * A summary of points of interest near the place.
      */
     neighborhoodSummary?: Schema$GoogleMapsPlacesV1PlaceNeighborhoodSummary;
+    /**
+     * The date this place will open in the future. This field is only populated if the business status is FUTURE_OPENING.
+     */
+    openingDate?: Schema$GoogleTypeDate;
     /**
      * Place provides outdoor seating.
      */
@@ -1466,6 +1474,10 @@ export namespace places_v1 {
      */
     includedTypes?: string[] | null;
     /**
+     * Optional. If true, include businesses that are not yet open but will open in the future.
+     */
+    includeFutureOpeningBusinesses?: boolean | null;
+    /**
      * Place details will be displayed with the preferred language if available. If the language code is unspecified or unrecognized, place details of any language may be returned, with a preference for English if such details exist. Current list of supported languages: https://developers.google.com/maps/faq#languagesupport.
      */
     languageCode?: string | null;
@@ -1524,6 +1536,10 @@ export namespace places_v1 {
      * The requested place type. Full list of types supported: https://developers.google.com/maps/documentation/places/web-service/place-types. Only support one included type.
      */
     includedType?: string | null;
+    /**
+     * Optional. If true, include businesses that are not yet open but will open in the future.
+     */
+    includeFutureOpeningBusinesses?: boolean | null;
     /**
      * Optional. Include pure service area businesses if the field is set to true. Pure service area business is a business that visits or delivers to customers directly but does not serve customers at their business address. For example, businesses like cleaning services or plumbers. Those businesses do not have a physical address or location on Google Maps. Places will not return fields including `location`, `plus_code`, and other location related fields for these businesses.
      */
@@ -1828,6 +1844,7 @@ export namespace places_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "includeFutureOpeningBusinesses": false,
      *       //   "includePureServiceAreaBusinesses": false,
      *       //   "includeQueryPredictions": false,
      *       //   "includedPrimaryTypes": [],
@@ -2043,6 +2060,7 @@ export namespace places_v1 {
      *   //   "name": "my_name",
      *   //   "nationalPhoneNumber": "my_nationalPhoneNumber",
      *   //   "neighborhoodSummary": {},
+     *   //   "openingDate": {},
      *   //   "outdoorSeating": false,
      *   //   "parkingOptions": {},
      *   //   "paymentOptions": {},
@@ -2217,6 +2235,7 @@ export namespace places_v1 {
      *       // {
      *       //   "excludedPrimaryTypes": [],
      *       //   "excludedTypes": [],
+     *       //   "includeFutureOpeningBusinesses": false,
      *       //   "includedPrimaryTypes": [],
      *       //   "includedTypes": [],
      *       //   "languageCode": "my_languageCode",
@@ -2382,6 +2401,7 @@ export namespace places_v1 {
      *       // request body parameters
      *       // {
      *       //   "evOptions": {},
+     *       //   "includeFutureOpeningBusinesses": false,
      *       //   "includePureServiceAreaBusinesses": false,
      *       //   "includedType": "my_includedType",
      *       //   "languageCode": "my_languageCode",
