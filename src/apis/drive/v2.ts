@@ -170,7 +170,7 @@ export namespace drive_v2 {
      */
     canCreateTeamDrives?: boolean | null;
     /**
-     * The domain sharing policy for the current user. Possible values are: * `allowed` * `allowedWithWarning` * `incomingOnly` * `disallowed`
+     * Deprecated: Does not granularly represent allowlisted domains or Trust Rules. The domain sharing policy for the current user. Possible values are: * `allowed` * `allowedWithWarning` * `incomingOnly` * `disallowed` Note that if the user is enrolled in Trust Rules, `disallowed` will always be returned. If sharing is restricted to allowlisted domains, either `incomingOnly` or `allowedWithWarning` will be returned, depending on whether receiving files from outside the allowlisted domains is permitted.
      */
     domainSharingPolicy?: string | null;
     /**
@@ -597,6 +597,19 @@ export namespace drive_v2 {
     selfLink?: string | null;
   }
   /**
+   * Details about the client-side encryption applied to the file.
+   */
+  export interface Schema$ClientEncryptionDetails {
+    /**
+     * The metadata used for client-side operations.
+     */
+    decryptionMetadata?: Schema$DecryptionMetadata;
+    /**
+     * The encryption state of the file. The values expected here are: - encrypted - unencrypted
+     */
+    encryptionState?: string | null;
+  }
+  /**
    * A comment on a file in Google Drive.
    */
   export interface Schema$Comment {
@@ -786,6 +799,39 @@ export namespace drive_v2 {
     type?: string | null;
   }
   /**
+   * Representation of the CSE DecryptionMetadata.
+   */
+  export interface Schema$DecryptionMetadata {
+    /**
+     * Chunk size used if content was encrypted with the AES 256 GCM Cipher. Possible values are: - default - small
+     */
+    aes256GcmChunkSize?: string | null;
+    /**
+     * The URL-safe Base64 encoded HMAC-SHA256 digest of the resource metadata with its DEK (Data Encryption Key); see https://developers.google.com/workspace/cse/reference
+     */
+    encryptionResourceKeyHash?: string | null;
+    /**
+     * The signed JSON Web Token (JWT) which can be used to authorize the requesting user with the Key ACL Service (KACLS). The JWT asserts that the requesting user has at least read permissions on the file.
+     */
+    jwt?: string | null;
+    /**
+     * The ID of the KACLS (Key ACL Service) used to encrypt the file.
+     */
+    kaclsId?: string | null;
+    /**
+     * The name of the KACLS (Key ACL Service) used to encrypt the file.
+     */
+    kaclsName?: string | null;
+    /**
+     * Key format for the unwrapped key. Must be `tinkAesGcmKey`.
+     */
+    keyFormat?: string | null;
+    /**
+     * The URL-safe Base64 encoded wrapped key used to encrypt the contents of the file.
+     */
+    wrappedKey?: string | null;
+  }
+  /**
    * Representation of a shared drive. Some resource methods (such as `drives.update`) require a `driveId`. Use the `drives.list` method to retrieve the ID for a shared drive.
    */
   export interface Schema$Drive {
@@ -955,6 +1001,10 @@ export namespace drive_v2 {
       canTrashChildren?: boolean;
       canUntrash?: boolean;
     } | null;
+    /**
+     * Client Side Encryption related details. Contains details about the encryption state of the file and details regarding the encryption mechanism that clients need to use when decrypting the contents of this item. This will only be present on files and not on folders or shortcuts.
+     */
+    clientEncryptionDetails?: Schema$ClientEncryptionDetails;
     /**
      * Restrictions for accessing the content of the file. Only populated if such a restriction exists.
      */
@@ -1312,6 +1362,31 @@ export namespace drive_v2 {
      * A link back to this list.
      */
     selfLink?: string | null;
+  }
+  /**
+   * JWT and associated metadata used to generate CSE files.
+   */
+  export interface Schema$GenerateCseTokenResponse {
+    /**
+     * The current Key ACL Service (KACLS) ID associated with the JWT.
+     */
+    currentKaclsId?: string | null;
+    /**
+     * Name of the KACLs that the returned KACLs ID points to.
+     */
+    currentKaclsName?: string | null;
+    /**
+     * The fileId for which the JWT was generated.
+     */
+    fileId?: string | null;
+    /**
+     * The signed JSON Web Token (JWT) for the file.
+     */
+    jwt?: string | null;
+    /**
+     * Output only. Identifies what kind of resource this is. Value: the fixed string `"drive#generateCseTokenResponse"`.
+     */
+    kind?: string | null;
   }
   /**
    * A list of generated IDs which can be provided in insert requests
@@ -5886,7 +5961,7 @@ export namespace drive_v2 {
     }
 
     /**
-     *  Lists the user's shared drives. This method accepts the `q` parameter, which is a search query combining one or more search terms. For more information, see the [Search for shared drives](/workspace/drive/api/guides/search-shareddrives) guide.
+     *  Lists the user's shared drives. This method accepts the `q` parameter, which is a search query combining one or more search terms. For more information, see the [Search for shared drives](https://developers.google.com/workspace/drive/api/guides/search-shareddrives) guide.
      * @example
      * ```js
      * // Before running the sample:
@@ -6505,6 +6580,7 @@ export namespace drive_v2 {
      *       //   "canComment": false,
      *       //   "canReadRevisions": false,
      *       //   "capabilities": {},
+     *       //   "clientEncryptionDetails": {},
      *       //   "contentRestrictions": [],
      *       //   "copyRequiresWriterPermission": false,
      *       //   "copyable": false,
@@ -6588,6 +6664,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -7163,6 +7240,153 @@ export namespace drive_v2 {
     }
 
     /**
+     * Generates a CSE token which can be used to create or update CSE files.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/drive.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const drive = google.drive('v2');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/drive'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await drive.files.generateCseToken({
+     *     // The ID of the file for which the JWT should be generated. If not provided, an id will be generated.
+     *     fileId: 'placeholder-value',
+     *     // The ID of the expected parent of the file. Used when generating a JWT for a new CSE file. If specified, the parent will be fetched, and if the parent is a shared drive item, the shared drive's policy will be used to determine the KACLS that should be used. It is invalid to specify both file_id and parent in a single request.
+     *     parent: 'placeholder-value',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "currentKaclsId": "my_currentKaclsId",
+     *   //   "currentKaclsName": "my_currentKaclsName",
+     *   //   "fileId": "my_fileId",
+     *   //   "jwt": "my_jwt",
+     *   //   "kind": "my_kind"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    generateCseToken(
+      params: Params$Resource$Files$Generatecsetoken,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    generateCseToken(
+      params?: Params$Resource$Files$Generatecsetoken,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GenerateCseTokenResponse>>;
+    generateCseToken(
+      params: Params$Resource$Files$Generatecsetoken,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    generateCseToken(
+      params: Params$Resource$Files$Generatecsetoken,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$GenerateCseTokenResponse>,
+      callback: BodyResponseCallback<Schema$GenerateCseTokenResponse>
+    ): void;
+    generateCseToken(
+      params: Params$Resource$Files$Generatecsetoken,
+      callback: BodyResponseCallback<Schema$GenerateCseTokenResponse>
+    ): void;
+    generateCseToken(
+      callback: BodyResponseCallback<Schema$GenerateCseTokenResponse>
+    ): void;
+    generateCseToken(
+      paramsOrCallback?:
+        | Params$Resource$Files$Generatecsetoken
+        | BodyResponseCallback<Schema$GenerateCseTokenResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GenerateCseTokenResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GenerateCseTokenResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GenerateCseTokenResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Files$Generatecsetoken;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Files$Generatecsetoken;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://www.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/drive/v2/files/generateCseToken').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: [],
+        pathParams: [],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GenerateCseTokenResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GenerateCseTokenResponse>(parameters);
+      }
+    }
+
+    /**
      * Generates a set of file IDs which can be provided in insert or copy requests.
      * @example
      * ```js
@@ -7310,7 +7534,7 @@ export namespace drive_v2 {
     }
 
     /**
-     *  Gets a file's metadata or content by ID. If you provide the URL parameter `alt=media`, then the response includes the file contents in the response body. Downloading content with `alt=media` only works if the file is stored in Drive. To download Google Docs, Sheets, and Slides use [`files.export`](/workspace/drive/api/reference/rest/v2/files/export) instead. For more information, see [Download & export files](/workspace/drive/api/guides/manage-downloads).
+     *  Gets a file's metadata or content by ID. If you provide the URL parameter `alt=media`, then the response includes the file contents in the response body. Downloading content with `alt=media` only works if the file is stored in Drive. To download Google Docs, Sheets, and Slides use [`files.export`](https://developers.google.com/workspace/drive/api/reference/rest/v2/files/export) instead. For more information, see [Download & export files](https://developers.google.com/workspace/drive/api/guides/manage-downloads).
      * @example
      * ```js
      * // Before running the sample:
@@ -7377,6 +7601,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -7546,7 +7771,7 @@ export namespace drive_v2 {
     }
 
     /**
-     *  Inserts a new file. This method supports an x/upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:*`x/x` Note: Specify a valid MIME type, rather than the literal `x/x` value. The literal `x/x` is only used to indicate that any valid MIME type can be uploaded. For more information on uploading files, see [Upload file data](/workspace/drive/api/guides/manage-uploads). Apps creating shortcuts with `files.insert` must specify the MIME type `application/vnd.google-apps.shortcut`. Apps should specify a file extension in the `title` property when inserting files with the API. For example, an operation to insert a JPEG file should specify something like `"title": "cat.jpg"` in the metadata. Subsequent `GET` requests include the read-only `fileExtension` property populated with the extension originally specified in the `title` property. When a Google Drive user requests to download a file, or when the file is downloaded through the sync client, Drive builds a full filename (with extension) based on the title. In cases where the extension is missing, Drive attempts to determine the extension based on the file's MIME type.
+     *  Inserts a new file. This method supports an x/upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:*`x/x` Note: Specify a valid MIME type, rather than the literal `x/x` value. The literal `x/x` is only used to indicate that any valid MIME type can be uploaded. For more information on uploading files, see [Upload file data](https://developers.google.com/workspace/drive/api/guides/manage-uploads). Apps creating shortcuts with `files.insert` must specify the MIME type `application/vnd.google-apps.shortcut`. Apps should specify a file extension in the `title` property when inserting files with the API. For example, an operation to insert a JPEG file should specify something like `"title": "cat.jpg"` in the metadata. Subsequent `GET` requests include the read-only `fileExtension` property populated with the extension originally specified in the `title` property. When a Google Drive user requests to download a file, or when the file is downloaded through the sync client, Drive builds a full filename (with extension) based on the title. In cases where the extension is missing, Drive attempts to determine the extension based on the file's MIME type.
      * @example
      * ```js
      * // Before running the sample:
@@ -7617,6 +7842,7 @@ export namespace drive_v2 {
      *       //   "canComment": false,
      *       //   "canReadRevisions": false,
      *       //   "capabilities": {},
+     *       //   "clientEncryptionDetails": {},
      *       //   "contentRestrictions": [],
      *       //   "copyRequiresWriterPermission": false,
      *       //   "copyable": false,
@@ -7704,6 +7930,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -7874,7 +8101,7 @@ export namespace drive_v2 {
     }
 
     /**
-     *  Lists the user's files. For more information, see [Search for files and folders](/workspace/drive/api/guides/search-files). This method accepts the `q` parameter, which is a search query combining one or more search terms. This method returns *all* files by default, including trashed files. If you don't want trashed files to appear in the list, use the `trashed=false` query parameter to remove trashed files from the results.
+     *  Lists the user's files. For more information, see [Search for files and folders](https://developers.google.com/workspace/drive/api/guides/search-files). This method accepts the `q` parameter, which is a search query combining one or more search terms. This method returns *all* files by default, including trashed files. If you don't want trashed files to appear in the list, use the `trashed=false` query parameter to remove trashed files from the results.
      * @example
      * ```js
      * // Before running the sample:
@@ -8442,6 +8669,7 @@ export namespace drive_v2 {
      *       //   "canComment": false,
      *       //   "canReadRevisions": false,
      *       //   "capabilities": {},
+     *       //   "clientEncryptionDetails": {},
      *       //   "contentRestrictions": [],
      *       //   "copyRequiresWriterPermission": false,
      *       //   "copyable": false,
@@ -8525,6 +8753,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -8750,6 +8979,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -8974,6 +9204,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -9198,6 +9429,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -9367,7 +9599,7 @@ export namespace drive_v2 {
     }
 
     /**
-     *  Updates a file's metadata, content, or both. When calling this method, only populate fields in the request that you want to modify. When updating fields, some fields might be changed automatically, such as `modifiedDate`. This method supports patch semantics. This method supports an x/upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:* `x/x` (Specify a valid MIME type, rather than the literal `x/x` value. The literal `x/x` is only used to indicate that any valid MIME type can be uploaded. For more information, see [Google Workspace and Google Drive supported MIME types](/workspace/drive/api/guides/mime-types).) For more information on uploading files, see [Upload file data](/workspace/drive/api/guides/manage-uploads).
+     *  Updates a file's metadata, content, or both. When calling this method, only populate fields in the request that you want to modify. When updating fields, some fields might be changed automatically, such as `modifiedDate`. This method supports patch semantics. This method supports an x/upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:* `x/x` (Specify a valid MIME type, rather than the literal `x/x` value. The literal `x/x` is only used to indicate that any valid MIME type can be uploaded. For more information, see [Google Workspace and Google Drive supported MIME types](https://developers.google.com/workspace/drive/api/guides/mime-types).) For more information on uploading files, see [Upload file data](https://developers.google.com/workspace/drive/api/guides/manage-uploads).
      * @example
      * ```js
      * // Before running the sample:
@@ -9452,6 +9684,7 @@ export namespace drive_v2 {
      *       //   "canComment": false,
      *       //   "canReadRevisions": false,
      *       //   "capabilities": {},
+     *       //   "clientEncryptionDetails": {},
      *       //   "contentRestrictions": [],
      *       //   "copyRequiresWriterPermission": false,
      *       //   "copyable": false,
@@ -9539,6 +9772,7 @@ export namespace drive_v2 {
      *   //   "canComment": false,
      *   //   "canReadRevisions": false,
      *   //   "capabilities": {},
+     *   //   "clientEncryptionDetails": {},
      *   //   "contentRestrictions": [],
      *   //   "copyRequiresWriterPermission": false,
      *   //   "copyable": false,
@@ -9995,6 +10229,16 @@ export namespace drive_v2 {
      * Required. The MIME type of the format requested for this export.
      */
     mimeType?: string;
+  }
+  export interface Params$Resource$Files$Generatecsetoken extends StandardParameters {
+    /**
+     * The ID of the file for which the JWT should be generated. If not provided, an id will be generated.
+     */
+    fileId?: string;
+    /**
+     * The ID of the expected parent of the file. Used when generating a JWT for a new CSE file. If specified, the parent will be fetched, and if the parent is a shared drive item, the shared drive's policy will be used to determine the KACLS that should be used. It is invalid to specify both file_id and parent in a single request.
+     */
+    parent?: string;
   }
   export interface Params$Resource$Files$Generateids extends StandardParameters {
     /**
@@ -11200,7 +11444,7 @@ export namespace drive_v2 {
      *
      *   // Do the magic
      *   const res = await drive.permissions.delete({
-     *     // Whether the request should enforce expansive access rules.
+     *     // Deprecated: All requests use the expansive access rules.
      *     enforceExpansiveAccess: 'placeholder-value',
      *     // The ID for the file or shared drive.
      *     fileId: 'placeholder-value',
@@ -11662,7 +11906,7 @@ export namespace drive_v2 {
      *   const res = await drive.permissions.insert({
      *     // A plain text custom message to include in notification emails.
      *     emailMessage: 'placeholder-value',
-     *     // Whether the request should enforce expansive access rules.
+     *     // Deprecated: All requests use the expansive access rules.
      *     enforceExpansiveAccess: 'placeholder-value',
      *     // Deprecated: See `moveToNewOwnersRoot` for details.
      *     enforceSingleParent: 'placeholder-value',
@@ -12024,7 +12268,7 @@ export namespace drive_v2 {
      *
      *   // Do the magic
      *   const res = await drive.permissions.patch({
-     *     // Whether the request should enforce expansive access rules.
+     *     // Deprecated: All requests use the expansive access rules.
      *     enforceExpansiveAccess: 'placeholder-value',
      *     // The ID for the file or shared drive.
      *     fileId: 'placeholder-value',
@@ -12225,7 +12469,7 @@ export namespace drive_v2 {
      *
      *   // Do the magic
      *   const res = await drive.permissions.update({
-     *     // Whether the request should enforce expansive access rules.
+     *     // Deprecated: All requests use the expansive access rules.
      *     enforceExpansiveAccess: 'placeholder-value',
      *     // The ID for the file or shared drive.
      *     fileId: 'placeholder-value',
@@ -12395,7 +12639,7 @@ export namespace drive_v2 {
 
   export interface Params$Resource$Permissions$Delete extends StandardParameters {
     /**
-     * Whether the request should enforce expansive access rules.
+     * Deprecated: All requests use the expansive access rules.
      */
     enforceExpansiveAccess?: boolean;
     /**
@@ -12453,7 +12697,7 @@ export namespace drive_v2 {
      */
     emailMessage?: string;
     /**
-     * Whether the request should enforce expansive access rules.
+     * Deprecated: All requests use the expansive access rules.
      */
     enforceExpansiveAccess?: boolean;
     /**
@@ -12522,7 +12766,7 @@ export namespace drive_v2 {
   }
   export interface Params$Resource$Permissions$Patch extends StandardParameters {
     /**
-     * Whether the request should enforce expansive access rules.
+     * Deprecated: All requests use the expansive access rules.
      */
     enforceExpansiveAccess?: boolean;
     /**
@@ -12561,7 +12805,7 @@ export namespace drive_v2 {
   }
   export interface Params$Resource$Permissions$Update extends StandardParameters {
     /**
-     * Whether the request should enforce expansive access rules.
+     * Deprecated: All requests use the expansive access rules.
      */
     enforceExpansiveAccess?: boolean;
     /**
