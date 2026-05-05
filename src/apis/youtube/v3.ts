@@ -2376,9 +2376,9 @@ export namespace youtube_v3 {
      */
     hasVisualEffect?: boolean | null;
     /**
-     * The cost of the gift in jewels.
+     * The value of the gift in jewels.
      */
-    jewelsCount?: number | null;
+    jewelsAmount?: number | null;
     /**
      * The BCP-47 language code of the gift.
      */
@@ -16093,6 +16093,8 @@ export namespace youtube_v3 {
      *   const res = await youtube.tests.insert({
      *     externalChannelId: 'placeholder-value',
      *
+     *     onBehalfOfContentOwnerChannel: 'placeholder-value',
+     *
      *     part: 'placeholder-value',
      *
      *     // Request body metadata
@@ -16216,6 +16218,10 @@ export namespace youtube_v3 {
      *
      */
     externalChannelId?: string;
+    /**
+     *
+     */
+    onBehalfOfContentOwnerChannel?: string;
     /**
      *
      */
