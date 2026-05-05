@@ -256,6 +256,27 @@ export namespace securitycenter_v1beta1 {
     count?: string | null;
   }
   /**
+   * Details about a data access attempt made by an agent principal not authorized under applicable data security policy.
+   */
+  export interface Schema$AgentDataAccessEvent {
+    /**
+     * Unique identifier for data access event.
+     */
+    eventId?: string | null;
+    /**
+     * Timestamp of data access event.
+     */
+    eventTime?: string | null;
+    /**
+     * The operation performed by the principal to access the data.
+     */
+    operation?: string | null;
+    /**
+     * The agent principal that accessed the data.
+     */
+    principalSubject?: string | null;
+  }
+  /**
    * Contains information about the AI model associated with the finding.
    */
   export interface Schema$AiModel {
@@ -1142,6 +1163,31 @@ export namespace securitycenter_v1beta1 {
     percentPagesMatched?: number | null;
   }
   /**
+   * Represents discovered, customer managed workload that is not registered with the respective GCP service.
+   */
+  export interface Schema$DiscoveredWorkload {
+    /**
+     * The confidence in detection of this workload.
+     */
+    confidence?: string | null;
+    /**
+     * A boolean flag set to true if associated hardware strongly predicts the workload type.
+     */
+    detectedRelevantHardware?: boolean | null;
+    /**
+     * A boolean flag set to true if associated keywords strongly predict the workload type.
+     */
+    detectedRelevantKeywords?: boolean | null;
+    /**
+     * A boolean flag set to true if installed packages strongly predict the workload type.
+     */
+    detectedRelevantPackages?: boolean | null;
+    /**
+     * The type of workload.
+     */
+    workloadType?: string | null;
+  }
+  /**
    * Contains information about the disk associated with the finding.
    */
   export interface Schema$Disk {
@@ -1266,9 +1312,17 @@ export namespace securitycenter_v1beta1 {
    */
   export interface Schema$ExternalExposure {
     /**
+     * The full resource name of the load balancer backend bucket, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendBuckets/{name\}"
+     */
+    backendBucket?: string | null;
+    /**
      * The full resource name of load balancer backend service, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendServices/{name\}".
      */
     backendService?: string | null;
+    /**
+     * The name and version of the exposed web application, for example, "Jenkins 2.184".
+     */
+    exposedApplication?: string | null;
     /**
      * The resource which is running the exposed service, for example, "//compute.googleapis.com/projects/{project-id\}/zones/{zone\}/instances/{instance\}.”
      */
@@ -1282,9 +1336,21 @@ export namespace securitycenter_v1beta1 {
      */
     forwardingRule?: string | null;
     /**
+     * Hostname of the exposed application, for example, "https://test-app.a.run.app/"
+     */
+    hostnameUri?: string | null;
+    /**
+     * The http response returned by the web application.
+     */
+    httpResponse?: Schema$HttpResponse[];
+    /**
      * The full resource name of the instance group, for example, "//compute.googleapis.com/projects/{project-id\}/global/instanceGroups/{name\}".
      */
     instanceGroup?: string | null;
+    /**
+     * The full resource name of load balancer backend service in the internal project having resource exposed via PSC, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendServices/{name\}".
+     */
+    internalBackendService?: string | null;
     /**
      * The full resource name of the load balancer firewall policy, for example, "//compute.googleapis.com/projects/{project-id\}/global/firewallPolicies/{policy-name\}".
      */
@@ -1294,6 +1360,10 @@ export namespace securitycenter_v1beta1 {
      */
     networkEndpointGroup?: string | null;
     /**
+     * The full resource name of the network ingress firewall policy, for example, "//compute.googleapis.com/projects/{project-id\}/global/firewallPolicies/{name\}".
+     */
+    networkIngressFirewallPolicy?: string | null;
+    /**
      * Private IP address of the exposed endpoint.
      */
     privateIpAddress?: string | null;
@@ -1301,6 +1371,14 @@ export namespace securitycenter_v1beta1 {
      * Port number associated with private IP address.
      */
     privatePort?: string | null;
+    /**
+     * The full resource name of the PSC (Private Service Connect) network attachment that network interface controller is attached to, for example, "//compute.googleapis.com/projects/{project-id\}/regions/{region\}/networkAttachments/{name\}"
+     */
+    pscNetworkAttachment?: string | null;
+    /**
+     * The full resource name of the PSC (Private Service Connect) service attachment that the load balancer network endpoint group targets, for example, "//compute.googleapis.com/projects/{project-id\}/regions/{region\}/serviceAttachments/{name\}"
+     */
+    pscServiceAttachment?: string | null;
     /**
      * Public IP address of the exposed endpoint.
      */
@@ -1376,6 +1454,10 @@ export namespace securitycenter_v1beta1 {
      * AffectedResources associated with the finding.
      */
     affectedResources?: Schema$AffectedResources;
+    /**
+     * Agent data access events associated with the finding.
+     */
+    agentDataAccessEvents?: Schema$AgentDataAccessEvent[];
     /**
      * The AI model associated with the finding.
      */
@@ -1464,6 +1546,10 @@ export namespace securitycenter_v1beta1 {
      * Contains more details about the finding.
      */
     description?: string | null;
+    /**
+     * DiscoveredWorkload associated with the finding.
+     */
+    discoveredWorkload?: Schema$DiscoveredWorkload;
     /**
      * Disk associated with the finding.
      */
@@ -1586,6 +1672,10 @@ export namespace securitycenter_v1beta1 {
      * Output only. The human readable display name of the finding source such as "Event Threat Detection" or "Security Health Analytics".
      */
     parentDisplayName?: string | null;
+    /**
+     * PolicyViolationSummary associated with the finding.
+     */
+    policyViolationSummary?: Schema$PolicyViolationSummary;
     /**
      * Represents operating system processes associated with the Finding.
      */
@@ -2586,6 +2676,27 @@ export namespace securitycenter_v1beta1 {
     count?: string | null;
   }
   /**
+   * Details about a data access attempt made by an agent principal not authorized under applicable data security policy.
+   */
+  export interface Schema$GoogleCloudSecuritycenterV2AgentDataAccessEvent {
+    /**
+     * Unique identifier for data access event.
+     */
+    eventId?: string | null;
+    /**
+     * Timestamp of data access event.
+     */
+    eventTime?: string | null;
+    /**
+     * The operation performed by the principal to access the data.
+     */
+    operation?: string | null;
+    /**
+     * The agent principal that accessed the data.
+     */
+    principalSubject?: string | null;
+  }
+  /**
    * Contains information about the AI model associated with the finding.
    */
   export interface Schema$GoogleCloudSecuritycenterV2AiModel {
@@ -3440,6 +3551,31 @@ export namespace securitycenter_v1beta1 {
     percentPagesMatched?: number | null;
   }
   /**
+   * Represents discovered, customer managed workload that is not registered with the respective GCP service.
+   */
+  export interface Schema$GoogleCloudSecuritycenterV2DiscoveredWorkload {
+    /**
+     * The confidence in detection of this workload.
+     */
+    confidence?: string | null;
+    /**
+     * A boolean flag set to true if associated hardware strongly predicts the workload type.
+     */
+    detectedRelevantHardware?: boolean | null;
+    /**
+     * A boolean flag set to true if associated keywords strongly predict the workload type.
+     */
+    detectedRelevantKeywords?: boolean | null;
+    /**
+     * A boolean flag set to true if installed packages strongly predict the workload type.
+     */
+    detectedRelevantPackages?: boolean | null;
+    /**
+     * The type of workload.
+     */
+    workloadType?: string | null;
+  }
+  /**
    * Contains information about the disk associated with the finding.
    */
   export interface Schema$GoogleCloudSecuritycenterV2Disk {
@@ -3522,9 +3658,17 @@ export namespace securitycenter_v1beta1 {
    */
   export interface Schema$GoogleCloudSecuritycenterV2ExternalExposure {
     /**
+     * The full resource name of the load balancer backend bucket, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendBuckets/{name\}"
+     */
+    backendBucket?: string | null;
+    /**
      * The full resource name of load balancer backend service, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendServices/{name\}".
      */
     backendService?: string | null;
+    /**
+     * The name and version of the exposed web application, for example, "Jenkins 2.184".
+     */
+    exposedApplication?: string | null;
     /**
      * The resource which is running the exposed service, for example, "//compute.googleapis.com/projects/{project-id\}/zones/{zone\}/instances/{instance\}.”
      */
@@ -3538,9 +3682,21 @@ export namespace securitycenter_v1beta1 {
      */
     forwardingRule?: string | null;
     /**
+     * Hostname of the exposed application, for example, "https://test-app.a.run.app/"
+     */
+    hostnameUri?: string | null;
+    /**
+     * The http response returned by the web application.
+     */
+    httpResponse?: Schema$GoogleCloudSecuritycenterV2HttpResponse[];
+    /**
      * The full resource name of the instance group, for example, "//compute.googleapis.com/projects/{project-id\}/global/instanceGroups/{name\}".
      */
     instanceGroup?: string | null;
+    /**
+     * The full resource name of load balancer backend service in the internal project having resource exposed via PSC, for example, "//compute.googleapis.com/projects/{project-id\}/global/backendServices/{name\}".
+     */
+    internalBackendService?: string | null;
     /**
      * The full resource name of the load balancer firewall policy, for example, "//compute.googleapis.com/projects/{project-id\}/global/firewallPolicies/{policy-name\}".
      */
@@ -3550,6 +3706,10 @@ export namespace securitycenter_v1beta1 {
      */
     networkEndpointGroup?: string | null;
     /**
+     * The full resource name of the network ingress firewall policy, for example, "//compute.googleapis.com/projects/{project-id\}/global/firewallPolicies/{name\}".
+     */
+    networkIngressFirewallPolicy?: string | null;
+    /**
      * Private IP address of the exposed endpoint.
      */
     privateIpAddress?: string | null;
@@ -3557,6 +3717,14 @@ export namespace securitycenter_v1beta1 {
      * Port number associated with private IP address.
      */
     privatePort?: string | null;
+    /**
+     * The full resource name of the PSC (Private Service Connect) network attachment that network interface controller is attached to, for example, "//compute.googleapis.com/projects/{project-id\}/regions/{region\}/networkAttachments/{name\}"
+     */
+    pscNetworkAttachment?: string | null;
+    /**
+     * The full resource name of the PSC (Private Service Connect) service attachment that the load balancer network endpoint group targets, for example, "//compute.googleapis.com/projects/{project-id\}/regions/{region\}/serviceAttachments/{name\}"
+     */
+    pscServiceAttachment?: string | null;
     /**
      * Public IP address of the exposed endpoint.
      */
@@ -3682,6 +3850,10 @@ export namespace securitycenter_v1beta1 {
      */
     affectedResources?: Schema$GoogleCloudSecuritycenterV2AffectedResources;
     /**
+     * Agent data access events associated with the finding.
+     */
+    agentDataAccessEvents?: Schema$GoogleCloudSecuritycenterV2AgentDataAccessEvent[];
+    /**
      * The AI model associated with the finding.
      */
     aiModel?: Schema$GoogleCloudSecuritycenterV2AiModel;
@@ -3775,6 +3947,10 @@ export namespace securitycenter_v1beta1 {
      * Contains more details about the finding.
      */
     description?: string | null;
+    /**
+     * DiscoveredWorkload associated with the finding.
+     */
+    discoveredWorkload?: Schema$GoogleCloudSecuritycenterV2DiscoveredWorkload;
     /**
      * Disk associated with the finding.
      */
@@ -3898,6 +4074,10 @@ export namespace securitycenter_v1beta1 {
      */
     parentDisplayName?: string | null;
     /**
+     * PolicyViolationSummary associated with the finding.
+     */
+    policyViolationSummary?: Schema$GoogleCloudSecuritycenterV2PolicyViolationSummary;
+    /**
      * Represents operating system processes associated with the Finding.
      */
     processes?: Schema$GoogleCloudSecuritycenterV2Process[];
@@ -4001,6 +4181,19 @@ export namespace securitycenter_v1beta1 {
      * Type of group.
      */
     groupType?: string | null;
+  }
+  /**
+   * The http response returned by the web application.
+   */
+  export interface Schema$GoogleCloudSecuritycenterV2HttpResponse {
+    /**
+     * The http path for which response code was returned by web application, for example, "https://test-app.a.run.app/test".
+     */
+    path?: string | null;
+    /**
+     * The http response code returned by the web application, for example, 200.
+     */
+    statusCode?: string | null;
   }
   /**
    * Represents a particular IAM binding, which captures a member's role addition, removal, or state.
@@ -4868,6 +5061,27 @@ export namespace securitycenter_v1beta1 {
     field?: string | null;
   }
   /**
+   * Metadata summarizing policy violations of child resources of the affected resource. `finding_category` and `resource` determine the exact semantics of the counts. For example, when category=DATA_SECURITY_POSTURE_OBJECT_PUBLIC_ACCESS_VIOLATION and resource='storage.googleapis.com/buckets/my-bucket-name' then this counts the number of Cloud Storage objects in my-bucket-name which violate a Public Access control.
+   */
+  export interface Schema$GoogleCloudSecuritycenterV2PolicyViolationSummary {
+    /**
+     * Total number of child resources that conform to the policy.
+     */
+    conformantResourcesCount?: string | null;
+    /**
+     * Number of child resources for which errors during evaluation occurred. The evaluation result for these child resources is effectively "unknown".
+     */
+    evaluationErrorsCount?: string | null;
+    /**
+     * Total count of child resources which were not in scope for evaluation.
+     */
+    outOfScopeResourcesCount?: string | null;
+    /**
+     * Count of child resources in violation of the policy.
+     */
+    policyViolationsCount?: string | null;
+  }
+  /**
    * A port range which is inclusive of the min and max values. Values are between 0 and 2^16-1. The max can be equal / must be not smaller than the min value. If min and max are equal this indicates that it is a single port.
    */
   export interface Schema$GoogleCloudSecuritycenterV2PortRange {
@@ -5619,6 +5833,19 @@ export namespace securitycenter_v1beta1 {
     properties?: {[key: string]: any} | null;
   }
   /**
+   * The http response returned by the web application.
+   */
+  export interface Schema$HttpResponse {
+    /**
+     * The http path for which response code was returned by web application, for example, "https://test-app.a.run.app/test".
+     */
+    path?: string | null;
+    /**
+     * The http response code returned by the web application, for example, 200.
+     */
+    statusCode?: string | null;
+  }
+  /**
    * Represents a particular IAM binding, which captures a member's role addition, removal, or state.
    */
   export interface Schema$IamBinding {
@@ -6197,6 +6424,27 @@ export namespace securitycenter_v1beta1 {
      * The name of the updated field, for example constraint.implementation.policy_rules[0].enforce
      */
     field?: string | null;
+  }
+  /**
+   * Metadata summarizing policy violations of child resources of the affected resource. `finding_category` and `resource` determine the exact semantics of the counts. For example, when category=DATA_SECURITY_POSTURE_OBJECT_PUBLIC_ACCESS_VIOLATION and resource='storage.googleapis.com/buckets/my-bucket-name' then this counts the number of Cloud Storage objects in my-bucket-name which violate a Public Access control.
+   */
+  export interface Schema$PolicyViolationSummary {
+    /**
+     * Total number of child resources that conform to the policy.
+     */
+    conformantResourcesCount?: string | null;
+    /**
+     * Number of child resources for which errors during evaluation occurred. The evaluation result for these child resources is effectively "unknown".
+     */
+    evaluationErrorsCount?: string | null;
+    /**
+     * Total count of child resources which were not in scope for evaluation.
+     */
+    outOfScopeResourcesCount?: string | null;
+    /**
+     * Count of child resources in violation of the policy.
+     */
+    policyViolationsCount?: string | null;
   }
   /**
    * A port range which is inclusive of the min and max values. Values are between 0 and 2^16-1. The max can be equal / must be not smaller than the min value. If min and max are equal this indicates that it is a single port.
