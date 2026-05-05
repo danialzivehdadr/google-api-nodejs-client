@@ -146,9 +146,13 @@ export namespace oracledatabase_v1 {
    */
   export interface Schema$AutonomousDatabase {
     /**
-     * Optional. Immutable. The password for the default ADMIN user.
+     * Optional. Immutable. The password for the default ADMIN user. Note: Only one of `admin_password_secret_version` or `admin_password` can be populated.
      */
     adminPassword?: string | null;
+    /**
+     * Optional. Immutable. The resource name of a secret version in Secret Manager which contains the database admin user's password. Format: projects/{project\}/secrets/{secret\}/versions/{version\}. Note: Only one of `admin_password_secret_version` or `admin_password` can be populated.
+     */
+    adminPasswordSecretVersion?: string | null;
     /**
      * Optional. Immutable. The subnet CIDR range for the Autonomous Database.
      */
@@ -525,7 +529,7 @@ export namespace oracledatabase_v1 {
      */
     isAutoScalingEnabled?: boolean | null;
     /**
-     * Output only. This field indicates whether the Autonomous Database has local (in-region) Data Guard enabled.
+     * Output only. Deprecated: Please use `local_data_guard_enabled` instead. This field indicates whether the Autonomous Database has local (in-region) Data Guard enabled.
      */
     isLocalDataGuardEnabled?: boolean | null;
     /**
@@ -541,9 +545,17 @@ export namespace oracledatabase_v1 {
      */
     lifecycleDetails?: string | null;
     /**
-     * Output only. This field indicates the maximum data loss limit for an Autonomous Database, in seconds.
+     * Output only. Deprecated: Please use `local_adg_auto_failover_max_data_loss_limit_duration` instead. This field indicates the maximum data loss limit for an Autonomous Database, in seconds.
      */
     localAdgAutoFailoverMaxDataLossLimit?: number | null;
+    /**
+     * Optional. This field indicates the maximum data loss limit for an Autonomous Database, in seconds.
+     */
+    localAdgAutoFailoverMaxDataLossLimitDuration?: number | null;
+    /**
+     * Optional. Indicates whether the Autonomous Database has a local (in-region) standby database. Not applicable to cross-region Data Guard or dedicated Exadata infrastructure.
+     */
+    localDataGuardEnabled?: boolean | null;
     /**
      * Output only. This field indicates the local disaster recovery (DR) type of an Autonomous Database.
      */
@@ -1119,9 +1131,13 @@ export namespace oracledatabase_v1 {
    */
   export interface Schema$Database {
     /**
-     * Required. The password for the default ADMIN user.
+     * Optional. The password for the default ADMIN user. Note: Only one of `admin_password_secret_version` or `admin_password` can be populated.
      */
     adminPassword?: string | null;
+    /**
+     * Optional. The resource name of a secret version in Secret Manager which contains the database admin user's password. Format: projects/{project\}/secrets/{secret\}/versions/{version\}. Note: Only one of `admin_password_secret_version` or `admin_password` can be populated.
+     */
+    adminPasswordSecretVersion?: string | null;
     /**
      * Optional. The character set for the database. The default is AL32UTF8.
      */
@@ -1167,13 +1183,25 @@ export namespace oracledatabase_v1 {
      */
     opsInsightsStatus?: string | null;
     /**
+     * Optional. The ID of the pluggable database associated with the Database. The ID must be unique within the project and location.
+     */
+    pluggableDatabaseId?: string | null;
+    /**
+     * Optional. The pluggable database associated with the Database. The name must begin with an alphabetic character and can contain a maximum of thirty alphanumeric characters.
+     */
+    pluggableDatabaseName?: string | null;
+    /**
      * Optional. The properties of the Database.
      */
     properties?: Schema$DatabaseProperties;
     /**
-     * Optional. The TDE wallet password for the database.
+     * Optional. The TDE wallet password for the database. Note: Only one of `tde_wallet_password_secret_version` or `tde_wallet_password` can be populated.
      */
     tdeWalletPassword?: string | null;
+    /**
+     * Optional. The resource name of a secret version in Secret Manager which contains the TDE wallet password for the database. Format: projects/{project\}/secrets/{secret\}/versions/{version\}. Note: Only one of `tde_wallet_password_secret_version` or `tde_wallet_password` can be populated.
+     */
+    tdeWalletPasswordSecretVersion?: string | null;
   }
   /**
    * Details of the Database character set resource.
@@ -2141,6 +2169,10 @@ export namespace oracledatabase_v1 {
      * A token identifying a page of results the server should return.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `AutonomousDbVersion.List`.
@@ -2167,6 +2199,10 @@ export namespace oracledatabase_v1 {
      * A token for fetching next page of response.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `CloudVmCluster.List`.
@@ -2180,6 +2216,10 @@ export namespace oracledatabase_v1 {
      * A token to fetch the next page of results.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `DatabaseCharacterSet.List`.
@@ -2271,6 +2311,10 @@ export namespace oracledatabase_v1 {
      * A token identifying a page of results the server should return.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `DbVersions.List`.
@@ -2310,6 +2354,10 @@ export namespace oracledatabase_v1 {
      * A token identifying a page of results the server should return.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `ExascaleDbStorageVault.List`.
@@ -2323,6 +2371,10 @@ export namespace oracledatabase_v1 {
      * A token identifying a page of results the server should return. If present, the next page token can be provided to a subsequent ListExascaleDbStorageVaults call to list the next page. If empty, there are no more pages.
      */
     nextPageToken?: string | null;
+    /**
+     * Unreachable locations when listing resources across all locations using wildcard location '-'.
+     */
+    unreachable?: string[] | null;
   }
   /**
    * The response for `GiVersion.List`.
@@ -3117,7 +3169,7 @@ export namespace oracledatabase_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -3147,7 +3199,7 @@ export namespace oracledatabase_v1 {
      *
      *   // Do the magic
      *   const res = await oracledatabase.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -3274,7 +3326,7 @@ export namespace oracledatabase_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -3712,6 +3764,7 @@ export namespace oracledatabase_v1 {
      *         // request body parameters
      *         // {
      *         //   "adminPassword": "my_adminPassword",
+     *         //   "adminPasswordSecretVersion": "my_adminPasswordSecretVersion",
      *         //   "cidr": "my_cidr",
      *         //   "createTime": "my_createTime",
      *         //   "database": "my_database",
@@ -4332,6 +4385,7 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "adminPassword": "my_adminPassword",
+     *   //   "adminPasswordSecretVersion": "my_adminPasswordSecretVersion",
      *   //   "cidr": "my_cidr",
      *   //   "createTime": "my_createTime",
      *   //   "database": "my_database",
@@ -4490,7 +4544,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "autonomousDatabases": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
@@ -4641,6 +4696,7 @@ export namespace oracledatabase_v1 {
      *         // request body parameters
      *         // {
      *         //   "adminPassword": "my_adminPassword",
+     *         //   "adminPasswordSecretVersion": "my_adminPasswordSecretVersion",
      *         //   "cidr": "my_cidr",
      *         //   "createTime": "my_createTime",
      *         //   "database": "my_database",
@@ -6358,7 +6414,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "cloudExadataInfrastructures": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
@@ -7218,7 +7275,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "cloudVmClusters": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
@@ -7777,6 +7835,7 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "adminPassword": "my_adminPassword",
+     *   //   "adminPasswordSecretVersion": "my_adminPasswordSecretVersion",
      *   //   "characterSet": "my_characterSet",
      *   //   "createTime": "my_createTime",
      *   //   "databaseId": "my_databaseId",
@@ -7788,8 +7847,11 @@ export namespace oracledatabase_v1 {
      *   //   "ncharacterSet": "my_ncharacterSet",
      *   //   "ociUrl": "my_ociUrl",
      *   //   "opsInsightsStatus": "my_opsInsightsStatus",
+     *   //   "pluggableDatabaseId": "my_pluggableDatabaseId",
+     *   //   "pluggableDatabaseName": "my_pluggableDatabaseName",
      *   //   "properties": {},
-     *   //   "tdeWalletPassword": "my_tdeWalletPassword"
+     *   //   "tdeWalletPassword": "my_tdeWalletPassword",
+     *   //   "tdeWalletPasswordSecretVersion": "my_tdeWalletPasswordSecretVersion"
      *   // }
      * }
      *
@@ -8736,7 +8798,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "dbSystems": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
@@ -9919,7 +9982,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "exadbVmClusters": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
@@ -11101,7 +11165,8 @@ export namespace oracledatabase_v1 {
      *   // Example response
      *   // {
      *   //   "exascaleDbStorageVaults": [],
-     *   //   "nextPageToken": "my_nextPageToken"
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
      *   // }
      * }
      *
