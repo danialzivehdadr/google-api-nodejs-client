@@ -960,6 +960,7 @@ export namespace calendar_v3 {
      */
     declineMessage?: string | null;
   }
+  export interface Schema$EventLabel {}
   export interface Schema$EventOutOfOfficeProperties {
     /**
      * Whether to decline meeting invitations which overlap Out of office events. Valid values are declineNone, meaning that no meeting invitations are declined; declineAllConflictingInvitations, meaning that all conflicting meeting invitations that conflict with the event are declined; and declineOnlyNewConflictingInvitations, meaning that only new conflicting meeting invitations which arrive while the Out of office event is present are to be declined.
@@ -1138,6 +1139,7 @@ export namespace calendar_v3 {
      */
     timeMin?: string | null;
   }
+  export interface Schema$LabelProperties {}
   export interface Schema$Setting {
     /**
      * ETag of the resource.
