@@ -2713,7 +2713,7 @@
       }
     }
   },
-  "revision": "20260408",
+  "revision": "20260508",
   "rootUrl": "https://walletobjects.googleapis.com/",
   "schemas": {
     "ActivationOptions": {
