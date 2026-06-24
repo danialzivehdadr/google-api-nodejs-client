@@ -1,0 +1,17 @@
+port ip 
+port = 1645 
+hostname lookups = no
+regular expressions = yes;
+extended expressions = yes;
+{
+
+    log stripped names = no
+    log auth = yes
+    log auth badpass = yes
+    log auth goodpass = no
+    
+#   cleanup delay = 6
+#   user = noboody; group = shadow
+#   pidfile = /var/run/radiusd.pid'
+
+ }
